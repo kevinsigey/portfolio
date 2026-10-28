@@ -125,6 +125,13 @@ img { display: block; max-width: 100%; }
 .mode-toggle .dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid currentColor; }
 html[data-mode="dark"] .mode-toggle .dot { background: currentColor; }
 
+.monogram { flex: none; display: block; width: 36px; height: 36px; border-radius: 8px; }
+.monogram svg { display: block; width: 100%; height: 100%; }
+.monogram .tile { fill: var(--accent); transition: fill 0.15s; }
+.monogram .ks { fill: var(--card); }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; flex: none; }
+.brand:hover .tile { fill: var(--ink); }
+
 /* ---------- hero ---------- */
 .hero { padding-top: 72px; padding-bottom: 48px; }
 .hero-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: end; }
