@@ -5,15 +5,20 @@ development), and Photography.
 
 ## Structure
 
-- `index.html` — landing page (Work index, Agentic Development ledger, contact)
-- `photos.html` — photography gallery (17 frames, 2023–2025)
-- `css/base.css` — layout only (no colors, no typefaces)
-- `css/theme-*.css` — three interchangeable visual editions, switched via the
-  footer Edition switcher (`editorial` default, `darkroom`, `terminal`)
-- `js/theme.js` — edition switcher, persisted in localStorage
-- `assets/photos/` — Kevin's real photography, curated from his Instagram
-- `assets/resume.pdf` — current resume
-- `tests/check.py` — TDD suite; `python3 tests/check.py` must pass
+- `index.html`: front page on the Research Desk system (lead story with a live
+  bridge interactive, writing index, systems, receipts, experience, photography
+  strip, contact)
+- `writing.html`: every paper, newest first
+- `anthropic-ipo.html`, `spacex-tesla-merger.html`, `stablecoin-remittance.html`,
+  `data-center-energy.html`: the papers (each carries its own styles for now)
+- `css/desk.css`: Research Desk tokens and layout. Light by default;
+  `html[data-mode="dark"]` is the dark mode
+- `js/desk.js`: the universal light/dark toggle (localStorage `ks-mode`, shared
+  by every page and paper) and the lead-story bridge
+- `photos.html`, `css/main.css`, `css/photos.css`, `js/main.js`, `js/photos.js`:
+  the photography page, unchanged until it moves to its own site
+- `assets/photos/`: Kevin's photography; `assets/resume.pdf`: current resume
+- `tests/check.py`: TDD suite; `python3 tests/check.py` must pass
 
 ## Preview locally
 
