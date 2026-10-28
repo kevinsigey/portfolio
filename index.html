@@ -3,337 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kevin Sigey: Quantitative problem solver and clear communicator</title>
-<meta name="description" content="Kevin Sigey is a quantitative problem solver and clear communicator. MS Business Analytics, UIUC December 2026. Predictive models, agentic AI systems, and professional experience.">
+<title>Kevin Sigey: models, explained so people act on them</title>
+<meta name="description" content="Kevin Sigey, quantitative analyst. MS Business Analytics, UIUC, December 2026. Interactive research papers, live prediction systems, and the numbers behind each call.">
+<meta property="og:title" content="Kevin Sigey">
+<meta property="og:description" content="Interactive research papers, live prediction systems, and the numbers behind each call.">
+<script>try{if(localStorage.getItem("ks-mode")==="dark")document.documentElement.setAttribute("data-mode","dark")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/desk.css">
 </head>
 <body>
 
-<header class="site-header" id="siteHeader">
-  <nav class="nav" aria-label="Primary">
-    <div class="logo"><a href="#top" aria-label="Home">KS</a></div>
-    <ol class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#lab">Lab</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li class="nav-photo"><a href="photos.html">Photography</a></li>
-      <li><a href="writing.html">Writing</a></li>
-    </ol>
-    <div class="nav-cta"><a class="btn btn-small" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a></div>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+<header class="masthead">
+  <div class="wrap masthead-inner">
+    <a class="nameplate" href="index.html">Kevin Sigey</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="writing.html">Writing</a>
+      <a href="#systems">Systems</a>
+      <a href="#receipts">Receipts</a>
+      <a href="#experience">Experience</a>
+      <a href="photos.html">Photography</a>
+      <a href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+    </nav>
+    <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Dark mode"><span class="dot" aria-hidden="true"></span><span class="lbl">Light</span></button>
+  </div>
 </header>
-
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <nav aria-label="Mobile">
-    <ol>
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#lab">Lab</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="photos.html">Photography</a></li>
-      <li><a href="writing.html">Writing</a></li>
-    </ol>
-    <a class="btn" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
-  </nav>
-</div>
-
-<aside class="rail rail-left" aria-label="Social links">
-  <a href="https://github.com/kevinsigey" target="_blank" rel="noopener" aria-label="GitHub">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-  </a>
-  <a href="https://www.linkedin.com/in/kevin-sigey-72a5501b5" target="_blank" rel="noopener" aria-label="LinkedIn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V8h4v2a6 6 0 0 1 2-2z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-  </a>
-</aside>
-
-<aside class="rail rail-right" aria-label="Email">
-  <a href="mailto:sigeykevin@gmail.com">sigeykevin@gmail.com</a>
-</aside>
 
 <main id="top">
 
-  <section class="hero" aria-label="Introduction">
-    <p class="eyebrow">Hi, my name is</p>
-    <h1 class="big-heading">Kevin Sigey.</h1>
-    <h2 class="big-heading dim">Quantitative problem solver and clear communicator.</h2>
-    <p class="hero-text">I am a master&rsquo;s student in Business Analytics at UIUC, graduating this December. I build predictive models and agentic AI systems, and explain both so clearly that a non-technical stakeholder can act on them.</p>
-    <a class="btn btn-big" href="mailto:sigeykevin@gmail.com">Get In Touch</a>
+  <section class="wrap hero" aria-label="Introduction">
+   <div class="hero-grid">
+   <div>
+    <p class="kicker">Quantitative analyst <span class="hl">&middot;</span> MS Business Analytics, UIUC <span class="hl">&middot;</span> December 2026</p>
+    <h1>I build models, then explain them so people <em>act</em> on them.</h1>
+    <p class="dek">Predictive models, agentic AI systems and research papers where the assumptions sit on the page and the numbers move when you move them.</p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="#lead">Try the lead story</a>
+      <a class="btn btn-ghost" href="mailto:sigeykevin@gmail.com">Get in touch</a>
+    </div>
+   </div>
+    <aside class="card desk-card" aria-labelledby="deskTitle">
+      <h2 id="deskTitle">On the desk</h2>
+      <a class="desk-item" href="anthropic-ipo.html"><span class="k">New paper &middot; Oct 2026</span><span class="h">Is Anthropic really worth $2T?</span><span class="s">$85 to $115 a share, and the condition it rests on.</span></a>
+      <a class="desk-item" href="https://pl.40-160-91-131.sslip.io" target="_blank" rel="noopener"><span class="k">Live &middot; Premier League</span><span class="h">This gameweek's picks, live</span><span class="s">Every pick recorded before kickoff, scored after.</span></a>
+      <a class="desk-item" href="https://algo.40-160-91-131.sslip.io/journal" target="_blank" rel="noopener"><span class="k">Live &middot; Prediction Journal</span><span class="h">1,631 forecasts scored against the market</span><span class="s">Sports, inflation, jobs, weather and energy.</span></a>
+    </aside>
+   </div>
+    <div class="stat-strip">
+      <div class="stat"><div class="v">$1B+</div><div class="l">in transfers reconciled to $0 variance at Busey Bank</div></div>
+      <div class="stat"><div class="v">6</div><div class="l">prediction models live across five sports</div></div>
+      <div class="stat"><div class="v">1,780</div><div class="l">forecasts locked in before the event on a public journal</div></div>
+      <div class="stat"><div class="v">5</div><div class="l">research papers, three of them interactive</div></div>
+    </div>
   </section>
 
-  <section class="section" id="about" aria-label="About">
-    <h2 class="section-heading"><span class="num">01.</span> About Me</h2>
-    <div class="about-inner">
-      <div class="about-text">
-        <p>I take ambiguous problems, break them into structured pieces, and solve them with data, financial modeling, or AI systems I build myself. The goal is to make clear, data-backed decisions.</p>
-        <p>Previously a Finance Intern in Treasury &amp; ALM at Busey Bank and VP of Events at NYU&rsquo;s Tandon Consulting Club; now a Student Consultant with Illinois Business Consulting. I am open to analyst roles starting in 2027.</p>
-        <p>The same judgment that frames a shot frames a finding: cut what distracts, keep what decides. My photography is on the Photography page.</p>
-        <p>Here are some of the tools I work with:</p>
-        <ul class="skills-list">
-          <li>Structured Problem Solving</li>
-          <li>Market Sizing &amp; MECE Frameworks</li>
-          <li>Financial Modeling &amp; Valuation</li>
-          <li>Data Analysis (Python, SQL)</li>
-          <li>Data Visualization (Power BI, Tableau)</li>
-          <li>Machine Learning (Scikit-learn, LightGBM)</li>
-          <li>Agentic AI Development</li>
-          <li>Stakeholder Communication</li>
-        </ul>
+  <section class="section" id="lead" aria-label="Lead story">
+    <div class="wrap lead">
+      <div class="lead-copy">
+        <p class="kicker">Lead story <span class="hl">&middot;</span> M&amp;A / Valuation <span class="hl">&middot;</span> October 2026</p>
+        <h2 class="lead-title">The $3.5 Trillion <em>Question</em></h2>
+        <p>Tesla and SpaceX have formed special committees to discuss a combination. I valued the merged company four ways: DCF, trading comps, sum of the parts and a reverse DCF, with the synergies modeled line by line.</p>
+        <div class="figures">
+          <div><b>$3.54T</b><span>combined market value</span></div>
+          <div><b>$1.51T</b><span>base-case DCF</span></div>
+          <div><b>$237.9B</b><span>synergy value</span></div>
+        </div>
+        <p>The DCF covers less than half of what the market pays. The rest is a bet on five things going right. The panel lets you price those bets yourself.</p>
+        <a class="text-link" href="spacex-tesla-merger.html">Read the full paper &rarr;</a>
+      </div>
+
+      <div class="card bridge" aria-labelledby="bridgeTitle">
+        <p class="kicker">Interactive <span class="hl">&middot;</span> from section 10</p>
+        <h3 id="bridgeTitle">What has to go right?</h3>
+        <p class="how">Each bet is worth its full value only if it succeeds. Set your odds. Try dropping Robotaxi to 10%: the gap the market asks you to believe opens by about $270B.</p>
+
+        <div class="pb-row"><label for="bRobo">Robotaxi + FSD network <small>$1,066B at full success</small></label><output id="bRobo-out" for="bRobo">35%</output><input type="range" id="bRobo" data-bucket data-full="1066" data-default="35" min="0" max="100" step="1" value="35"></div>
+        <div class="pb-row"><label for="bOpt">Optimus humanoids <small>$237B at full success</small></label><output id="bOpt-out" for="bOpt">20%</output><input type="range" id="bOpt" data-bucket data-full="237" data-default="20" min="0" max="100" step="1" value="20"></div>
+        <div class="pb-row"><label for="bAi">SpaceX AI compute <small>$500B at full success</small></label><output id="bAi-out" for="bAi">30%</output><input type="range" id="bAi" data-bucket data-full="500" data-default="30" min="0" max="100" step="1" value="30"></div>
+        <div class="pb-row"><label for="bTel">Starlink + telecom <small>$300B at full success</small></label><output id="bTel-out" for="bTel">45%</output><input type="range" id="bTel" data-bucket data-full="300" data-default="45" min="0" max="100" step="1" value="45"></div>
+        <div class="pb-row"><label for="bShip">Starship + space economy <small>$200B at full success</small></label><output id="bShip-out" for="bShip">25%</output><input type="range" id="bShip" data-bucket data-full="200" data-default="25" min="0" max="100" step="1" value="25"></div>
+
+        <div class="pb-bar" role="img" aria-label="Base DCF plus the expected value of the five bets, against the $3.54T market value">
+          <div class="pb-track"><span class="pb-seg base" id="pbBase"></span><span class="pb-seg ev" id="pbEv"></span></div>
+          <div class="pb-legend"><span>DCF $1.51T + your bets</span><span>market $3.54T</span></div>
+        </div>
+        <div class="pb-out" aria-live="polite">
+          <div><b id="pbEvOut">+$755.5B</b>expected value of the five bets</div>
+          <div><b id="pbTotalOut">$2.27T</b>probability-weighted value</div>
+          <div class="resid"><b id="pbResidOut">$1.27T</b><span id="pbResidLbl">the market still asks you to believe</span></div>
+        </div>
+        <button class="pb-reset" type="button" id="pbReset">Reset to the paper's odds</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="writing" aria-label="Writing">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Writing</p><h2>Research, built to be read</h2></div>
+        <a class="more" href="writing.html">All writing &rarr;</a>
+      </div>
+      <ul class="paper-list">
+        <li class="paper-row">
+          <p class="when">Oct 2026<b>Equity research</b></p>
+          <div>
+            <h3><a href="anthropic-ipo.html">Is Anthropic really worth $2T?</a></h3>
+            <p>Anthropic is worth $85 to $115 a share if it climbs from selling metered tokens, whose price is collapsing, to owning the application and agent layer above them.</p>
+            <p class="tags">S-1 analysis &middot; DCF &middot; comps &middot; scenario toggles</p>
+          </div>
+          <div class="thumb" aria-hidden="true">
+            <p class="t">Equity value, $B</p>
+            <svg viewBox="0 0 200 64"><line class="axis" x1="0" y1="40" x2="200" y2="40"/><rect class="bar-a" x="91" y="32" width="92" height="16" rx="3"/><circle cx="5" cy="40" r="4" class="bar-b"/><rect x="192" y="28" width="2" height="24" class="bar-b"/><text x="0" y="62">965 last round</text><text x="91" y="22">1,440 to 1,948</text><text x="200" y="62" text-anchor="end">2,000</text></svg>
+          </div>
+        </li>
+        <li class="paper-row">
+          <p class="when">Oct 2026<b>M&amp;A / Valuation</b></p>
+          <div>
+            <h3><a href="spacex-tesla-merger.html">The $3.5 Trillion Question</a></h3>
+            <p>A Tesla and SpaceX merger valued four ways, with the synergies modeled line by line and a probability-weighted bridge for the $2 trillion the market prices beyond the fundamentals.</p>
+            <p class="tags">DCF &middot; comps &middot; synergy slider &middot; plausibility bridge</p>
+          </div>
+          <div class="thumb" aria-hidden="true">
+            <p class="t">Market vs base DCF</p>
+            <svg viewBox="0 0 200 64"><rect class="bar-b" x="0" y="6" width="200" height="16" rx="3"/><rect class="bar-a" x="0" y="34" width="85" height="16" rx="3"/><text x="4" y="18">$3.54T market</text><text x="92" y="46">$1.51T DCF</text></svg>
+          </div>
+        </li>
+        <li class="paper-row">
+          <p class="when">Sep 2026<b>Fintech / On-chain</b></p>
+          <div>
+            <h3><a href="stablecoin-remittance.html">The Digital Remittance Bridge</a></h3>
+            <p>Sending money home costs about $14 the traditional way and $7 digitally. On-chain data says stablecoin rails can do it for about $0.51. The paper stress-tests that claim.</p>
+            <p class="tags">Dune SQL &middot; on-chain flows &middot; weekly refresh</p>
+          </div>
+          <div class="thumb" aria-hidden="true">
+            <p class="t">Cost to send</p>
+            <svg viewBox="0 0 200 64"><rect class="bar-b" x="0" y="2" width="150" height="14" rx="3"/><rect class="bar-b" x="0" y="24" width="75" height="14" rx="3"/><rect class="bar-a" x="0" y="46" width="6" height="14" rx="2"/><text x="156" y="13">$14</text><text x="81" y="35">$7</text><text x="12" y="57">$0.51 stablecoin</text></svg>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="systems" aria-label="Systems">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Systems</p><h2>Models that run in public</h2><p class="sec-lede">Every pick is recorded before the event and scored after. Nothing is overwritten, so the record is the proof.</p></div>
+      </div>
+      <div class="systems">
+        <article class="card system">
+          <p class="live"><i aria-hidden="true"></i> Live</p>
+          <h3>Predictor Hub</h3>
+          <p>Six sports prediction models (Premier League, F1, NFL, college football, NBA) running as containers, built and maintained with agentic AI systems. Each pick shows its confidence, its reasoning and its record.</p>
+          <div class="readout">
+            <div><b>13 of 30</b>PL picks made before kickoff, correct</div>
+            <div><b>5 sports</b>one shared design system</div>
+          </div>
+          <div class="links"><a class="text-link" href="https://40-160-91-131.sslip.io" target="_blank" rel="noopener">Open the hub &rarr;</a><a class="text-link" href="https://github.com/kevinsigey/predictor-hub" target="_blank" rel="noopener">Source</a></div>
+          <p class="snap">Snapshot, verified Oct 28, 2026</p>
+        </article>
+        <article class="card system">
+          <p class="live"><i aria-hidden="true"></i> Live</p>
+          <h3>Algo Trade Hub: Prediction Journal</h3>
+          <p>Forecasts for sports, inflation, jobs, weather and energy markets, locked in before the event and scored against the Kalshi price. It places no orders: the ledger is the product.</p>
+          <div class="readout">
+            <div><b>1,780</b>forecasts locked in</div>
+            <div><b>1,631</b>scored so far</div>
+          </div>
+          <div class="links"><a class="text-link" href="https://algo.40-160-91-131.sslip.io/journal" target="_blank" rel="noopener">Open the journal &rarr;</a><a class="text-link" href="https://github.com/kevinsigey/algo-trade-hub-prod" target="_blank" rel="noopener">Source</a></div>
+          <p class="snap">Snapshot, verified Oct 28, 2026</p>
+        </article>
+      </div>
+      <div class="lab">
+        <article class="card">
+          <p class="kicker">Lab &middot; pipeline running</p>
+          <h4><a class="text-link" href="https://github.com/kevinsigey/Stable-Coin-Analysis" target="_blank" rel="noopener">Stablecoin Remittance Monitor</a></h4>
+          <p>A live monitor of stablecoin remittance flows with a weekly data refresh. An always-on pipeline, not a notebook.</p>
+          <p class="tags">SQL &middot; Dune &middot; pipelines</p>
+        </article>
+        <article class="card">
+          <p class="kicker">Lab &middot; shipped</p>
+          <h4><a class="text-link" href="https://github.com/kevinsigey/FPL_Optimizer" target="_blank" rel="noopener">FPL Scout</a></h4>
+          <p>Four per-position XGBoost models on four seasons of data, live FPL API integration and a Streamlit dashboard with feature-importance explanations.</p>
+          <p class="tags">Python &middot; XGBoost &middot; Streamlit</p>
+        </article>
+        <article class="card">
+          <p class="kicker">Competition entry</p>
+          <h4>Synchrony Guardrail Engine</h4>
+          <p>Illinois Datathon 2026. Across 30+ model iterations we rejected the most accurate model for the operationally correct one. The numbers are in Receipts.</p>
+          <p class="tags">Python &middot; Prophet &middot; XGBoost</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="receipts" aria-label="Receipts">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Receipts</p><h2>The numbers behind the calls</h2></div>
+      </div>
+      <div class="receipts">
+        <article class="card receipt">
+          <p class="kicker">Datathon</p>
+          <h3>Synchrony Guardrail Engine</h3>
+          <p class="ctx">Staffing forecasts for four client portfolios.</p>
+          <div class="rbars" role="img" aria-label="Abandon error by model version: V16 1.54 percent, V20 1.87 percent, V21 to V25 2.15 percent, V32 2.4 percent.">
+            <div class="rbar"><span>V16</span><span class="track"><span class="fill pick" style="width: 64%"></span></span><span class="val">1.54%</span></div>
+            <div class="rbar"><span>V20</span><span class="track"><span class="fill" style="width: 78%"></span></span><span class="val">1.87%</span></div>
+            <div class="rbar"><span>V21-V25</span><span class="track"><span class="fill" style="width: 90%"></span></span><span class="val">2.15%</span></div>
+            <div class="rbar"><span>V32</span><span class="track"><span class="fill" style="width: 100%"></span></span><span class="val">2.4%</span></div>
+          </div>
+          <p class="note">Abandon error by model version. Volume accuracy kept improving across the same versions.</p>
+          <ul class="callouts">
+            <li>Shipped V16, not the most accurate model.</li>
+            <li>Abandon error is the metric that predicts customer pain.</li>
+          </ul>
+        </article>
+        <article class="card receipt">
+          <p class="kicker">Treasury &amp; ALM</p>
+          <h3>Busey Bank Transfer Matching</h3>
+          <p class="ctx">Separate real deposit growth from internal transfers.</p>
+          <table class="rtable">
+            <tr><th scope="row">Transfers reconciled</th><td>$1B+</td></tr>
+            <tr><th scope="row">Variance</th><td>$0 across all five deposit categories</td></tr>
+            <tr><th scope="row">Runtime</th><td>2+ hrs down to 6-13 min per stage</td></tr>
+          </table>
+          <ul class="callouts">
+            <li>Proximity tiebreaker made it worse: 90% to 86%.</li>
+            <li>Confirmation numbers: identical on both legs, a collision-proof key.</li>
+          </ul>
+        </article>
+        <article class="card receipt">
+          <p class="kicker">MSBA capstone</p>
+          <h3>Dot Foods Capstone</h3>
+          <p class="ctx">Project Lead on a 6-person team: does adding pallets lower total supply-chain cost?</p>
+          <table class="rtable">
+            <tr><th scope="row">Load records analyzed</th><td>7,229</td></tr>
+            <tr><th scope="row">Pallets, traditional loading</th><td>309,761</td></tr>
+            <tr><th scope="row">Pallets, pre-sorted by customer</th><td>416,159 (+34.3%)</td></tr>
+            <tr><th scope="row">Cost mechanism</th><td>per-case sort fee &rarr; flat drop fee</td></tr>
+          </table>
+          <ul class="callouts">
+            <li>Pre-sorting shifts cost from the dock to the warehouse.</li>
+            <li>Direction validated on real data; the dollar figure rests on placeholder unit costs, flagged before anyone acts on it.</li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section" id="experience" aria-label="Experience">
-    <h2 class="section-heading"><span class="num">02.</span> Where I&rsquo;ve Worked</h2>
-    <div class="tabs">
-      <div class="tab-list" role="tablist" aria-label="Jobs">
-        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="job-ibc">IBC</button>
-        <button class="tab-btn" role="tab" aria-selected="false" data-tab="job-busey">Busey Bank</button>
-        <button class="tab-btn" role="tab" aria-selected="false" data-tab="job-tandon">Tandon CC</button>
-        <button class="tab-btn" role="tab" aria-selected="false" data-tab="job-dotfoods">Dot Foods</button>
-        <button class="tab-btn" role="tab" aria-selected="false" data-tab="job-wow">WOW Payments</button>
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Experience</p><h2>Where I&rsquo;ve worked</h2></div>
+        <a class="more" href="assets/resume.pdf" target="_blank" rel="noopener">Resume (PDF) &rarr;</a>
       </div>
-      <div class="tab-panels">
-        <div class="tab-panel active" id="job-ibc" role="tabpanel">
-          <h3>Student Consultant <span class="at">@ Illinois Business Consulting</span></h3>
-          <p class="range">Sep 2026 &ndash; Present</p>
-          <ul>
-            <li>Selected through a competitive, multi-round case-based process for UIUC&rsquo;s student consulting organization.</li>
-            <li>Leading quantitative analysis and market research on a curriculum modernization and AI strategy workstream for a live client.</li>
-          </ul>
-        </div>
-        <div class="tab-panel" id="job-busey" role="tabpanel">
-          <h3>Finance Intern <span class="at">@ Busey Bank, Treasury &amp; ALM</span></h3>
-          <p class="range">Jul 2026 &ndash; Sep 2026</p>
-          <ul>
-            <li>Built a deposit classification model separating internal product shifts from true external growth across $1B+ in transfers, validated to $0 variance.</li>
-            <li>Researched the GENIUS Act and stablecoin regulation and presented a proposal to management on leveraging stablecoins for deposit growth.</li>
-          </ul>
-        </div>
-        <div class="tab-panel" id="job-tandon" role="tabpanel">
-          <h3>VP of Events <span class="at">@ NYU Tandon Consulting Club</span></h3>
-          <p class="range">Aug 2024 &ndash; May 2025</p>
-          <ul>
-            <li>Grew club membership from 150 to 450 through partnerships with McKinsey and Deloitte.</li>
-            <li>Ran the events program end to end, from recruiting pipelines to flagship panels.</li>
-          </ul>
-        </div>
-        <div class="tab-panel" id="job-dotfoods" role="tabpanel">
-          <h3>Project Lead <span class="at">@ Dot Foods Capstone</span></h3>
-          <p class="range">UIUC MSBA Capstone</p>
-          <ul>
-            <li>Led a 6-person team end to end on the capstone engagement, from scoping to final delivery.</li>
-          </ul>
-        </div>
-        <div class="tab-panel" id="job-wow" role="tabpanel">
-          <h3>Fintech Marketing Intern <span class="at">@ WOW Payments</span></h3>
-          <p class="range">May 2024 &ndash; Aug 2024</p>
-          <ul>
-            <li>Conducted 100+ door-to-door field sales conversations with small business owners to grow WOW&rsquo;s payment network.</li>
-            <li>Found that pricing confusion, not product fit, drove conversion drop-offs, and fed that insight back into how the campaign was framed.</li>
-          </ul>
-        </div>
+      <ol class="timeline">
+        <li class="job"><p class="when">Sep 2026 &ndash; now</p><div><h3>Student Consultant <span>&middot; Illinois Business Consulting</span></h3><ul><li>Selected through a competitive, multi-round case-based process.</li><li>Leading quantitative analysis and market research on a curriculum modernization and AI strategy workstream for a live client.</li></ul></div></li>
+        <li class="job"><p class="when">Jul &ndash; Sep 2026</p><div><h3>Finance Intern <span>&middot; Busey Bank, Treasury &amp; ALM</span></h3><ul><li>Built a deposit classification model separating internal product shifts from true external growth across $1B+ in transfers, validated to $0 variance.</li><li>Researched the GENIUS Act and stablecoin regulation and presented a proposal to management on stablecoins for deposit growth.</li></ul></div></li>
+        <li class="job"><p class="when">UIUC MSBA</p><div><h3>Project Lead <span>&middot; Dot Foods Capstone</span></h3><ul><li>Led a 6-person team end to end, from scoping to final delivery.</li></ul></div></li>
+        <li class="job"><p class="when">Aug 2024 &ndash; May 2025</p><div><h3>VP of Events <span>&middot; NYU Tandon Consulting Club</span></h3><ul><li>Grew club membership from 150 to 450 through partnerships with McKinsey and Deloitte.</li></ul></div></li>
+        <li class="job"><p class="when">May &ndash; Aug 2024</p><div><h3>Fintech Marketing Intern <span>&middot; WOW Payments</span></h3><ul><li>Ran 100+ door-to-door field sales conversations with small business owners.</li><li>Found that pricing confusion, not product fit, drove conversion drop-offs, and fed that back into the campaign.</li></ul></div></li>
+      </ol>
+      <ul class="skills" aria-label="Tools">
+        <li>Python</li><li>SQL</li><li>Excel &middot; Power Query (M) &middot; DAX</li><li>Power BI</li><li>Tableau</li><li>scikit-learn</li><li>LightGBM / XGBoost</li><li>Financial modeling</li><li>Agentic AI development</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="photography" aria-label="Photography">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="kicker">Photography</p><h2>The same eye, a different frame</h2><p class="sec-lede">Cut what distracts, keep what decides. Fashion, editorial and portrait work, 2023 to 2025.</p></div>
+        <a class="more" href="photos.html">See the gallery &rarr;</a>
+      </div>
+      <div class="photo-strip">
+        <figure><img src="assets/photos/thumbs/cole-pearl-jacket.jpg" alt="Calm and Collected, a fashion portrait" loading="lazy"><figcaption>Calm &amp; Collected</figcaption></figure>
+        <figure><img src="assets/photos/thumbs/yuna-seki-spring.jpg" alt="Yuna Seki, spring fashion shoot" loading="lazy"><figcaption>Yuna Seki, Spring</figcaption></figure>
+        <figure><img src="assets/photos/thumbs/daily-paper-nyfw.jpg" alt="Daily Paper at New York Fashion Week" loading="lazy"><figcaption>Daily Paper &times; Arte Servizio</figcaption></figure>
       </div>
     </div>
   </section>
 
-  <section class="section" id="work" aria-label="Projects">
-    <h2 class="section-heading"><span class="num">03.</span> Some Things I&rsquo;ve Built</h2>
-    <p class="section-lede">Things I&rsquo;ve built and written.</p>
-    <ul class="projects-grid">
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          <div class="card-links">
-            <a href="https://github.com/kevinsigey/predictor-hub" target="_blank" rel="noopener" aria-label="Predictor Hub on GitHub">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            </a>
-            <a href="https://40-160-91-131.sslip.io" target="_blank" rel="noopener" aria-label="Predictor Hub live app">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="https://40-160-91-131.sslip.io" target="_blank" rel="noopener">Predictor Hub</a></h3>
-        <p class="card-desc">Six sports prediction models (NFL, college football, NBA, Premier League, F1) running as containers on Azure, which I build and maintain using agentic AI systems.</p>
-        <p class="card-viz"><a href="https://muse.ai/s/sports-predictor-architecture-yxo6muxlfxqjos" target="_blank" rel="noopener">visualization</a></p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Live</p>
-        <p class="card-signal"><span class="live-strip-label">Snapshot, verified Oct 14, 2026:</span> 6 containers on Azure.</p>
-        <ul class="card-tech"><li>Python</li><li>Azure</li><li>Docker</li><li>Agents</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3 class="card-title">Synchrony Guardrail Engine</h3>
-        <p class="card-desc">Illinois Datathon 2026, Team 123. Across 30+ model iterations we rejected the most accurate model for the operationally correct one: V16 held abandon error at 1.54% where further tuning pushed it to 2.4%. Strategy over vanity metrics.</p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Competition entry</p>
-        <ul class="card-tech"><li>Python</li><li>Prophet</li><li>XGBoost</li><li>Ensembles</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2-2z"/></svg>
-          <div class="card-links">
-            <a href="https://muse.ai/s/data-center-energy-analysis-sxg6axdjxrs2xuq" target="_blank" rel="noopener" aria-label="Data-Center Energy Analysis interactive paper">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1 2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="https://muse.ai/s/data-center-energy-analysis-sxg6axdjxrs2xuq" target="_blank" rel="noopener">Data-Center Energy Analysis</a></h3>
-        <p class="card-desc">My BDI 513 final project with Group 10: an interactive analysis of data-center energy demand, written for non-technical readers.</p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Interactive paper</p>
-        <ul class="card-tech"><li>Data storytelling</li><li>Visualization</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3 class="card-title"><a href="#receipts">Deposit Rollforward &amp; Transfer-Matching System</a></h3>
-        <p class="card-desc">Monthly deposit rollforward for Liquidity Management, built in Excel with Power Query and Power Pivot. Matches raw inter-account transfers into Origin &rarr; Destination pairs so every dollar of balance movement traces to a cause.</p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Shipped &middot; Internal system</p>
-        <ul class="card-tech"><li>Excel</li><li>Power Query (M)</li><li>Power Pivot (DAX)</li></ul>
-      </li>
-    </ul>
-  
-
-  <section class="section" id="lab" aria-label="Lab">
-    <h2 class="section-heading"><span class="num">04.</span> The Lab</h2>
-    <p class="section-lede">Self-directed experiments. Things I build to test an idea, not to fill a brief.</p>
-    <ul class="projects-grid">
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          <div class="card-links">
-            <a href="https://github.com/kevinsigey/algo-trade-hub-prod" target="_blank" rel="noopener" aria-label="Algo Trade Hub on GitHub">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="https://algo.40-160-91-131.sslip.io/lab" target="_blank" rel="noopener">Algo Trade Hub</a></h3>
-        <p class="card-desc">Prediction systems for CPI, Fed rate cuts, equities, and crypto on free data, which I'm rebuilding into portfolio-grade software using agentic AI systems.</p>
-        <p class="card-status"><span class="dot building" aria-hidden="true"></span>Status: In active rebuild</p>
-        <ul class="card-tech"><li>Python</li><li>Free market data</li><li>Agents</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          <div class="card-links">
-            <a href="https://github.com/kevinsigey/Stable-Coin-Analysis" target="_blank" rel="noopener" aria-label="Stablecoin Remittance Monitor on GitHub">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="https://muse.ai/s/stablecoin-analysis-rs6bwonxrjxfxx" target="_blank" rel="noopener">Stablecoin Remittance Monitor</a></h3>
-        <p class="card-desc">A live monitor of stablecoin remittance flows with a weekly data refresh. An always-on pipeline, not a notebook.</p>
-        <p class="card-status"><span class="dot building" aria-hidden="true"></span>Status: Pipeline running</p>
-        <p class="card-signal">Refreshes weekly. Snapshot, verified Oct 14, 2026.</p>
-        <ul class="card-tech"><li>SQL</li><li>Dune</li><li>Pipelines</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2-2z"/></svg>
-          <div class="card-links">
-            <a href="https://github.com/kevinsigey/FPL_Optimizer" target="_blank" rel="noopener" aria-label="FPL Scout on GitHub">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="https://github.com/kevinsigey/FPL_Optimizer" target="_blank" rel="noopener">FPL Scout</a></h3>
-        <p class="card-desc">A Fantasy Premier League optimizer I built solo: four per-position XGBoost models on four seasons of data, live FPL API integration, and a Streamlit dashboard with feature-importance explainability.</p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Shipped</p>
-        <ul class="card-tech"><li>Python</li><li>XGBoost</li><li>Streamlit</li></ul>
-      </li>
-<li class="project-card">
-        <div class="card-top">
-          <svg class="folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1 2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2-2z"/></svg>
-          <div class="card-links">
-            <a href="assets/papers/tightness-paradox.pdf" target="_blank" rel="noopener" aria-label="Tightness Paradox paper (PDF)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </a>
-          </div>
-        </div>
-        <h3 class="card-title"><a href="assets/papers/tightness-paradox.pdf" target="_blank" rel="noopener">Tightness Paradox</a></h3>
-        <p class="card-desc">Original labor-market research: openings-based tightness gauges misread ghost-job postings as demand pressure. A measurement paper with a contrarian thesis.</p>
-        <p class="card-status"><span class="dot live" aria-hidden="true"></span>Status: Research paper</p>
-        <ul class="card-tech"><li>Python</li><li>Econometrics</li><li>Visualization</li></ul>
-      </li>
-    </ul>
-  </section>
-</section>
-
-
-  <section class="section" id="receipts" aria-label="Receipts">
-    <h2 class="section-heading"><span class="num">05.</span> Receipts</h2>
-    <p class="section-lede">The numbers behind the calls.</p>
-    <ul class="receipts-grid">
-      <li class="receipt-card">
-        <h3 class="receipt-title">Synchrony Guardrail Engine</h3>
-        <p class="receipt-context">Synchrony Datathon: staffing forecasts for four client portfolios.</p>
-        <div class="receipt-bars" role="img" aria-label="Abandon error by model version: V16 1.54 percent, V20 1.87 percent, V21 to V25 2.15 percent, V32 2.4 percent.">
-          <div class="receipt-bar-row"><span class="receipt-bar-label">V16</span><span class="receipt-bar-track"><span class="receipt-bar pick" style="width: 64%"></span></span><span class="receipt-bar-value">1.54%</span></div>
-          <div class="receipt-bar-row"><span class="receipt-bar-label">V20</span><span class="receipt-bar-track"><span class="receipt-bar" style="width: 78%"></span></span><span class="receipt-bar-value">1.87%</span></div>
-          <div class="receipt-bar-row"><span class="receipt-bar-label">V21-V25</span><span class="receipt-bar-track"><span class="receipt-bar" style="width: 90%"></span></span><span class="receipt-bar-value">2.15%</span></div>
-          <div class="receipt-bar-row"><span class="receipt-bar-label">V32</span><span class="receipt-bar-track"><span class="receipt-bar" style="width: 100%"></span></span><span class="receipt-bar-value">2.4%</span></div>
-        </div>
-        <p class="receipt-chart-note">Abandon error by model version. Volume accuracy kept improving across the same versions.</p>
-        <ul class="receipt-callouts">
-          <li>Shipped V16, not the most accurate model</li>
-          <li>Abandon error is the metric that predicts customer pain.</li>
-        </ul>
-      </li>
-      <li class="receipt-card">
-        <h3 class="receipt-title">Busey Bank Transfer Matching</h3>
-        <p class="receipt-context">Busey Bank Treasury and ALM: separate real deposit growth from internal transfers.</p>
-        <table class="receipt-table">
-          <tr><th scope="row">Transfers reconciled</th><td>$1B+</td></tr>
-          <tr><th scope="row">Variance</th><td>$0 across all five deposit categories</td></tr>
-          <tr><th scope="row">Runtime</th><td>2+ hrs down to 6-13 min per stage</td></tr>
-        </table>
-        <ul class="receipt-callouts">
-          <li>Proximity tiebreaker made it worse: 90% to 86%</li>
-          <li>Confirmation numbers: identical on both legs, collision-proof key.</li>
-        </ul>
-      </li>
-      <li class="receipt-card">
-        <h3 class="receipt-title">Dot Foods Capstone</h3>
-        <p class="receipt-context">MSBA capstone, Project Lead on a 6-person team: does adding pallets actually lower total supply-chain cost?</p>
-        <table class="receipt-table">
-          <tr><th scope="row">Load records analyzed</th><td>7,229</td></tr>
-          <tr><th scope="row">Pallets, traditional loading</th><td>309,761</td></tr>
-          <tr><th scope="row">Pallets, pre-sorted by customer</th><td>416,159 (+34.3%)</td></tr>
-          <tr><th scope="row">Cost mechanism</th><td>driver per-case sort fee &rarr; flat drop fee</td></tr>
-        </table>
-        <p class="receipt-chart-note">Direction validated on real operational data; the dollar figure rests on placeholder unit costs, flagged before anyone acts on it.</p>
-        <ul class="receipt-callouts">
-          <li>Counter-intuitive call held: pre-sorting shifts cost from the dock to the warehouse.</li>
-          <li>Caught the model's own numbers contradicting the &ldquo;savings&rdquo; narrative &mdash; named the tradeoff instead.</li>
-        </ul>
-      </li>
-    </ul>
-  </section>
-
-
   <section class="section contact" id="contact" aria-label="Contact">
-    <p class="eyebrow center">06. What&rsquo;s Next?</p>
-    <h2 class="big-heading center">Get In Touch</h2>
-    <p class="contact-text">I am open to analyst roles starting in 2027. Whether you have a role in mind or just want to talk models, my inbox is always open.</p>
-    <a class="btn btn-big" href="mailto:sigeykevin@gmail.com">Say Hello</a>
+    <div class="wrap">
+      <p class="kicker">Contact</p>
+      <h2>Open to analyst roles starting in 2027.</h2>
+      <p>Whether you have a role in mind or just want to talk models, my inbox is open.</p>
+      <div class="cta-row">
+        <a class="btn btn-solid" href="mailto:sigeykevin@gmail.com">sigeykevin@gmail.com</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/kevin-sigey-72a5501b5" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/kevinsigey" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
   </section>
 
 </main>
 
 <footer class="footer">
-  <p>Designed &amp; Built by Kevin Sigey</p>
-  <p class="footer-sub"><a href="https://github.com/kevinsigey/portfolio" target="_blank" rel="noopener">Source on GitHub</a></p>
+  <div class="wrap">
+    <span>Kevin Sigey &middot; MS Business Analytics, UIUC</span>
+    <a href="https://github.com/kevinsigey/portfolio" target="_blank" rel="noopener">Source on GitHub</a>
+  </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script src="js/desk.js"></script>
 </body>
 </html>
