@@ -3,100 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Writing - Kevin Sigey</title>
-<meta name="description" content="Research papers by Kevin Sigey: a Tesla x SpaceX merger valuation, the economics of stablecoin remittances, and the energy footprint of data centers. Interactive papers with live models.">
+<title>Writing: Kevin Sigey</title>
+<meta name="description" content="Research papers by Kevin Sigey: valuation, fintech, energy and labor markets, built so the model is on the page and the numbers move when you move them.">
+<script>try{if(localStorage.getItem("ks-mode")==="dark")document.documentElement.setAttribute("data-mode","dark")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/writing.css">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/desk.css">
 </head>
 <body>
 
-<header class="site-header" id="siteHeader">
-  <nav class="nav" aria-label="Primary">
-    <div class="logo"><a href="index.html" aria-label="Home">KS</a></div>
-    <ol class="nav-links">
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#experience">Experience</a></li>
-      <li><a href="index.html#work">Work</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
-      <li class="nav-photo"><a href="photos.html">Photography</a></li>
-      <li><a href="writing.html" aria-current="page">Writing</a></li>
-    </ol>
-    <div class="nav-cta"><a class="btn btn-small" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a></div>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+<header class="masthead">
+  <div class="wrap masthead-inner">
+    <a class="nameplate" href="index.html">Kevin Sigey</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="writing.html" aria-current="page">Writing</a>
+      <a href="index.html#systems">Systems</a>
+      <a href="index.html#receipts">Receipts</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="photos.html">Photography</a>
+      <a href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+    </nav>
+    <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Dark mode"><span class="dot" aria-hidden="true"></span><span class="lbl">Light</span></button>
+  </div>
 </header>
 
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <nav aria-label="Mobile">
-    <ol>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#experience">Experience</a></li>
-      <li><a href="index.html#work">Work</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
-      <li><a href="photos.html">Photography</a></li>
-      <li><a href="writing.html" aria-current="page">Writing</a></li>
-    </ol>
-    <a class="btn" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
-  </nav>
-</div>
-
-<aside class="rail rail-left" aria-label="Social links">
-  <a href="https://github.com/kevinsigey" target="_blank" rel="noopener" aria-label="GitHub">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-  </a>
-  <a href="https://www.linkedin.com/in/kevin-sigey-72a5501b5" target="_blank" rel="noopener" aria-label="LinkedIn">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V8h4v2a6 6 0 0 1 2-2z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-  </a>
-  <a href="https://www.instagram.com/kevin.sigey" target="_blank" rel="noopener" aria-label="Instagram">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-  </a>
-</aside>
-
-<aside class="rail rail-right" aria-label="Email">
-  <a href="mailto:sigeykevin@gmail.com">sigeykevin@gmail.com</a>
-</aside>
-
-<main id="top">
-
-  <section class="section" id="papers" aria-label="Papers">
-    <h2 class="section-heading"><span class="num">01.</span> Writing</h2>
-    <div class="writing-intro">
-      <p>Research papers I build the way I would want to read them: the model is on the page, the assumptions are visible, and the numbers move when you move them. Each one started as a question I could not leave alone.</p>
-    </div>
-
-    <div class="paper-grid">
-
-      <article class="paper-card">
-        <p class="paper-meta">October 2026 · M&amp;A / Valuation</p>
-        <h3 class="paper-title">The $3.5 Trillion Question</h3>
-        <p class="paper-thesis">Tesla and SpaceX are discussing a merger through special committees at both boards. I modeled it end to end: DCFs, trading comps, a synergy build, and a probability-weighted bridge for the $2 trillion the market prices beyond the fundamentals.</p>
-        <a class="paper-link" href="spacex-tesla-merger.html">Read the paper <span>&rarr;</span></a>
-      </article>
-
-      <article class="paper-card">
-        <p class="paper-meta">September 2026 · Fintech / On-Chain Data</p>
-        <h3 class="paper-title">The Digital Remittance Bridge</h3>
-        <p class="paper-thesis">Sending money home costs about $14 the traditional way and $7 digitally. On-chain data says stablecoin rails can do it for about $0.51. This paper stress-tests that claim against what actually moves on-chain.</p>
-        <a class="paper-link" href="stablecoin-remittance.html">Read the paper <span>&rarr;</span></a>
-      </article>
-
-      <article class="paper-card">
-        <p class="paper-meta">2026 · Data Storytelling</p>
-        <h3 class="paper-title">The Hidden Megawatts</h3>
-        <p class="paper-thesis">Data centers are becoming one of the largest new loads on the grid. An interactive data story on how much energy they use, where that power comes from, and what it means for the communities around them.</p>
-        <a class="paper-link" href="data-center-energy.html">Read the paper <span>&rarr;</span></a>
-      </article>
-
-    </div>
+<main>
+  <section class="wrap page-head" aria-label="Writing">
+    <p class="kicker">Writing <span class="hl">&middot;</span> 5 papers</p>
+    <h1>Research, built to be <em>read</em></h1>
+    <p class="dek">Papers I build the way I would want to read them: the model is on the page, the assumptions are visible, and the numbers move when you move them. Each one started as a question I could not leave alone.</p>
   </section>
 
+  <section class="wrap" aria-label="All papers" style="padding-bottom: 72px">
+    <ul class="paper-list">
+      <li class="paper-row">
+        <p class="when">Oct 2026<b>Equity research</b></p>
+        <div>
+          <h3><a href="anthropic-ipo.html">Is Anthropic really worth $2T? And what it must do to remain atop the AI pyramid</a></h3>
+          <p>Anthropic is worth $85 to $115 a share if it holds its enterprise lead and climbs from selling metered tokens, whose price is collapsing, to owning the application and agent layer above them, where customers pay per outcome.</p>
+          <p class="tags">S-1 analysis &middot; DCF &middot; comps &middot; scenario toggles &middot; model download</p>
+        </div>
+        <div class="thumb" aria-hidden="true">
+          <p class="t">Equity value, $B</p>
+          <svg viewBox="0 0 200 64"><line class="axis" x1="0" y1="40" x2="200" y2="40"/><rect class="bar-a" x="91" y="32" width="92" height="16" rx="3"/><circle cx="5" cy="40" r="4" class="bar-b"/><rect x="192" y="28" width="2" height="24" class="bar-b"/><text x="0" y="62">965 last round</text><text x="91" y="22">1,440 to 1,948</text><text x="200" y="62" text-anchor="end">2,000</text></svg>
+        </div>
+      </li>
+      <li class="paper-row">
+        <p class="when">Oct 2026<b>M&amp;A / Valuation</b></p>
+        <div>
+          <h3><a href="spacex-tesla-merger.html">The $3.5 Trillion Question</a></h3>
+          <p>Tesla and SpaceX are discussing a merger through special committees at both boards. I modeled it end to end: DCFs, trading comps, a synergy build, and a probability-weighted bridge for the $2 trillion the market prices beyond the fundamentals.</p>
+          <p class="tags">DCF &middot; comps &middot; synergy slider &middot; plausibility bridge</p>
+        </div>
+        <div class="thumb" aria-hidden="true">
+          <p class="t">Market vs base DCF</p>
+          <svg viewBox="0 0 200 64"><rect class="bar-b" x="0" y="6" width="200" height="16" rx="3"/><rect class="bar-a" x="0" y="34" width="85" height="16" rx="3"/><text x="4" y="18">$3.54T market</text><text x="92" y="46">$1.51T DCF</text></svg>
+        </div>
+      </li>
+      <li class="paper-row">
+        <p class="when">Sep 2026<b>Fintech / On-chain</b></p>
+        <div>
+          <h3><a href="stablecoin-remittance.html">The Digital Remittance Bridge</a></h3>
+          <p>Sending money home costs about $14 the traditional way and $7 digitally. On-chain data says stablecoin rails can do it for about $0.51. This paper stress-tests that claim against what actually moves on-chain.</p>
+          <p class="tags">Dune SQL &middot; on-chain flows &middot; weekly refresh</p>
+        </div>
+        <div class="thumb" aria-hidden="true">
+          <p class="t">Cost to send</p>
+          <svg viewBox="0 0 200 64"><rect class="bar-b" x="0" y="2" width="150" height="14" rx="3"/><rect class="bar-b" x="0" y="24" width="75" height="14" rx="3"/><rect class="bar-a" x="0" y="46" width="6" height="14" rx="2"/><text x="156" y="13">$14</text><text x="81" y="35">$7</text><text x="12" y="57">$0.51 stablecoin</text></svg>
+        </div>
+      </li>
+      <li class="paper-row">
+        <p class="when">2026<b>Data storytelling</b></p>
+        <div>
+          <h3><a href="data-center-energy.html">The Hidden Megawatts</a></h3>
+          <p>Data centers are becoming one of the largest new loads on the grid. An interactive data story on how much energy they use, where that power comes from, and what it means for the communities around them.</p>
+          <p class="tags">BDI 513 &middot; Group 10 &middot; interactive</p>
+        </div>
+        <div class="thumb" aria-hidden="true"><p class="t">Interactive data story</p><p style="font-family: var(--serif); font-size: 19px; line-height: 1.25; color: var(--ink-2)">Written for non-technical readers.</p></div>
+      </li>
+      <li class="paper-row">
+        <p class="when">2026<b>Labor economics</b></p>
+        <div>
+          <h3><a href="assets/papers/tightness-paradox.pdf" target="_blank" rel="noopener">Tightness Paradox</a></h3>
+          <p>Original labor-market research: openings-based tightness gauges misread ghost-job postings as demand pressure. A measurement paper with a contrarian thesis.</p>
+          <p class="tags">Python &middot; econometrics &middot; PDF</p>
+        </div>
+        <div class="thumb" aria-hidden="true"><p class="t">Research paper &middot; PDF</p><p style="font-family: var(--serif); font-size: 19px; line-height: 1.25; color: var(--ink-2)">Ghost jobs read as demand.</p></div>
+      </li>
+    </ul>
+  </section>
 </main>
 
-<script src="js/main.js"></script>
+<footer class="footer">
+  <div class="wrap">
+    <span>Kevin Sigey &middot; MS Business Analytics, UIUC</span>
+    <a href="mailto:sigeykevin@gmail.com">sigeykevin@gmail.com</a>
+  </div>
+</footer>
+
+<script src="js/desk.js"></script>
 </body>
 </html>
