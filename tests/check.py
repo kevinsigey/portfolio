@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""TDD checks for Kevin Sigey's portfolio site (~/workspace/portfolio-site/site/).
+"""TDD checks for Kevin Sigey's portfolio site.
 
-Landing page and photography page in Brittany Chiang v4 design language
-(static, flat colors, no gradients).
+Front page and writing page on the Research Desk system (light by default,
+universal dark mode, flat colors, no gradients). The photography page keeps
+its current design until it moves to its own site.
 """
 import re
 import sys
@@ -39,232 +40,111 @@ class LinkImgParser(HTMLParser):
 
 
 index = (SITE / "index.html").read_text(encoding="utf-8")
+writing = (SITE / "writing.html").read_text(encoding="utf-8")
 photos = (SITE / "photos.html").read_text(encoding="utf-8")
-main_css = (SITE / "css" / "main.css").read_text(encoding="utf-8")
-main_js = (SITE / "js" / "main.js").read_text(encoding="utf-8")
+desk_css = (SITE / "css" / "desk.css").read_text(encoding="utf-8")
+desk_js = (SITE / "js" / "desk.js").read_text(encoding="utf-8")
 
 # ---------- 1. files ----------
-for rel in ["index.html", "photos.html", "css/main.css", "css/photos.css",
-            "js/main.js", "assets/resume.pdf", "assets/papers/tightness-paradox.pdf"]:
+for rel in ["index.html", "writing.html", "photos.html", "anthropic-ipo.html",
+            "spacex-tesla-merger.html", "stablecoin-remittance.html",
+            "data-center-energy.html", "css/desk.css", "js/desk.js",
+            "css/main.css", "css/photos.css", "js/photos.js",
+            "assets/resume.pdf", "assets/papers/tightness-paradox.pdf"]:
     check(f"file exists: {rel}", (SITE / rel).is_file())
 
-# ---------- 2. index references new assets only ----------
-check("index references css/main.css", "css/main.css" in index)
-check("index references js/main.js", "js/main.js" in index)
-check("index has viewport meta",
-      bool(re.search(r'<meta[^>]+name=["\']viewport["\']', index, re.I)))
-for legacy in ["theme-editorial.css", "theme-darkroom.css",
-               "theme-terminal.css", "js/theme.js", "data-theme=",
-               "data-set-theme"]:
-    check(f"index does not reference legacy {legacy}", legacy not in index)
+# ---------- 2. Research Desk system (Oct 28 redesign) ----------
+for page_name, page in [("index", index), ("writing", writing)]:
+    check(f"{page_name} uses css/desk.css", "css/desk.css" in page)
+    check(f"{page_name} uses js/desk.js", "js/desk.js" in page)
+    check(f"{page_name} has viewport meta",
+          bool(re.search(r'<meta[^>]+name=["\']viewport["\']', page, re.I)))
+    check(f"{page_name} applies saved dark mode before paint",
+          'localStorage.getItem("ks-mode")' in page.split("</head>")[0])
+    check(f"{page_name} has the universal mode toggle", "data-mode-toggle" in page)
+    check(f"{page_name} loads Newsreader + IBM Plex",
+          "Newsreader" in page and "IBM+Plex+Sans" in page and "IBM+Plex+Mono" in page)
+    for legacy in ["css/main.css", "theme-editorial.css", "js/theme.js",
+                   "data-theme=", "Hi, my name is", "rail rail-left"]:
+        check(f"{page_name} drops legacy {legacy!r}", legacy not in page)
+check("light is the default: :root holds the light paper",
+      re.search(r":root\s*\{[^}]*--paper:\s*#f4f1ea", desk_css) is not None)
+check("dark mode is html[data-mode=dark] with the shared #0b0d10 ground",
+      re.search(r'html\[data-mode="dark"\]\s*\{[^}]*--paper:\s*#0b0d10', desk_css) is not None)
+check("mode stored under one universal key", '"ks-mode"' in desk_js)
+check("mode follows other tabs and papers", '"storage"' in desk_js)
+check("desk.css has no gradients (flat colors only)",
+      "gradient" not in desk_css)
+check("desk.css balanced braces", desk_css.count("{") == desk_css.count("}"))
 
-# ---------- 3. neutral palette tokens (white text, white/gray accents) ----------
-for token in ["#0c0c0e", "#17171b", "#ffffff",
-              "JetBrains Mono", "--nav-height", "--green-tint"]:
-    check(f"main.css uses token {token}", token in main_css)
-check("main.css accent is white, not teal", "--green: #ffffff" in main_css)
-check("main.css header is off-black, not navy",
-      "rgba(12, 12, 14, 0.9)" in main_css)
-for banned in ["#64ffda", "#57cbff", "#0a192f", "#112240", "#8892b0",
-               "#ccd6f6", "#a8b2d1", "#e6f1ff", "#495670",
-               "rgba(10, 25, 47", "rgba(100, 255, 218"]:
-    check(f"main.css has no blue/teal {banned}", banned not in main_css)
-
-# ---------- 4. Kevin's hard rule: FLAT colors, no gradients ----------
-check("main.css has no linear-gradient", "linear-gradient" not in main_css)
-check("main.css has no radial-gradient", "radial-gradient" not in main_css)
-check("main.css balanced braces",
-      main_css.count("{") == main_css.count("}") and main_css.count("{") > 0)
-
-# ---------- 5. v4 structure present ----------
-for frag in ['class="site-header"', 'class="nav-links"', 'class="rail rail-left"',
-             'class="rail rail-right"', 'class="hero"', 'class="eyebrow"',
-             'class="big-heading"', 'class="section-heading"',
-             'class="tab-btn', 'class="tab-panel', 'class="projects-grid"',
-             'class="project-card"', 'class="card-tech"', 'class="footer"',
-             'id="menuBtn"', 'id="mobileMenu"']:
+# ---------- 3. front page structure ----------
+for frag in ['id="lead"', 'id="writing"', 'id="systems"', 'id="receipts"',
+             'id="experience"', 'id="photography"', 'id="contact"',
+             'class="stat-strip"', 'class="card desk-card"', 'class="paper-list"']:
     check(f"index has {frag}", frag in index)
-check("nav has 4 numbered sections + photography",
-      all(f'href="#{s}"' in index for s in ["about", "experience", "work", "contact"])
-      and 'href="photos.html"' in index)
+order = [index.find(f'id="{s}"') for s in
+         ["lead", "writing", "systems", "receipts", "experience", "photography", "contact"]]
+check("sections in order: lead, writing, systems, receipts, experience, photography, contact",
+      order == sorted(order) and -1 not in order)
+check("stat strip has at most 4 stats", index.count('class="stat"') <= 4)
 
-# ---------- 6. content ----------
-for phrase in ["Hi, my name is", "Kevin Sigey.",
-               "Quantitative problem solver and clear communicator",
-               "01.", "About Me", "02.", "Where I",
-               "03.", "Some Things I",
-               "04.", "Get In Touch",
-               "sigeykevin@gmail.com",
-               "linkedin.com/in/kevin-sigey-72a5501b5",
-               "Predictor Hub", "Algo Trade Hub",
-               "Stablecoin Remittance Monitor",
-               "Synchrony Guardrail Engine", "FPL Scout",
-               "Tightness Paradox", "Data-Center Energy Analysis",
-               "Deposit Rollforward", "Power Query (M)", "Power Pivot (DAX)",
-               "Monthly deposit rollforward for Liquidity Management",
-               "Shipped &middot; Internal system",
-               "Status: Live", "In active rebuild", "Pipeline running",
-               "Competition entry", "Status: Shipped",
-               "Status: Research paper", "Status: Interactive paper",
-               "github.com/Kevocado/predictor-hub",
-               "github.com/Kevocado/algo-trade-hub-prod",
-               "github.com/Kevocado/Stable-Coin-Analysis",
-               "github.com/Kevocado/FPL_Optimizer",
-               "assets/papers/tightness-paradox.pdf",
-               "data-center-energy-analysis-sxg6axdjxrs2xuq",
-               "40-160-91-131.sslip.io",
-               "assets/resume.pdf",
+# ---------- 4. lead story interactive (SpaceX paper, section 10) ----------
+for bucket, full, default in [("bRobo", 1066, 35), ("bOpt", 237, 20), ("bAi", 500, 30),
+                              ("bTel", 300, 45), ("bShip", 200, 25)]:
+    check(f"bridge slider {bucket} = ${full}B at {default}%",
+          f'id="{bucket}" data-bucket data-full="{full}" data-default="{default}"' in index)
+check("bridge constants match the paper", "BASE = 1511.5" in desk_js and "MARKET = 3538.0" in desk_js)
+check("bridge default EV is the paper's $755.5B", "+$755.5B" in index)
+check("bridge has a reset to the paper's odds", 'id="pbReset"' in index)
+
+# ---------- 5. content kept from the previous site ----------
+for phrase in ["sigeykevin@gmail.com", "linkedin.com/in/kevin-sigey-72a5501b5",
+               "Predictor Hub", "Algo Trade Hub", "Prediction Journal",
+               "algo.40-160-91-131.sslip.io/journal",
+               "Stablecoin Remittance Monitor", "Synchrony Guardrail Engine",
+               "FPL Scout", "github.com/kevinsigey/predictor-hub",
+               "github.com/kevinsigey/algo-trade-hub-prod",
+               "github.com/kevinsigey/Stable-Coin-Analysis",
+               "github.com/kevinsigey/FPL_Optimizer",
+               "Snapshot, verified Oct 28, 2026",
                "Busey Bank", "Illinois Business Consulting",
                "Tandon Consulting Club", "Dot Foods", "WOW Payments",
-               "job-wow", "Fintech Marketing Intern",
-               "150 to 450", "100+ door-to-door"]:
-    check(f"index content present: {phrase!r}", phrase in index)
-
-# ---------- 7b. Lab / card signals on index ----------
-# The standalone snapshot strip and the Decisions prose are gone (Oct 14
-# follow-up): the Predictor Hub signal lives inside the Predictor Hub card,
-# the Stablecoin refresh note inside the Stablecoin card. The Dot Foods
-# tradeoff toy was removed (Oct 14, Kevin's call).
-for frag in ['id="lab"',
-             'class="card-signal"',
-             'href="#lab"',
-             'id="receipts"', 'class="receipts-grid"',
-             'class="receipt-card"',
-             'class="receipt-bar-row"', 'class="receipt-table"']:
-    check(f"index has {frag}", frag in index)
-for phrase in ["The Lab",
-               "Snapshot, verified Oct 14, 2026",
-               "6 containers on Azure", "Refreshes weekly",
-               "The same judgment that frames a shot",
-               "Receipts", "The numbers behind the calls.",
-               "Synchrony Datathon: staffing forecasts for four client portfolios.",
-               "Abandon error by model version",
-               "Volume accuracy kept improving across the same versions.",
+               "150 to 450", "100+ door-to-door",
                "Shipped V16, not the most accurate model",
                "Abandon error is the metric that predicts customer pain.",
-               "Busey Bank Treasury and ALM: separate real deposit growth from internal transfers.",
                "Proximity tiebreaker made it worse: 90% to 86%",
-               "Confirmation numbers: identical on both legs, collision-proof key.",
-               "MSBA capstone: denser truck loading for a food redistributor.",
-               "Optimized costs more under placeholder costs",
-               "Name the tradeoff, not the savings.",
-               "Placeholder costs."]:
+               "$0 across all five deposit categories",
+               "2+ hrs down to 6-13 min per stage",
+               "416,159 (+34.3%)", "assets/resume.pdf", "photos.html"]:
     check(f"index content present: {phrase!r}", phrase in index)
-check("standalone snapshot strip is gone",
-      'class="live-strip"' not in index)
-check("Decisions section is gone",
-      'id="decisions"' not in index and 'href="#decisions"' not in index)
-for headline in ["Ship the less accurate model",
-                 "Fix the key, not the tiebreaker"]:
-    check(f"Decisions prose gone: {headline!r}", headline not in index)
-# The tradeoff toy is gone entirely: no markup, no IDs, no link, no JS hooks.
-for gone in ['id="dotFoodsToy"', 'Try the tradeoff',
-             'id="palletCost"', 'id="laborRate"',
-             'id="sortFee"', 'id="dropFee"', 'id="toyReset"',
-             'id="toyTraditional"', 'id="toyOptimized"', 'id="toyVerdict"',
-             'href="#dotFoodsToy"', 'Try the tradeoff in the Lab',
-             "Reset to practicum placeholders",
-             "Simplified illustration. Directional, not validated.",
-             "same as the toy"]:
-    check(f"tradeoff toy gone: {gone!r}", gone not in index)
-check("Predictor Hub signal inside its card",
-      index.find('Predictor Hub') < index.find('6 containers on Azure')
-      < index.find('Synchrony Guardrail Engine'))
-check("Stablecoin refresh note inside its card",
-      index.find('Stablecoin Remittance Monitor')
-      < index.find('Refreshes weekly')
-      < index.find('FPL Scout'))
-# ---------- 7c. Receipts section (Oct 14 follow-up, replaces Decisions) ----------
-check("Receipts takes the Decisions slot (Lab < Receipts < Contact)",
-      index.find('id="lab"') < index.find('id="receipts"')
-      < index.find('id="contact"'))
-check("Receipts heading is numbered 05",
-      '<span class="num">05.</span> Receipts' in index)
-check("Contact renumbered to 06 after Receipts",
-      '06. What' in index)
-check("Receipts has exactly three cards",
-      index.count('class="receipt-card"') == 3,
-      f"found {index.count('class=\"receipt-card\"')}")
-check("Receipts has exactly three callout lists",
-      index.count('class="receipt-callouts"') == 3)
-# Busey card is the restored table version (Oct 14, Kevin's call): the
-# reconciliation table with the real numbers, the numeric tiebreaker
-# callout, no bucket names, no estimates findings list.
-_busey_start = index.find('Busey Bank Transfer Matching')
-_busey_end = index.find('Dot Foods Capstone', _busey_start)
-busey_card = index[_busey_start:_busey_end] if _busey_start >= 0 else ""
-check("Busey card block found for scoped checks",
-      bool(busey_card) and _busey_end > _busey_start)
-check("Busey card has the reconciliation table",
-      'class="receipt-table"' in busey_card)
-for val in ["$1B+", "$0 across all five deposit categories",
-            "2+ hrs down to 6-13 min per stage",
-            "Proximity tiebreaker made it worse: 90% to 86%"]:
-    check(f"Busey card table/callout has {val!r}", val in busey_card)
-for gone in ["About 9 in 10", "categorized by cause", "loan paydowns",
-             "so I dropped it", "receipt-findings"]:
-    check(f"Busey card has no estimates-era {gone!r}", gone not in busey_card)
-for name in ["DDA/NOW", "Interest Checking",
-             "MMDA", "Savings", "Time Deposits"]:
-    check(f"Busey card names no bucket {name!r}", name not in busey_card)
 for val in ["1.54%", "1.87%", "2.15%", "2.4%"]:
-    check(f"Synchrony chart shows abandon error {val}",
-          f'class="receipt-bar-value">{val}' in index)
-check("Synchrony chart marks V16 as the pick",
-      'class="receipt-bar pick" style="width: 64%"' in index)
-check("Receipts has no Decisions prose paragraphs",
-      'class="decision"' not in index
-      and 'class="decisions-list"' not in index)
-check("Receipts CSS has no decisions rules",
-      ".decisions-list" not in main_css and ".decision " not in main_css)
-for cls in [".receipts-grid", ".receipt-card", ".receipt-bars",
-            ".receipt-bar-row", ".receipt-table", ".receipt-callouts"]:
-    check(f"main.css defines {cls}", cls in main_css)
-check("main.css has no toy / findings / receipt-link rules",
-      ".toy" not in main_css and "#toyVerdict" not in main_css
-      and ".receipt-findings" not in main_css
-      and ".receipt-link" not in main_css)
-# Each project appears in exactly one card title (Work vs Lab split).
-for name in ["Predictor Hub", "Algo Trade Hub",
-             "Stablecoin Remittance Monitor", "Synchrony Guardrail Engine",
-             "FPL Scout", "Tightness Paradox", "Data-Center Energy Analysis",
-             "Deposit Rollforward &amp; Transfer-Matching System"]:
-    titles = re.findall(r'class="card-title">(?:<a[^>]*>)?([^<]+)', index)
-    check(f"project {name!r} appears in exactly one card title",
-          titles.count(name) == 1, str(titles.count(name)))
-# Busey Work card: title links to #receipts (internal work, no public
-# demo or repo), and the card carries no external link.
-check("Busey Work card title links to #receipts",
-      '<a href="#receipts">Deposit Rollforward' in index)
-_busey_pos = index.find("Deposit Rollforward")
-_busey_start = index.rfind('<li class="project-card">', 0, _busey_pos)
-_busey_end = index.find("      </li>", _busey_pos)
-_busey_card = index[_busey_start:_busey_end]
-check("Busey Work card has no external link",
-      "http" not in _busey_card, _busey_card[:200])
-check("Busey Work card has the approved tech tags",
-      all(t in _busey_card for t in
-          ["<li>Excel</li>", "<li>Power Query (M)</li>",
-           "<li>Power Pivot (DAX)</li>"]))
-# Dot Foods toy is gone: no toy code in main.js, and the Receipts
-# Dot Foods card keeps its static cost table.
-for gone in ["dotFoodsToy", "P_TRAD", "P_OPT", "LABOR_HOURS", "toyReset",
-             "toyTraditional", "toyOptimized", "toyVerdict"]:
-    check(f"main.js has no toy code {gone!r}", gone not in main_js)
-for val in ["$8,457,877", "$11,507,953",
-            "Optimized costs $3,050,076 more"]:
-    check(f"Receipts Dot Foods table keeps {val!r}", val in index)
-check("no em-dashes in main.js", "\u2014" not in main_js)
-lp = LinkImgParser()
-lp.feed(index)
-check("index: every <a> has a non-empty href", not lp.bad_links)
-check("index: every <img> has alt text", not lp.bad_imgs)
+    check(f"Synchrony receipt shows abandon error {val}",
+          f'<span class="val">{val}</span>' in index)
+check("Synchrony receipt marks V16 as the pick",
+      'class="fill pick" style="width: 64%"' in index)
+check("Receipts has exactly three cards", index.count('class="card receipt"') == 3)
+
+# ---------- 6. writing ----------
+for href in ["anthropic-ipo.html", "spacex-tesla-merger.html", "stablecoin-remittance.html",
+             "data-center-energy.html", "assets/papers/tightness-paradox.pdf"]:
+    check(f"writing lists {href}", f'href="{href}"' in writing)
+check("writing marks itself current in the nav",
+      'href="writing.html" aria-current="page"' in writing)
+check("front page features the 3 newest papers", index.count('class="paper-row"') == 3)
+
+# ---------- 7. hygiene ----------
 emoji_re = re.compile(r"[\U0001F300-\U0001FAFF\U0001F000-\U0001F2FF"
                       r"\u2600-\u27BF\u2B00-\u2BFF]")
-check("no emojis in index", not emoji_re.findall(index))
-check("no lorem in index", "lorem" not in index.lower())
-check("no em-dashes in index", "\u2014" not in index)
-check("no em-dashes in main.css", "\u2014" not in main_css)
+for page_name, page in [("index", index), ("writing", writing)]:
+    lp = LinkImgParser()
+    lp.feed(page)
+    check(f"{page_name}: every <a> has a non-empty href", not lp.bad_links)
+    check(f"{page_name}: every <img> has alt text", not lp.bad_imgs)
+    check(f"no emojis in {page_name}", not emoji_re.findall(page))
+    check(f"no lorem in {page_name}", "lorem" not in page.lower())
+    check(f"no em-dashes in {page_name}", "\u2014" not in page)
+check("no em-dashes in desk.css", "\u2014" not in desk_css)
+check("no em-dashes in desk.js", "\u2014" not in desk_js)
 
 # ---------- 8. photos.html: v4 styling, no legacy theme system ----------
 for css in ["css/main.css", "css/photos.css"]:
