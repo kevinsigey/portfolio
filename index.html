@@ -44,8 +44,6 @@
 .fs-cap{font-size:13.5px;color:var(--ink-3);line-height:1.55;margin-top:10px;max-width:58ch}
 .lead-links{margin-top:20px;display:flex;gap:22px;flex-wrap:wrap;align-items:baseline}
 .fp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.desk-sec{margin-top:44px}
-.desk-sec .desk-card{max-width:660px}
 .fp-tile{padding:20px}
 .fp-tile h3{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.2;margin:4px 0 8px}
 .fp-tile svg{display:block;width:100%;height:auto;margin:10px 0}
@@ -82,6 +80,15 @@ a.fp-tile:hover{border-color:var(--accent)}
 .job h3 .role-tag.t-emp{color:var(--accent);border-color:var(--accent)}
 .job h3 .role-tag.t-res{color:var(--slate);border-color:var(--slate)}
 .job h3 .role-tag.t-ind{color:var(--ink-3);border-color:var(--line)}
+/* rev4: slim full-width hero band; desk section removed */
+.hero{padding-top:32px;padding-bottom:24px}
+.hero-band{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 22px}
+.hero h1{font-size:clamp(30px,3.8vw,44px);line-height:1.05;margin:0;max-width:none;white-space:nowrap}
+.hero .editor-line{margin-top:16px}
+.hero-line{display:flex;align-items:center;flex-wrap:wrap;gap:14px 30px;margin-top:20px}
+.hero-line .dek{max-width:60ch}
+.hero-line .cta-row{margin-top:0;flex:none}
+@media(max-width:720px){.hero{padding-top:26px}.hero h1{white-space:normal}}
 </style>
 </head>
 <body>
@@ -104,17 +111,17 @@ a.fp-tile:hover{border-color:var(--accent)}
 <main id="top">
 
   <section class="wrap hero" aria-label="Introduction">
-   <div class="editor-line"><span>Sunday, November 1, 2026</span><span>Champaign, Illinois</span><span>All figures as of their stated dates</span></div>
-   <div class="hero-grid" style="margin-top:34px">
-   <div>
+   <div class="hero-band">
+    <h1>Kevin Sigey</h1>
     <p class="kicker">Quantitative analyst <span class="hl">&middot;</span> MS Business Analytics, UIUC <span class="hl">&middot;</span> December 2026</p>
-    <p class="fact-line">MS Business Analytics, University of Illinois, Dec 2026 <span class="hl">&middot;</span> Finance Intern, Treasury &amp; ALM, Busey Bank <span class="hl">&middot;</span> Gies peer tutor</p>
-    <p class="dek">Right now I am writing research papers, running live prediction systems, and trading a paper book through earnings season. The lead story below is the biggest thing I am working on. Explore the papers, check the systems, and ask me anything.</p>
+   </div>
+   <div class="editor-line"><span>Sunday, November 1, 2026</span><span>Champaign, Illinois</span><span>MS Business Analytics, University of Illinois, Dec 2026</span><span>Finance Intern, Treasury &amp; ALM, Busey Bank</span><span>Gies peer tutor</span><span>All figures as of their stated dates</span></div>
+   <div class="hero-line">
+    <p class="dek">Right now I am writing research papers, running live prediction systems, and trading a paper book through earnings season.</p>
     <div class="cta-row">
       <a class="btn btn-solid" href="#writing">Explore the papers</a>
       <a class="btn btn-ghost" href="#contact">Ask me anything</a>
     </div>
-   </div>
    </div>
   </section>
 
@@ -223,14 +230,7 @@ a.fp-tile:hover{border-color:var(--accent)}
     </div>
   </section>
 
-  <section class="wrap desk-sec" aria-labelledby="deskTitle">
-    <aside class="card desk-card">
-      <h2 id="deskTitle">On the desk</h2>
-      <a class="desk-item" href="anthropic-ipo.html"><span class="k">New paper &middot; Oct 2026</span><span class="h">Is Anthropic really worth $2T?</span><span class="s">$85 to $110 a share, $98 probability-weighted, and the condition it rests on.</span></a>
-      <a class="desk-item" href="https://40-160-91-131.sslip.io/" target="_blank" rel="noopener"><span class="k">Live &middot; Premier League</span><span class="h">This gameweek's picks, live</span><span class="s">Every pick recorded before kickoff, scored after.</span></a>
-      <a class="desk-item" href="https://40-160-91-131.sslip.io/" target="_blank" rel="noopener"><span class="k">Live &middot; Prediction Journal</span><span class="h">1,631 forecasts scored against the market</span><span class="s">Sports, inflation, jobs, weather and energy.</span></a>
-    </aside>
-  </section>
+
   <section class="section" id="writing" aria-label="Research Desk">
     <div class="wrap">
       <div class="sec-head">
@@ -300,7 +300,7 @@ a.fp-tile:hover{border-color:var(--accent)}
         <article class="card system">
           <p class="live"><i aria-hidden="true"></i> Live</p>
           <h3>Algo Trade Hub</h3>
-          <p>A trading system, with the journal as its record. Python engines on a VPS scan Kalshi markets hourly across weather, energy, inflation, jobs and sports, price the edge, and write every forecast to a public journal that settles it against the market price. Strategy HQ tracks the idea pipeline; a signed-in order form is live, and a machine order API and a TradingAgents debate feed are specced and in progress.</p>
+          <p>A trading system that scans prediction markets for mispriced contracts, prices the edge with its own models, and keeps a public, scored record of every call. Each forecast settles against the market price after the event.</p>
           <div class="readout">
             <div><b>1,780</b>forecasts locked in</div>
             <div><b>1,631</b>scored so far</div>
@@ -342,7 +342,7 @@ a.fp-tile:hover{border-color:var(--accent)}
       </div>
       <ol class="timeline">
         <li class="job"><p class="when">Oct &ndash; Nov 2026</p><div><h3>Trader <span>&middot; Gies Disruption Lab &times; IBKR Trading Competition</span> <span class="role-tag t-res">Research</span></h3><ul><li>Running a $1M paper book through the densest two weeks of earnings season, to a hard close on the November 6 jobs report.</li><li>The trades run on the earnings event study above: the forward-file factor separated all 14 classified prints, and the Intel puts returned +$20,436 in two days.</li></ul></div></li>
-        <li class="job"><p class="when">2024 &ndash; now</p><div><h3>Vibe coding <span>&middot; independent building with AI tools</span> <span class="role-tag t-ind">Independent</span></h3><ul><li>Designing, shipping and maintaining software with AI coding tools since 2024: the trade hub and predictor systems above, the interactive tooling inside the papers, and this site.</li><li>Not a job. It is how most of the work on this page got built.</li></ul></div></li>
+        <li class="job"><p class="when">2024 &ndash; now</p><div><h3>Building with AI <span>&middot; software and prediction models</span> <span class="role-tag t-ind">Independent</span></h3><ul><li>Building software and prediction models with AI tools since 2024: the trade hub, the sports predictors, this site and the tooling inside the papers.</li><li>The calls stay mine: what to model, what the data can support, when a result is real. The AI is leverage on that judgment, not a replacement for it.</li></ul></div></li>
         <li class="job"><p class="when">Sep 2026 &ndash; now</p><div><h3>Student Consultant <span>&middot; Illinois Business Consulting</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Selected through a competitive, multi-round case-based process.</li><li>Leading quantitative analysis and market research on a curriculum modernization and AI strategy workstream for a live client.</li></ul></div></li>
                 <li class="job"><p class="when">Fall 2026</p><div><h3>Graduate Peer Tutor <span>&middot; Gies College of Business</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Tutoring graduate courses across accounting, business administration, business data and finance (ACCY 512/593, BADM 550/554/557, BDI 513, FIN 550), including Python, coding and data-visualization support.</li><li>Five hours a week, plus extra shifts before exams.</li></ul></div></li>
         <li class="job"><p class="when">Fall 2026</p><div><h3>FS Catering Worker <span>&middot; UIUC Housing Division</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Catering shifts for campus dining events, worked alongside the full-time MSBA.</li></ul></div></li>
