@@ -304,22 +304,25 @@
             <li>Abandon error is the metric that predicts customer pain.</li>
           </ul>
         
+      </div>
       <div class="exhibit-detail" id="exhibit-dotfoods" hidden>
           <p class="kicker">MSBA capstone</p>
           <h3>Dot Foods Capstone</h3>
-          <p class="ctx">Project Lead on a 6-person team: does adding pallets lower total supply-chain cost?</p>
+          <p class="ctx">Project Lead on a 6-person team for Dot Foods, the largest food redistributor in North America: does pre-sorting freight by customer lower total supply-chain cost, even though it ships more pallets?</p>
           <table class="rtable">
-            <tr><th scope="row">Load records analyzed</th><td>7,229</td></tr>
-            <tr><th scope="row">Pallets, traditional loading</th><td>309,761</td></tr>
-            <tr><th scope="row">Pallets, pre-sorted by customer</th><td>416,159 (+34.3%)</td></tr>
+            <tr><th scope="row">Load records analyzed</th><td>7,229 (Ti/Hi by load, 2024)</td></tr>
+            <tr><th scope="row">Pallets, traditional loading</th><td>309,761 (modeled baseline)</td></tr>
+            <tr><th scope="row">Pallets, pre-sorted by customer</th><td>416,159 (+106,398, +34.3%)</td></tr>
+            <tr><th scope="row">Driver unloading fees</th><td>$2,659,950 saved by pre-sorting</td></tr>
+            <tr><th scope="row">Warehouse cost added</th><td>$5,710,026 (pallets + build labor)</td></tr>
+            <tr><th scope="row">Net at placeholder prices</th><td>-$3,050,076 (a net cost, not a saving)</td></tr>
             <tr><th scope="row">Cost mechanism</th><td>per-case sort fee &rarr; flat drop fee</td></tr>
           </table>
+          <p class="note">The more-pallets hypothesis: the cost of air (less dense pallets) against the cost of labor (drivers sorting mixed cases at the dock). Pre-sorting wins the dock and loses the warehouse at placeholder prices. It pays when the real fee spread is wide enough, and only while the truck has the cubic capacity.</p>
           <ul class="callouts">
-            <li>Pre-sorting shifts cost from the dock to the warehouse.</li>
-            <li>Direction validated on real data; the dollar figure rests on placeholder unit costs, flagged before anyone acts on it.</li>
+            <li>Every dollar figure rests on placeholder unit costs ($0.25 per case to sort, $5 per pallet to drop, $12 per pallet), flagged before anyone acts on it. The physical counts come from the load data; the prices are the client's to replace.</li>
+            <li>The traditional count is a modeled baseline (mixed volume compressed at 0.7), and weight and cube were excluded from Term 1 by design.</li>
           </ul>
-        
-      </div>
       </div>
     </div>
   </section>
