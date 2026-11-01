@@ -1,8 +1,13 @@
-/* Photography: The Contact Sheet. Category filter chips, drag-to-scroll
-   strips, and the lightbox (scoped to the clicked frame's shoot, keyboard
-   navigable). Data: #galleryData, built from the shoot manifest plus each
-   post's date and tagged location. No EXIF exists in the source files, so
-   the viewer shows no settings line rather than an invented one. */
+/* Photography rev 2: editorial spreads. Lightbox (scoped to the clicked
+   frame's shoot, keyboard navigable) plus a scrollspy for the side section
+   guide. Rev 1's lightbox failure, diagnosed: frames were draggable <img>s
+   inside a drag-scroll strip, so real clicks with a few px of movement fired
+   dragstart and the click event was cancelled. Rev 2 has no drag machinery
+   at all, marks every image draggable="false", and blocks dragstart on
+   images outright, so still and wobble clicks alike reach the handler.
+   Data: #galleryData, built from the shoot manifest plus each post's date
+   and tagged location. No EXIF exists in the source files, so the viewer
+   shows no settings line rather than an invented one. */
 (function () {
   'use strict';
 
@@ -12,66 +17,35 @@
   var bySlug = {};
   data.shoots.forEach(function (s) { bySlug[s.slug] = s; });
 
-  /* ---------- filter chips ---------- */
-  var chips = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
-  var groups = Array.prototype.slice.call(document.querySelectorAll('[data-cat-group]'));
-  var countEl = document.getElementById('showCount');
-  var TOTALS = { shoots: 0, frames: 0 };
-  var PER = {};
-  data.shoots.forEach(function (s) {
-    TOTALS.shoots += 1; TOTALS.frames += s.frames.length;
-    PER[s.category] = PER[s.category] || { shoots: 0, frames: 0 };
-    PER[s.category].shoots += 1; PER[s.category].frames += s.frames.length;
-  });
-  function applyFilter(cat) {
-    chips.forEach(function (c) {
-      c.setAttribute('aria-pressed', c.getAttribute('data-filter') === cat ? 'true' : 'false');
-    });
-    groups.forEach(function (g) {
-      g.hidden = !(cat === 'all' || g.getAttribute('data-cat-group') === cat);
-    });
-    var t = cat === 'all' ? TOTALS : PER[cat];
-    if (countEl) {
-      countEl.textContent = 'Showing ' + t.shoots + ' of ' + TOTALS.shoots +
-        ' shoots \u00B7 ' + t.frames + ' frames';
-    }
-  }
-  chips.forEach(function (c) {
-    c.addEventListener('click', function () { applyFilter(c.getAttribute('data-filter')); });
+  /* belt and braces: an image drag must never eat a click again */
+  document.addEventListener('dragstart', function (e) {
+    if (e.target && e.target.tagName === 'IMG') { e.preventDefault(); }
   });
 
-  /* ---------- strip drag-to-scroll (mouse); touch scrolls natively --- */
-  Array.prototype.forEach.call(document.querySelectorAll('[data-strip]'), function (strip) {
-    var down = false, moved = 0, startX = 0, startScroll = 0;
-    strip.addEventListener('pointerdown', function (e) {
-      if (e.pointerType !== 'mouse' || e.button !== 0) { return; }
-      down = true; moved = 0; startX = e.clientX; startScroll = strip.scrollLeft;
-      strip.classList.add('dragging');
-    });
-    window.addEventListener('pointermove', function (e) {
-      if (!down) { return; }
-      var dx = e.clientX - startX;
-      moved = Math.max(moved, Math.abs(dx));
-      strip.scrollLeft = startScroll - dx;
-    });
-    window.addEventListener('pointerup', function () {
-      if (!down) { return; }
-      down = false;
-      strip.classList.remove('dragging');
-      if (moved > 8) {
-        /* the pointerup click on a frame must not open the viewer */
-        strip.dataset.suppress = '1';
-        setTimeout(function () { delete strip.dataset.suppress; }, 0);
-      }
-    });
-    strip.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target === strip) {
-        e.preventDefault();
-        var slug = strip.closest('.shoot').id.replace('shoot-', '');
-        openLb(slug, 0);
-      }
-    });
+  /* ---------- scrollspy for the side guide ---------- */
+  var spyLinks = {};
+  Array.prototype.forEach.call(document.querySelectorAll('[data-spy]'), function (a) {
+    spyLinks[a.getAttribute('data-spy')] = a;
   });
+  function setCurrent(id) {
+    Object.keys(spyLinks).forEach(function (k) {
+      if (k === id) { spyLinks[k].setAttribute('aria-current', 'true'); }
+      else { spyLinks[k].removeAttribute('aria-current'); }
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { setCurrent(en.target.id); }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    ['fashion', 'editorial', 'portrait'].forEach(function (id) {
+      var sec = document.getElementById(id);
+      if (sec) { spy.observe(sec); }
+    });
+  } else {
+    setCurrent('fashion');
+  }
 
   /* ---------- lightbox ---------- */
   var lb = document.getElementById('lightbox');
@@ -137,8 +111,6 @@
   document.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('[data-open]') : null;
     if (!t) { return; }
-    var strip = t.closest('[data-strip]');
-    if (strip && strip.dataset.suppress) { return; }
     var parts = t.getAttribute('data-open').split(':');
     openLb(parts[0], parseInt(parts[1], 10));
   });
