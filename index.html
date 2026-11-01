@@ -76,8 +76,12 @@ a.fp-tile{display:block;text-decoration:none;color:inherit}
 a.fp-tile:hover{border-color:var(--accent)}
 .fp-tile .go{font:500 12.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-top:12px}
 #receipt-busey,#receipt-synchrony{scroll-margin-top:90px}
-.job-emp{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);padding:18px 20px;margin:16px 0}
-.job h3 .emp-tag{font:600 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
+.fact-line{font:12.5px var(--mono);letter-spacing:.05em;color:var(--ink-3);margin-top:10px}
+.ss-figs{display:block;font:500 13px var(--mono);letter-spacing:.04em;color:var(--ink-2);margin-top:10px}
+.job h3 .role-tag{font:600 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;border:1px solid;border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
+.job h3 .role-tag.t-emp{color:var(--accent);border-color:var(--accent)}
+.job h3 .role-tag.t-res{color:var(--slate);border-color:var(--slate)}
+.job h3 .role-tag.t-ind{color:var(--ink-3);border-color:var(--line)}
 </style>
 </head>
 <body>
@@ -104,6 +108,7 @@ a.fp-tile:hover{border-color:var(--accent)}
    <div class="hero-grid" style="margin-top:34px">
    <div>
     <p class="kicker">Quantitative analyst <span class="hl">&middot;</span> MS Business Analytics, UIUC <span class="hl">&middot;</span> December 2026</p>
+    <p class="fact-line">MS Business Analytics, University of Illinois, Dec 2026 <span class="hl">&middot;</span> Finance Intern, Treasury &amp; ALM, Busey Bank <span class="hl">&middot;</span> Gies peer tutor</p>
     <p class="dek">Right now I am writing research papers, running live prediction systems, and trading a paper book through earnings season. The lead story below is the biggest thing I am working on. Explore the papers, check the systems, and ask me anything.</p>
     <div class="cta-row">
       <a class="btn btn-solid" href="#writing">Explore the papers</a>
@@ -161,6 +166,7 @@ a.fp-tile:hover{border-color:var(--accent)}
     <summary>
       <span class="kicker ss-kicker">Second story <span class="hl">&middot;</span> Earnings season 2026 <span class="hl">&middot;</span> The Bill Comes Due</span>
       <span class="ss-title">Beats fell 47% of the time. The <em>guide</em> decided the rest.</span>
+      <span class="ss-figs">47% of beats fell <span class="hl">&middot;</span> the factor separated 14 of 14 live prints <span class="hl">&middot;</span> Intel +$20,436</span>
       <span class="ss-cue ss-open">Open the story <span aria-hidden="true">+</span></span>
       <span class="ss-cue ss-close">Close the story <span aria-hidden="true">&minus;</span></span>
     </summary>
@@ -335,15 +341,15 @@ a.fp-tile:hover{border-color:var(--accent)}
         <a class="more" href="assets/resume.pdf" target="_blank" rel="noopener">Resume (PDF) &rarr;</a>
       </div>
       <ol class="timeline">
-        <li class="job"><p class="when">Oct &ndash; Nov 2026</p><div><h3>Trader <span>&middot; Gies Disruption Lab &times; IBKR Trading Competition</span></h3><ul><li>Running a $1M paper book through the densest two weeks of earnings season, to a hard close on the November 6 jobs report.</li><li>The trades run on the earnings event study above: the forward-file factor separated all 14 classified prints, and the Intel puts returned +$20,436 in two days.</li></ul></div></li>
-        <li class="job"><p class="when">2024 &ndash; now</p><div><h3>Vibe coding <span>&middot; independent building with AI tools</span></h3><ul><li>Designing, shipping and maintaining software with AI coding tools since 2024: the trade hub and predictor systems above, the interactive tooling inside the papers, and this site.</li><li>Not a job. It is how most of the work on this page got built.</li></ul></div></li>
-        <li class="job job-emp"><p class="when">Sep 2026 &ndash; now</p><div><h3>Student Consultant <span>&middot; Illinois Business Consulting</span> <span class="emp-tag">Employment</span></h3><ul><li>Selected through a competitive, multi-round case-based process.</li><li>Leading quantitative analysis and market research on a curriculum modernization and AI strategy workstream for a live client.</li></ul></div></li>
-                <li class="job job-emp"><p class="when">Fall 2026</p><div><h3>Graduate Peer Tutor <span>&middot; Gies College of Business</span> <span class="emp-tag">Employment</span></h3><ul><li>Tutoring graduate courses across accounting, business administration, business data and finance (ACCY 512/593, BADM 550/554/557, BDI 513, FIN 550), including Python, coding and data-visualization support.</li><li>Five hours a week, plus extra shifts before exams.</li></ul></div></li>
-        <li class="job job-emp"><p class="when">Fall 2026</p><div><h3>FS Catering Worker <span>&middot; UIUC Housing Division</span> <span class="emp-tag">Employment</span></h3><ul><li>Catering shifts for campus dining events, worked alongside the full-time MSBA.</li></ul></div></li>
-        <li class="job job-emp"><p class="when">Jul &ndash; Sep 2026</p><div><h3>Finance Intern <span>&middot; Busey Bank, Treasury &amp; ALM</span> <span class="emp-tag">Employment</span></h3><ul><li>Built a deposit classification model separating internal product shifts from true external growth across $1B+ in transfers, validated to $0 variance.</li><li>Researched the GENIUS Act and stablecoin regulation and presented a proposal to management on stablecoins for deposit growth.</li></ul></div></li>
-        <li class="job"><p class="when">UIUC MSBA</p><div><h3>Project Lead <span>&middot; Dot Foods Capstone</span></h3><ul><li>Led a 6-person team end to end, from scoping to final delivery.</li></ul></div></li>
-        <li class="job"><p class="when">Aug 2024 &ndash; May 2025</p><div><h3>VP of Events <span>&middot; NYU Tandon Consulting Club</span></h3><ul><li>Grew club membership from 150 to 450 through partnerships with McKinsey and Deloitte.</li></ul></div></li>
-        <li class="job job-emp"><p class="when">May &ndash; Aug 2024</p><div><h3>Fintech Marketing Intern <span>&middot; WOW Payments</span> <span class="emp-tag">Employment</span></h3><ul><li>Ran 100+ door-to-door field sales conversations with small business owners.</li><li>Found that pricing confusion, not product fit, drove conversion drop-offs, and fed that back into the campaign.</li></ul></div></li>
+        <li class="job"><p class="when">Oct &ndash; Nov 2026</p><div><h3>Trader <span>&middot; Gies Disruption Lab &times; IBKR Trading Competition</span> <span class="role-tag t-res">Research</span></h3><ul><li>Running a $1M paper book through the densest two weeks of earnings season, to a hard close on the November 6 jobs report.</li><li>The trades run on the earnings event study above: the forward-file factor separated all 14 classified prints, and the Intel puts returned +$20,436 in two days.</li></ul></div></li>
+        <li class="job"><p class="when">2024 &ndash; now</p><div><h3>Vibe coding <span>&middot; independent building with AI tools</span> <span class="role-tag t-ind">Independent</span></h3><ul><li>Designing, shipping and maintaining software with AI coding tools since 2024: the trade hub and predictor systems above, the interactive tooling inside the papers, and this site.</li><li>Not a job. It is how most of the work on this page got built.</li></ul></div></li>
+        <li class="job"><p class="when">Sep 2026 &ndash; now</p><div><h3>Student Consultant <span>&middot; Illinois Business Consulting</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Selected through a competitive, multi-round case-based process.</li><li>Leading quantitative analysis and market research on a curriculum modernization and AI strategy workstream for a live client.</li></ul></div></li>
+                <li class="job"><p class="when">Fall 2026</p><div><h3>Graduate Peer Tutor <span>&middot; Gies College of Business</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Tutoring graduate courses across accounting, business administration, business data and finance (ACCY 512/593, BADM 550/554/557, BDI 513, FIN 550), including Python, coding and data-visualization support.</li><li>Five hours a week, plus extra shifts before exams.</li></ul></div></li>
+        <li class="job"><p class="when">Fall 2026</p><div><h3>FS Catering Worker <span>&middot; UIUC Housing Division</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Catering shifts for campus dining events, worked alongside the full-time MSBA.</li></ul></div></li>
+        <li class="job"><p class="when">Jul &ndash; Sep 2026</p><div><h3>Finance Intern <span>&middot; Busey Bank, Treasury &amp; ALM</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Built a deposit classification model separating internal product shifts from true external growth across $1B+ in transfers, validated to $0 variance.</li><li>Researched the GENIUS Act and stablecoin regulation and presented a proposal to management on stablecoins for deposit growth.</li></ul></div></li>
+        <li class="job"><p class="when">UIUC MSBA</p><div><h3>Project Lead <span>&middot; Dot Foods Capstone</span> <span class="role-tag t-res">Research</span></h3><ul><li>Led a 6-person team end to end, from scoping to final delivery.</li></ul></div></li>
+        <li class="job"><p class="when">Aug 2024 &ndash; May 2025</p><div><h3>VP of Events <span>&middot; NYU Tandon Consulting Club</span> <span class="role-tag t-ind">Independent</span></h3><ul><li>Grew club membership from 150 to 450 through partnerships with McKinsey and Deloitte.</li></ul></div></li>
+        <li class="job"><p class="when">May &ndash; Aug 2024</p><div><h3>Fintech Marketing Intern <span>&middot; WOW Payments</span> <span class="role-tag t-emp">Employment</span></h3><ul><li>Ran 100+ door-to-door field sales conversations with small business owners.</li><li>Found that pricing confusion, not product fit, drove conversion drop-offs, and fed that back into the campaign.</li></ul></div></li>
       </ol>
       <ul class="skills" aria-label="Tools">
         <li>Python</li><li>SQL</li><li>Excel &middot; Power Query (M) &middot; DAX</li><li>Power BI</li><li>Tableau</li><li>scikit-learn</li><li>LightGBM / XGBoost</li><li>Financial modeling</li><li>Agentic AI development</li>
