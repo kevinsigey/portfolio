@@ -352,7 +352,7 @@ h1 em, h2 em, .lead-title em { font-style: italic; color: var(--accent); font-we
 }
 
 /* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
-   A marked panel ([data-panel-pop]) opens whole — chart, title, caption —
+   A marked panel ([data-panel-pop]) opens whole: chart, title, caption.
    in a full-screen viewer, the way photos open on the Photography page. */
 [data-panel-pop]{cursor:zoom-in;position:relative}
 [data-panel-pop]:focus-visible{outline:2px solid var(--accent,#b4552d);outline-offset:3px}
