@@ -43,10 +43,29 @@ a{color:var(--accent)}
 .masthead-inner{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:24px;height:60px}
 .nameplate{font-family:var(--serif);font-size:21px;font-weight:600;white-space:nowrap}
 .masthead .tag{font:12px var(--mono);color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
-.mode-toggle{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:999px;padding:6px 12px;font:500 12.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.mode-toggle{margin-left:auto;flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:999px;padding:0;cursor:pointer}
 .mode-toggle:hover{color:var(--ink);border-color:var(--ink-3)}
-.mode-toggle .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor}
-html[data-mode="dark"] .mode-toggle .dot{background:currentColor}
+.mode-toggle .mt-ic{width:17px;height:17px;display:block}
+.mode-toggle .mt-moon{display:none}
+html[data-mode="dark"] .mode-toggle .mt-sun{display:none}
+html[data-mode="dark"] .mode-toggle .mt-moon{display:block}
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   A marked panel ([data-panel-pop]) opens whole: chart, title, caption,
+   in a full-screen viewer, the way photos open on the Photography page. */
+[data-panel-pop]{cursor:zoom-in;position:relative}
+[data-panel-pop]:focus-visible{outline:2px solid var(--accent,#b4552d);outline-offset:3px}
+.pp-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--card,#fffdf8);color:var(--ink-2,#8b96a5);border:1px solid var(--line,#ccc);opacity:0;pointer-events:none;transition:opacity .15s;z-index:6}
+[data-panel-pop]:hover .pp-badge,[data-panel-pop]:focus-visible .pp-badge{opacity:.94}
+@media(hover:none){.pp-badge{opacity:.78}}
+.pp-overlay{position:fixed;inset:0;z-index:400;background:rgba(8,10,12,.76);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:none;overflow-y:auto;overscroll-behavior:contain;padding:26px 14px 44px;box-sizing:border-box}
+.pp-overlay.open{display:block}
+.pp-stage{max-width:920px;margin:0 auto;position:relative}
+.pp-stage [data-panel-pop]{cursor:default}
+.pp-close{position:fixed;top:12px;right:12px;z-index:410;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(14,16,20,.88);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.pp-close svg{width:19px;height:19px;display:block}
+body.pp-lock{overflow:hidden}
+.pp-ph{border:1px dashed var(--line,#ccc);border-radius:8px;box-sizing:border-box}
+@media(max-width:720px){.pp-overlay{padding:14px 8px 30px}.pp-stage{max-width:100%}}
 
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);flex:none}
 .monogram{flex:none;display:block;width:36px;height:36px;border-radius:8px}
@@ -103,7 +122,7 @@ svg text{font-family:var(--mono)}
 .f-beat{fill:var(--sage)} .f-miss{fill:var(--bad)} .f-inl{fill:var(--ink-3)} .f-gm{fill:var(--gold)} .f-clay{fill:var(--accent)} .f-slate{fill:var(--slate)}
 .t-ink{fill:var(--ink)} .t-mut{fill:var(--ink-3)} .t-inv{fill:var(--card)}
 .s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-clay{stroke:var(--accent)} .s-mut{stroke:var(--ink-3)}
-@media(max-width:720px){.stat-strip{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}.slate,.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.wrap,.masthead-inner{padding:0 18px}.mode-toggle .lbl{display:none}}
+@media(max-width:720px){.stat-strip{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}.slate,.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.wrap,.masthead-inner{padding:0 18px}}
 </style></head>
 <body>
 <header class="masthead"><div class="masthead-inner">
@@ -111,12 +130,11 @@ svg text{font-family:var(--mono)}
 <nav class="site-nav" aria-label="Primary">
 <a href="writing.html" aria-current="page">Research Desk</a>
 <a href="index.html#systems">Systems</a>
-<a href="index.html#receipts">Receipts</a>
 <a href="index.html#experience">Experience</a>
 <a href="photos.html">Photography</a>
 <a href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
 </nav>
-<button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Toggle dark mode"><span class="dot"></span><span class="lbl">Light</span></button>
+<button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Switch to dark mode"><svg class="mt-ic mt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></svg><svg class="mt-ic mt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 </div></header>
 <div class="wrap">
 <header class="hero">
@@ -137,7 +155,7 @@ svg text{font-family:var(--mono)}
 <p>The competition ends on November 6, the day of the October jobs report. The file does not end with it. The book keeps running on Webull after the competition closes, because the question the season raised is larger than a two-week contest, and the prints keep coming.</p>
 <p>The question is simple to state. If beating earnings no longer moves a stock, what exactly is the market paying for?</p>
 
-<div class="panel"><h3>The season's tape: fifteen prints, Oct 27 to 30</h3>
+<div class="panel" data-panel-pop><h3>The season's tape: fifteen prints, Oct 27 to 30</h3>
 <svg viewBox="0 0 980 486" role="img"><line x1="478.0" y1="6" x2="478.0" y2="458" class="s-ink" stroke-width="1"/><text x="56" y="26.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">VRT</text><rect x="478.0" y="14" width="225.72789066191703" height="19" rx="3" class="f-beat"/><text x="695.7278906619171" y="26.0" text-anchor="end" font-size="13" font-weight="600" class="t-inv">+15.0%</text><text x="56" y="56.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">LLY</text><rect x="478.0" y="44" width="69.825160844753" height="19" rx="3" class="f-beat"/><text x="539.825160844753" y="56.0" text-anchor="end" font-size="13" font-weight="600" class="t-inv">+4.6%</text><text x="56" y="86.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">MA</text><rect x="478.0" y="74" width="46.34946021591363" height="19" rx="3" class="f-beat"/><text x="531.3494602159136" y="86.0" text-anchor="start" font-size="13" font-weight="600" class="t-ink">+3.1%</text><text x="56" y="116.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">XOM</text><rect x="478.0" y="104" width="30.097052088255605" height="19" rx="3" class="f-beat"/><text x="515.0970520882556" y="116.0" text-anchor="start" font-size="13" font-weight="600" class="t-ink">+2.0%</text><text x="56" y="146.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">MSFT</text><rect x="478.0" y="134" width="24.830067972810873" height="19" rx="3" class="f-beat"/><text x="509.83006797281087" y="146.0" text-anchor="start" font-size="13" font-weight="600" class="t-ink">+1.6%</text><text x="56" y="176.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">CVX</text><rect x="478.0" y="164" width="20.766965940896366" height="19" rx="3" class="f-beat"/><text x="505.76696594089634" y="176.0" text-anchor="start" font-size="13" font-weight="600" class="t-ink">+1.4%</text><text x="56" y="206.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">EQT</text><rect x="470.4757369779361" y="194" width="7.524263022063901" height="19" rx="3" class="f-beat"/><text x="463.4757369779361" y="206.0" text-anchor="end" font-size="13" font-weight="600" class="t-ink">-0.5%</text><text x="56" y="236.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">HOOD</text><rect x="393.7282541528843" y="224" width="84.2717458471157" height="19" rx="3" class="f-miss"/><text x="401.7282541528843" y="236.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-5.6%</text><text x="56" y="266.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">COIN</text><rect x="375.3690523790484" y="254" width="102.63094762095162" height="19" rx="3" class="f-inl"/><text x="383.3690523790484" y="266.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-6.8%</text><text x="56" y="296.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">AMZN</text><rect x="365.5875104503653" y="284" width="112.41248954963469" height="19" rx="3" class="f-miss"/><text x="373.5875104503653" y="296.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-7.5%</text><text x="56" y="326.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">SNDK</text><rect x="338.1991930500527" y="314" width="139.8008069499473" height="19" rx="3" class="f-beat"/><text x="346.1991930500527" y="326.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-9.3%</text><text x="56" y="356.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">GOOGL</text><rect x="337.14579622696374" y="344" width="140.85420377303623" height="19" rx="3" class="f-miss"/><text x="345.14579622696374" y="356.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-9.4%</text><text x="56" y="386.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">CAT</text><rect x="304.1895241903239" y="374" width="173.81047580967612" height="19" rx="3" class="f-beat"/><text x="312.1895241903239" y="386.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-11.6%</text><text x="56" y="416.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">NOW</text><rect x="203.51488495510893" y="404" width="274.4851150448911" height="19" rx="3" class="f-miss"/><text x="211.51488495510893" y="416.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-18.2%</text><text x="56" y="446.0" text-anchor="end" font-size="13" font-weight="700" class="t-ink">INTC</text><rect x="101.63636363636363" y="434" width="376.3636363636364" height="19" rx="3" class="f-gm"/><text x="109.63636363636363" y="446.0" text-anchor="start" font-size="13" font-weight="600" class="t-inv">-25.0%</text><text x="64" y="480" font-size="12.5" class="t-mut">Reaction to the print, percent. Green beat, red miss, grey inline, gold beat with a guide miss.</text></svg>
 <p class="cap">Source: the competition drift tracker, as of Oct 30, 2026. Reactions are the first full read on each print (after hours or the next session, as recorded live). Read the colors, not the order: green beats sit at both the top and the bottom of the table. Intel beat the quarter and missed the guide. Caterpillar and SanDisk beat and fell anyway.</p></div>
 
@@ -145,11 +163,11 @@ svg text{font-family:var(--mono)}
 <p>None of this required the season to discover. Before it started, I built an event study of 167 earnings prints across fourteen names I follow, measuring each print's abnormal reaction against the stock's own history. The point of building it first was discipline: the base rates would be fixed before a single live print could be explained away.</p>
 <p>The method started in a classroom. In FIN 559, my quantitative finance course at Illinois, Lecture 15 worked through market responses to earnings announcements as a CAPM event study: estimate each stock's alpha and beta in a window before the event, measure the abnormal return around the print, and split the results by whether expectations were met. A companion lecture ran the same machinery on dividend announcements. I took that method out of the demo dataset and rebuilt it on the names I actually follow, 167 prints deep. The class study asked whether the market responds to earnings. The live version asked a sharper question: what in the print is the market grading?</p>
 <p>The base rates were blunt. Of 138 clean beats in the sample, 65 still fell, a rate of 47.1%, and the average beat was worth +1.17%. Of 18 misses, 83.3% fell, at an average of −4.92%. A model that reads only the headline starts the season close to blind: the beat tells you the quarter was fine, and almost nothing about what the stock does next.</p>
-<div class="panel"><h3>Base rates: what a beat was worth before this season</h3>
+<div class="panel" data-panel-pop><h3>Base rates: what a beat was worth before this season</h3>
 <svg viewBox="0 0 820 108" role="img"><text x="190" y="30" text-anchor="end" font-size="12" font-weight="700" class="t-ink">Beat (138 prints)</text><rect x="200" y="14" width="207.24" height="24" rx="4" class="f-beat"/><text x="416.24" y="30" font-size="12.5" font-weight="700" class="t-ink">47.1% fell</text><text x="200" y="50" font-size="11" class="t-mut">Mean reaction +1.17%. A beat was close to a coin flip.</text><text x="190" y="76" text-anchor="end" font-size="12" font-weight="700" class="t-ink">Miss (18 prints)</text><rect x="200" y="60" width="366.52" height="24" rx="4" class="f-miss"/><text x="575.52" y="76" font-size="12.5" font-weight="700" class="t-ink">83.3% fell</text><text x="200" y="96" font-size="11" class="t-mut">Mean reaction -4.92%. The information was never in the headline.</text></svg>
 <p class="cap">Source: earnings event study dataset (167 prints), as of Oct 30, 2026.</p></div>
 <p>The blindness is not an average hiding a pattern. It holds name by name. Apple beat expectations in every one of its last twelve prints in the sample and still averaged a negative reaction. Beating often and being rewarded for it are different things, and the history says the first does not buy the second.</p>
-<div class="panel"><h3>Beat rate vs average reaction, by company</h3>
+<div class="panel" data-panel-pop><h3>Beat rate vs average reaction, by company</h3>
 <svg viewBox="0 0 860 470" role="img"><line x1="76" y1="273.73406862745094" x2="664" y2="273.73406862745094" class="s-ink" stroke-width="1"/><line x1="76" y1="20" x2="76" y2="414" class="s-line" stroke-width="1"/><text x="-60.74418604651163" y="432" text-anchor="middle" font-size="11" class="t-mut">50%</text><text x="76.0" y="432" text-anchor="middle" font-size="11" class="t-mut">60%</text><text x="212.74418604651163" y="432" text-anchor="middle" font-size="11" class="t-mut">70%</text><text x="349.48837209302326" y="432" text-anchor="middle" font-size="11" class="t-mut">80%</text><text x="486.2325581395349" y="432" text-anchor="middle" font-size="11" class="t-mut">90%</text><text x="622.9767441860465" y="432" text-anchor="middle" font-size="11" class="t-mut">100%</text><text x="370.0" y="462" text-anchor="middle" font-size="11" class="t-mut">How often the company beats, last 12 prints per name</text><text x="18" y="217.0" font-size="11" class="t-mut" transform="rotate(-90 18 217.0)" text-anchor="middle">Average reaction to its prints (%)</text><line x1="520.5813953488372" y1="232.93382352941177" x2="674" y2="228.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="232.93382352941177" font-size="11.5" font-weight="700" class="t-ink">AMZN <tspan font-weight="400" class="t-mut">+1.7%</tspan></text><line x1="506.906976744186" y1="250.55759803921566" x2="674" y2="247.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="251.93382352941177" font-size="11.5" font-weight="700" class="t-ink">META <tspan font-weight="400" class="t-mut">+1.0%</tspan></text><line x1="520.5813953488372" y1="251.28186274509804" x2="674" y2="266.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="270.93382352941177" font-size="11.5" font-weight="700" class="t-ink">EQT <tspan font-weight="400" class="t-mut">+0.9%</tspan></text><line x1="520.5813953488372" y1="274.94117647058823" x2="674" y2="285.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="289.93382352941177" font-size="11.5" font-weight="700" class="t-ink">MSFT <tspan font-weight="400" class="t-mut">-0.1%</tspan></text><line x1="520.5813953488372" y1="279.0453431372549" x2="674" y2="304.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="308.93382352941177" font-size="11.5" font-weight="700" class="t-ink">GOOGL <tspan font-weight="400" class="t-mut">-0.2%</tspan></text><line x1="629.9767441860465" y1="291.3578431372549" x2="674" y2="323.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="327.93382352941177" font-size="11.5" font-weight="700" class="t-ink">AAPL <tspan font-weight="400" class="t-mut">-0.7%</tspan></text><line x1="629.9767441860465" y1="293.53063725490193" x2="674" y2="342.93382352941177" class="s-mut" stroke-width="1"/><text x="682" y="346.93382352941177" font-size="11.5" font-weight="700" class="t-ink">SWK <tspan font-weight="400" class="t-mut">-0.8%</tspan></text><line x1="164.72093023255815" y1="273.2512254901961" x2="159.72093023255815" y2="269.2512254901961" class="s-mut" stroke-width="1"/><text x="155.72093023255815" y="273.2512254901961" text-anchor="end" font-size="11.5" font-weight="700" class="t-ink">CVX</text><line x1="164.72093023255815" y1="318.3970588235294" x2="159.72093023255815" y2="303.2916666666667" class="s-mut" stroke-width="1"/><text x="155.72093023255815" y="307.2916666666667" text-anchor="end" font-size="11.5" font-weight="700" class="t-ink">PBF</text><line x1="164.72093023255815" y1="324.4325980392157" x2="159.72093023255815" y2="337.33210784313724" class="s-mut" stroke-width="1"/><text x="155.72093023255815" y="341.33210784313724" text-anchor="end" font-size="11.5" font-weight="700" class="t-ink">AMD</text><line x1="164.72093023255815" y1="375.37254901960785" x2="159.72093023255815" y2="371.37254901960785" class="s-mut" stroke-width="1"/><text x="155.72093023255815" y="375.37254901960785" text-anchor="end" font-size="11.5" font-weight="700" class="t-ink">INTC</text><circle cx="622.9767441860465" cy="291.3578431372549" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="171.72093023255815" cy="324.4325980392157" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="513.5813953488372" cy="232.93382352941177" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="171.72093023255815" cy="273.2512254901961" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="513.5813953488372" cy="251.28186274509804" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="513.5813953488372" cy="279.0453431372549" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="171.72093023255815" cy="375.37254901960785" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="390.51162790697674" cy="239.2107843137255" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="499.906976744186" cy="250.55759803921566" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="513.5813953488372" cy="274.94117647058823" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="171.72093023255815" cy="318.3970588235294" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="281.1162790697674" cy="58.627450980392155" r="5.5" class="f-beat" fill-opacity="0.88"/><circle cx="622.9767441860465" cy="293.53063725490193" r="5.5" class="f-miss" fill-opacity="0.88"/><circle cx="281.1162790697674" cy="299.3247549019608" r="5.5" class="f-miss" fill-opacity="0.88"/><text x="400.51162790697674" y="245.2107843137255" font-size="11.5" font-weight="700" class="t-ink">LLY</text><text x="291.1162790697674" y="64.62745098039215" font-size="11.5" font-weight="700" class="t-ink">PLTR</text><text x="291.1162790697674" y="305.3247549019608" font-size="11.5" font-weight="700" class="t-ink">XOM</text><text x="682" y="22" font-size="10.5" class="t-mut">Cluster: 91 to 100% beat rate</text></svg>
 <p class="cap">Source: per-ticker summary of the 167-print event study, as of Oct 30, 2026. Each point is one company over its last 12 prints. If the beat drove the reaction, the points would climb to the right. They do not. Apple beats every time and still averages a negative reaction.</p></div>
 
@@ -168,7 +186,7 @@ svg text{font-family:var(--mono)}
 <div class="cell hot"><div class="tag">Species 3 · The priced lever misses</div><div class="big">RBLX · RDDT</div><p>Where the stock was priced on one operating number, that number decided the print. The earnings line was not the lever, so the earnings line did not save it.</p></div>
 </div>
 <p>The rewarded prints were the mirror image: a guide raised on the lever the stock was priced on, as Eli Lilly did when it won on a revenue-guide raise while cutting its EPS guide, or discipline on spending, as Microsoft showed. And the rewards carry a warning of their own. They fade.</p>
-<div class="panel"><h3>The half-life of a reward: Microsoft, print to plus one day</h3>
+<div class="panel" data-panel-pop><h3>The half-life of a reward: Microsoft, print to plus one day</h3>
 <svg viewBox="0 0 820 250" role="img"><line x1="60" y1="162.15384615384616" x2="780" y2="162.15384615384616" class="s-ink" stroke-width="1"/><path d="M90.0,62.769230769230774 L425.0,150.9076923076923 L760.0,166.33846153846153" fill="none" class="s-clay" stroke-width="2.4"/><circle cx="90.0" cy="62.769230769230774" r="6" class="f-clay"/><text x="90.0" y="48.769230769230774" text-anchor="middle" font-size="13" font-weight="700" class="t-ink">+3.80%</text><text x="90.0" y="226" text-anchor="middle" font-size="11" class="t-mut">Print, after hours</text><circle cx="425.0" cy="150.9076923076923" r="6" class="f-clay"/><text x="425.0" y="136.9076923076923" text-anchor="middle" font-size="13" font-weight="700" class="t-ink">+0.43%</text><text x="425.0" y="226" text-anchor="middle" font-size="11" class="t-mut">Print-day close</text><circle cx="760.0" cy="166.33846153846153" r="6" class="f-clay"/><text x="760.0" y="152.33846153846153" text-anchor="middle" font-size="13" font-weight="700" class="t-ink">-0.16%</text><text x="760.0" y="226" text-anchor="middle" font-size="11" class="t-mut">Next day close</text></svg>
 <p class="cap">Recorded marks from the trading book, Oct 28 to 30, 2026. Microsoft's file improved and the stock was paid after hours. By the next day's close the entire reward was gone. A correct read of the factor is worth less than it looks if the exit is a day late.</p></div>
 
@@ -199,11 +217,11 @@ svg text{font-family:var(--mono)}
 
 <h2><span class="no">7 ·</span> What the prediction markets add: nothing, and one good chart</h2>
 <p>A natural objection is that prediction markets might price these prints better than a single model. They were checked for all of next week's names, and the answer is no, for a structural reason: the markets that exist price the beat, which is the variable this paper shows does not decide the reaction. They are also nearly empty. The six Polymarket beat books for next week's slate have traded about $6,470 in their entire lives, with bid and ask spreads up to 18 points wide. Shopify and Axon have no market at all, and Airbnb's book has never traded. Kalshi lists no earnings-beat market for any of them, only markets on which words get said on the call.</p>
-<div class="panel"><h3>The beat panel: priced for a variable that does not decide the outcome</h3>
+<div class="panel" data-panel-pop><h3>The beat panel: priced for a variable that does not decide the outcome</h3>
 <svg viewBox="0 0 820 274" role="img"><text x="110" y="27" text-anchor="end" font-size="12" font-weight="700" class="t-ink">HUBS</text><rect x="120" y="12" width="438.6" height="20" rx="4" class="f-clay"/><text x="567.6" y="27" font-size="12" font-weight="700" class="t-ink">86% to beat</text><text x="812" y="27" text-anchor="end" font-size="11" class="t-mut">$1,454 traded</text><text x="110" y="61" text-anchor="end" font-size="12" font-weight="700" class="t-ink">ARM</text><rect x="120" y="46" width="438.6" height="20" rx="4" class="f-clay"/><text x="567.6" y="61" font-size="12" font-weight="700" class="t-ink">86% to beat</text><text x="812" y="61" text-anchor="end" font-size="11" class="t-mut">$412 traded</text><text x="110" y="95" text-anchor="end" font-size="12" font-weight="700" class="t-ink">EL</text><rect x="120" y="80" width="436.05" height="20" rx="4" class="f-clay"/><text x="565.05" y="95" font-size="12" font-weight="700" class="t-ink">86% to beat</text><text x="812" y="95" text-anchor="end" font-size="11" class="t-mut">$1,770 traded</text><text x="110" y="129" text-anchor="end" font-size="12" font-weight="700" class="t-ink">PLTR</text><rect x="120" y="114" width="433.5" height="20" rx="4" class="f-clay"/><text x="562.5" y="129" font-size="12" font-weight="700" class="t-ink">85% to beat</text><text x="812" y="129" text-anchor="end" font-size="11" class="t-mut">$950 traded</text><text x="110" y="163" text-anchor="end" font-size="12" font-weight="700" class="t-ink">AAPL</text><rect x="120" y="148" width="413.1" height="20" rx="4" class="f-clay"/><text x="542.1" y="163" font-size="12" font-weight="700" class="t-ink">81% to beat</text><text x="812" y="163" text-anchor="end" font-size="11" class="t-mut">$1,021 traded</text><text x="110" y="197" text-anchor="end" font-size="12" font-weight="700" class="t-ink">AMD</text><rect x="120" y="182" width="402.9" height="20" rx="4" class="f-clay"/><text x="531.9" y="197" font-size="12" font-weight="700" class="t-ink">79% to beat</text><text x="812" y="197" text-anchor="end" font-size="11" class="t-mut">$863 traded</text><line x1="360.21000000000004" y1="2" x2="360.21000000000004" y2="236" class="s-ink" stroke-width="1.4" stroke-dasharray="5,4"/><text x="360.21000000000004" y="256" text-anchor="middle" font-size="11.5" font-weight="700" class="t-ink">Dashed line: share of beats that still fell in his 167-print history, 47.1%</text><text x="120" y="271" font-size="11" class="t-mut">Polymarket beat contracts, Oct 30, 2026. Lifetime volume for all six books combined: about $6,470.</text></svg>
 <p class="cap">Source: Polymarket, retrieved Oct 30, 2026; history from the 167-print event study. The panel is still worth printing, because it is the thesis in one picture: an entire market quoting 79 to 86% confidence on a number that history says is close to a coin flip for direction.</p></div>
 <p>Where a deep market exists beside them, the prediction markets simply agree with it. December rate-hike odds sat at about 71% on the futures market, Kalshi, and Polymarket at the same time on October 30. Three venues, one number, nothing to harvest.</p>
-<div class="panel"><h3>December hike odds: the mirror, not a signal</h3>
+<div class="panel" data-panel-pop><h3>December hike odds: the mirror, not a signal</h3>
 <svg viewBox="0 0 820 134" role="img"><text x="205" y="26" text-anchor="end" font-size="12" font-weight="700" class="t-ink">CME FedWatch (futures)</text><rect x="215" y="10" width="346.29" height="22" rx="4" class="f-slate"/><text x="570.29" y="26" font-size="12" font-weight="700" class="t-ink">71.4%</text><text x="205" y="62" text-anchor="end" font-size="12" font-weight="700" class="t-ink">Kalshi</text><rect x="215" y="46" width="344.35" height="22" rx="4" class="f-slate"/><text x="568.35" y="62" font-size="12" font-weight="700" class="t-ink">71.0%</text><text x="205" y="98" text-anchor="end" font-size="12" font-weight="700" class="t-ink">Polymarket</text><rect x="215" y="82" width="341.925" height="22" rx="4" class="f-slate"/><text x="565.925" y="98" font-size="12" font-weight="700" class="t-ink">70.5%</text><text x="215" y="130" font-size="11" class="t-mut">Probability of a 25bp December hike, Oct 30, 2026. Three venues, one number.</text></svg>
 <p class="cap">Sources: CME FedWatch as reported Oct 30, 2026; Kalshi and Polymarket retrieved the same evening. The one prediction book in the window with real depth is the midterms: $47.4M traded on control of Congress, the only market price that exists for that event, with a Democratic sweep at 69.5%.</p></div>
 
@@ -237,11 +255,100 @@ function read(){try{return localStorage.getItem(KEY)}catch(e){return null}}
 function save(m){try{localStorage.setItem(KEY,m)}catch(e){}}
 function apply(m){if(m==="dark")root.setAttribute("data-mode","dark");else root.removeAttribute("data-mode");
 var b=document.querySelectorAll("[data-mode-toggle]");for(var i=0;i<b.length;i++){var d=m==="dark";
-b[i].setAttribute("aria-pressed",d?"true":"false");var l=b[i].querySelector(".lbl");if(l)l.textContent=d?"Dark":"Light";}}
+b[i].setAttribute("aria-pressed",d?"true":"false");b[i].setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode");}}
 apply(read()==="dark"?"dark":"light");
 document.addEventListener("click",function(e){var t=e.target.closest?e.target.closest("[data-mode-toggle]"):null;
 if(!t)return;var n=root.getAttribute("data-mode")==="dark"?"light":"dark";save(n);apply(n);});
 window.addEventListener("storage",function(e){if(e.key===KEY)apply(e.newValue==="dark"?"dark":"light");});})();
+</script>
+<script>
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   Clicking a marked panel moves the whole panel (chart, title, caption)
+   into a full-screen viewer; closing returns it to its exact place.
+   Interactive elements inside a panel keep their own behavior. */
+(function () {
+  "use strict";
+  var overlay = null, stage = null, closeBtn = null, current = null, ph = null, lastFocus = null;
+  var INTERACTIVE = 'a,button,input,select,textarea,summary,label,[data-bucket],[role="slider"]';
+  function build() {
+    overlay = document.createElement('div');
+    overlay.className = 'pp-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Expanded panel');
+    closeBtn = document.createElement('button');
+    closeBtn.className = 'pp-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close expanded panel');
+    closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+    stage = document.createElement('div');
+    stage.className = 'pp-stage';
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(stage);
+    document.body.appendChild(overlay);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  }
+  function refit() { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function open(panel) {
+    if (!overlay) build();
+    if (current) return;
+    lastFocus = document.activeElement;
+    ph = document.createElement('div');
+    ph.className = 'pp-ph';
+    ph.style.height = panel.offsetHeight + 'px';
+    panel.parentNode.insertBefore(ph, panel);
+    stage.appendChild(panel);
+    current = panel;
+    overlay.classList.add('open');
+    document.body.classList.add('pp-lock');
+    overlay.scrollTop = 0;
+    closeBtn.focus();
+    setTimeout(refit, 60);
+  }
+  function close() {
+    if (!current) return;
+    ph.parentNode.insertBefore(current, ph);
+    ph.remove(); ph = null; current = null;
+    overlay.classList.remove('open');
+    document.body.classList.remove('pp-lock');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    setTimeout(refit, 60);
+  }
+  document.addEventListener('click', function (e) {
+    if (current) return;
+    var t = e.target;
+    if (!t.closest) return;
+    var panel = t.closest('[data-panel-pop]');
+    if (!panel) return;
+    if (t.closest(INTERACTIVE)) return;
+    open(panel);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && current) { close(); return; }
+    if (current) return;
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.hasAttribute && e.target.hasAttribute('data-panel-pop')) {
+      e.preventDefault(); open(e.target);
+    }
+  });
+  function dress(scope) {
+    var ps = (scope || document).querySelectorAll('[data-panel-pop]');
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      if (!p.hasAttribute('tabindex')) p.setAttribute('tabindex', '0');
+      if (!p.querySelector('.pp-badge')) {
+        var b = document.createElement('span');
+        b.className = 'pp-badge';
+        b.setAttribute('aria-hidden', 'true');
+        b.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+        p.appendChild(b);
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { dress(); });
+  else dress();
+  window.__panelpop = { open: open, close: close, dress: dress };
+})();
 </script>
 <script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
