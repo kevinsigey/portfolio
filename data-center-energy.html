@@ -4,13 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
 <title>The Hidden Megawatts</title>
 <link rel="icon" href="favicon.ico" sizes="48x48">
-<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicons/research.svg" type="image/svg+xml">
+<meta property="og:title" content="The Hidden Megawatts">
+<meta property="og:description" content="A forensic reading of aggregate ZIP-level electricity use—a data-center proxy, not a facility meter—and what its anomalies may reveal about the AI boom.">
+<meta property="og:image" content="https://kevinsigey.github.io/portfolio/og/data-center-energy.png">
+<meta property="og:url" content="https://kevinsigey.github.io/portfolio/data-center-energy.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Hidden Megawatts">
+<meta name="twitter:description" content="A forensic reading of aggregate ZIP-level electricity use—a data-center proxy, not a facility meter—and what its anomalies may reveal about the AI boom.">
+<meta name="twitter:image" content="https://kevinsigey.github.io/portfolio/og/data-center-energy.png">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <style>
 :root{
@@ -193,5 +201,6 @@ function drawChart(){svg.innerHTML='';var W=1100,H=560,L=82,R=28,T=42,B=62,pw=W-
  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;var stats=document.querySelectorAll('[data-count]');if('IntersectionObserver'in window&&!reduced){var io=new IntersectionObserver(function(entries){entries.forEach(function(en){if(!en.isIntersecting)return;var node=en.target,target=parseFloat(node.getAttribute('data-count')),suffix=node.getAttribute('data-suffix'),start=performance.now();function tick(now){var p=Math.min(1,(now-start)/800),ease=1-Math.pow(1-p,3);node.textContent=(target<10?Math.round(target*ease):(target*ease).toFixed(1))+suffix;if(p<1)requestAnimationFrame(tick);}requestAnimationFrame(tick);io.unobserve(node);});},{threshold:.4});stats.forEach(function(s){io.observe(s);});}
 })();
 </script>
+<script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
