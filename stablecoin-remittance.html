@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script>try{var m=localStorage.getItem("ks-mode");if(m!=="light"&&m!=="dark")m=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.setAttribute("data-mode",m);}catch(e){document.documentElement.setAttribute("data-mode","dark");}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
@@ -56,8 +57,43 @@ a{color:var(--mint2);text-underline-offset:3px}button,input{font:inherit}button{
 @media(max-width:640px){.wrap,.reader{width:min(100% - 28px,760px)}.hero{min-height:auto;padding:108px 0 46px}.hero:after{right:14px;top:26px}h1{font-size:3.25rem}.section{padding:70px 0}.bridge-figure{min-height:285px;padding:18px}.bridge-figure:before{left:18px;top:18px}.bridge-figure:after{right:16px;top:22px}.stats{grid-template-columns:1fr}.stat{min-height:145px}.chart-shell{margin-left:-8px;margin-right:-8px}.chart-head{padding:20px 18px 0}.chart-wrap{padding:4px 2px 12px}.chart-wrap svg{min-height:430px}.chart-legend{padding:0 18px 20px;gap:12px}.calc-controls,.calc-results{padding:24px 18px}.calc-bar{grid-template-columns:92px 1fr 66px;gap:8px}.threshold-labels{grid-template-columns:4fr 1fr}.threshold-bar{grid-template-columns:9fr 1fr}.entity-flow{grid-template-columns:1fr}.flow-arrow{transform:rotate(90deg)}.challenge{grid-template-columns:46px 1fr 38px;gap:12px}.challenge-response{grid-column:1/-1}.roadmap,.method-steps,.limit-grid,.notes-grid,.truth-strip,.talk-track{grid-template-columns:1fr}.step:last-child,.talk-step:last-child{grid-column:auto}.road-step,.talk-step{min-height:0}.decision,.speaker-close{grid-template-columns:1fr}.callout{padding:22px 20px}.segment-btn{grid-template-columns:82px 1fr 18px}.snapshot-note{align-items:flex-start;flex-direction:column}.guide-list{grid-template-columns:1fr}.guide-link:nth-child(odd){border-right:0;padding-right:0}.guide-link:nth-child(even){padding-left:0}.result-chart{padding:20px 16px}.data-row{grid-template-columns:92px minmax(0,1fr);gap:9px}.data-value{grid-column:2;text-align:left;margin-top:-5px}.metric-hero,.ratio-callout{align-items:flex-start;flex-direction:column}.metric-hero span,.ratio-callout span{text-align:left}.label-shift{grid-template-columns:1fr}.label-arrow{transform:rotate(90deg);min-height:40px}.presenter-answer{padding-right:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.calc-fill,.window{transition:none}.route-dot{display:none}}
 </style>
+<style>
+html[data-mode="dark"]{--bg:#07120f;--bg2:#0b1a16;--paper:#10231d;--paper2:#142b24;--text:#f1f6ef;--muted:#9fb4a9;--line:#29443a;--mint:#75e7bb;--mint2:#b7f4dc;--lime:#d8f05a;--gold:#f2b84b;--coral:#ff766d;--blue:#61b9ff;--north:#61b9ff;--south:#d8f05a;--shadow:0 22px 58px rgba(0,0,0,.22);--bar-bg:rgba(10,10,12,.94);--bar-ink:#f1f6ef;--bar-mut:#c9c9ce}
+html[data-mode="light"]{--bg:#eef4ef;--bg2:#e3ece6;--paper:#fbfdfb;--paper2:#fff;--text:#10231d;--muted:#50665c;--line:#c6d7ce;--mint:#087c57;--mint2:#075a40;--lime:#6a7d00;--gold:#a86100;--coral:#bc3c35;--blue:#146a9b;--north:#146a9b;--south:#6a7d00;--shadow:0 20px 55px rgba(30,67,51,.11);--bar-bg:rgba(238,244,239,.94);--bar-ink:#10231d;--bar-mut:#50665c}
+
+/* ks-toggle: sun/moon mode switch for the legacy papers (Nov 2026). */
+html[data-mode="dark"]{color-scheme:dark}
+html[data-mode="light"]{color-scheme:light}
+.ks-toggle{flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--bar-mut);cursor:pointer;padding:0}
+.ks-toggle:hover{color:var(--bar-ink)}
+.ks-toggle .mt-ic{width:16px;height:16px;display:block}
+.ks-toggle .mt-sun{display:none}
+html[data-mode="light"] .ks-toggle .mt-sun{display:block}
+html[data-mode="light"] .ks-toggle .mt-moon{display:none}
+@media(max-width:640px){.ks-bar nav{gap:11px !important}.ks-bar nav a[href="index.html"]{display:none}}
+
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   A marked panel ([data-panel-pop]) opens whole: chart, title, caption,
+   in a full-screen viewer, the way photos open on the Photography page. */
+[data-panel-pop]{cursor:zoom-in;position:relative}
+[data-panel-pop]:focus-visible{outline:2px solid var(--accent,#b4552d);outline-offset:3px}
+.pp-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--card,var(--paper,#fffdf8));color:var(--ink-2,var(--muted,#8b96a5));border:1px solid var(--line,#ccc);opacity:0;pointer-events:none;transition:opacity .15s;z-index:6}
+[data-panel-pop]:hover .pp-badge,[data-panel-pop]:focus-visible .pp-badge{opacity:.94}
+@media(hover:none){.pp-badge{opacity:.78}}
+.pp-overlay{position:fixed;inset:0;z-index:400;background:rgba(8,10,12,.76);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:none;overflow-y:auto;overscroll-behavior:contain;padding:26px 14px 44px;box-sizing:border-box}
+.pp-overlay.open{display:block}
+.pp-stage{max-width:920px;margin:0 auto;position:relative}
+.pp-stage [data-panel-pop]{cursor:default}
+.pp-close{position:fixed;top:12px;right:12px;z-index:410;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(14,16,20,.88);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.pp-close svg{width:19px;height:19px;display:block}
+body.pp-lock{overflow:hidden}
+.pp-ph{border:1px dashed var(--line,#ccc);border-radius:8px;box-sizing:border-box}
+@media(max-width:720px){.pp-overlay{padding:14px 8px 30px}.pp-stage{max-width:100%}}
+.pp-overlay{z-index:10000}
+.pp-close{z-index:10010}
+</style>
 </head>
-<body><div style="position:fixed;top:0;left:0;right:0;z-index:9999;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(10,10,12,.94);border-bottom:1px solid #26262b;font-family:Inter,system-ui,sans-serif;font-size:13px"><a href="index.html" style="color:#fff;text-decoration:none;font-weight:700;letter-spacing:.04em">KS&nbsp;&nbsp;Kevin Sigey</a><nav style="display:flex;gap:20px"><a href="index.html" style="color:#c9c9ce;text-decoration:none">Home</a><a href="writing.html" style="color:#fff;text-decoration:none">Research Desk</a><a href="photos.html" style="color:#c9c9ce;text-decoration:none">Photography</a><a href="assets/resume.pdf" style="color:#c9c9ce;text-decoration:none">Resume</a></nav></div><style>body{padding-top:46px !important}</style>
+<body><div class="ks-bar" style="position:fixed;top:0;left:0;right:0;z-index:9999;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--bar-bg);border-bottom:1px solid var(--line);font-family:Inter,system-ui,sans-serif;font-size:13px"><a href="index.html" style="color:var(--bar-ink);text-decoration:none;font-weight:700;letter-spacing:.04em">KS&nbsp;&nbsp;Kevin Sigey</a><nav style="display:flex;gap:20px"><a href="index.html" style="color:var(--bar-mut);text-decoration:none">Home</a><a href="writing.html" style="color:var(--bar-ink);text-decoration:none">Research Desk</a><a href="photos.html" style="color:var(--bar-mut);text-decoration:none">Photography</a><a href="assets/resume.pdf" style="color:var(--bar-mut);text-decoration:none">Resume</a><button class="ks-toggle" type="button" data-mode-toggle aria-pressed="true" aria-label="Switch to light mode"><svg class="mt-ic mt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"/></svg><svg class="mt-ic mt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></nav></div><style>body{padding-top:46px !important}</style>
 <main>
 <section class="hero"><div class="wrap hero-grid">
   <div><p class="kicker">A stablecoin remittance study</p><h1>The Digital <em>Remittance Bridge</em></h1><p class="deck">On-chain transfer economics tested against real remittance benchmarks—separating retail-sized activity from speculative noise without pretending wallets reveal intent.</p><div class="byline">Group 15</div></div>
@@ -147,5 +183,107 @@ document.querySelectorAll('.presenter-toggle').forEach(function(btn){btn.addEven
 })();
 </script>
 <script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+document.querySelectorAll('.chart-shell,.result-chart,figure.bridge-figure,figure.threshold-figure').forEach(function(e){e.setAttribute('data-panel-pop','');});
+</script>
+<script>
+(function(){var r=document.documentElement,b=document.querySelector("[data-mode-toggle]");
+if(!b)return;
+function cur(){return r.getAttribute("data-mode")||"dark";}
+function paint(){var d=cur()==="dark";b.setAttribute("aria-pressed",d?"true":"false");b.setAttribute("aria-label",d?"Switch to light mode":"Switch to dark mode");}
+paint();
+b.addEventListener("click",function(){var n=cur()==="dark"?"light":"dark";r.setAttribute("data-mode",n);try{localStorage.setItem("ks-mode",n);}catch(e){}paint();});
+window.addEventListener("storage",function(e){if(e.key==="ks-mode"&&(e.newValue==="light"||e.newValue==="dark")){r.setAttribute("data-mode",e.newValue);paint();}});
+})();
+</script>
+<script>
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   Clicking a marked panel moves the whole panel (chart, title, caption)
+   into a full-screen viewer; closing returns it to its exact place.
+   Interactive elements inside a panel keep their own behavior. */
+(function () {
+  "use strict";
+  var overlay = null, stage = null, closeBtn = null, current = null, ph = null, lastFocus = null;
+  var INTERACTIVE = 'a,button,input,select,textarea,summary,label,[data-bucket],[role="slider"]';
+  function build() {
+    overlay = document.createElement('div');
+    overlay.className = 'pp-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Expanded panel');
+    closeBtn = document.createElement('button');
+    closeBtn.className = 'pp-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close expanded panel');
+    closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+    stage = document.createElement('div');
+    stage.className = 'pp-stage';
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(stage);
+    document.body.appendChild(overlay);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  }
+  function refit() { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function open(panel) {
+    if (!overlay) build();
+    if (current) return;
+    lastFocus = document.activeElement;
+    ph = document.createElement('div');
+    ph.className = 'pp-ph';
+    ph.style.height = panel.offsetHeight + 'px';
+    panel.parentNode.insertBefore(ph, panel);
+    stage.appendChild(panel);
+    current = panel;
+    overlay.classList.add('open');
+    document.body.classList.add('pp-lock');
+    overlay.scrollTop = 0;
+    closeBtn.focus();
+    setTimeout(refit, 60);
+  }
+  function close() {
+    if (!current) return;
+    ph.parentNode.insertBefore(current, ph);
+    ph.remove(); ph = null; current = null;
+    overlay.classList.remove('open');
+    document.body.classList.remove('pp-lock');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    setTimeout(refit, 60);
+  }
+  document.addEventListener('click', function (e) {
+    if (current) return;
+    var t = e.target;
+    if (!t.closest) return;
+    var panel = t.closest('[data-panel-pop]');
+    if (!panel) return;
+    if (t.closest(INTERACTIVE)) return;
+    open(panel);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && current) { close(); return; }
+    if (current) return;
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.hasAttribute && e.target.hasAttribute('data-panel-pop')) {
+      e.preventDefault(); open(e.target);
+    }
+  });
+  function dress(scope) {
+    var ps = (scope || document).querySelectorAll('[data-panel-pop]');
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      if (!p.hasAttribute('tabindex')) p.setAttribute('tabindex', '0');
+      if (!p.querySelector('.pp-badge')) {
+        var b = document.createElement('span');
+        b.className = 'pp-badge';
+        b.setAttribute('aria-hidden', 'true');
+        b.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+        p.appendChild(b);
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { dress(); });
+  else dress();
+  window.__panelpop = { open: open, close: close, dress: dress };
+})();
+</script>
 </body>
 </html>
