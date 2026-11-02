@@ -73,10 +73,16 @@
 /* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
    Clicking a marked panel moves the whole panel (chart, title, caption)
    into a full-screen viewer; closing returns it to its exact place.
+   Zoom (rev. Nov 2026): on open the panel is laid out at a wide stage
+   width (up to 1100px; a resize event lets charts refit at that size)
+   and then transform-scaled so it renders ~1.5x its in-page width on a
+   phone and substantially larger on desktop too. The overlay scrolls
+   to pan, and pinch zoom still works on top of the transform.
    Interactive elements inside a panel keep their own behavior. */
 (function () {
   "use strict";
   var overlay = null, stage = null, closeBtn = null, current = null, ph = null, lastFocus = null;
+  var savedStyle = null, resizeTimer = null;
   var INTERACTIVE = 'a,button,input,select,textarea,summary,label,[data-bucket],[role="slider"]';
   function build() {
     overlay = document.createElement('div');
@@ -95,29 +101,64 @@
     overlay.appendChild(stage);
     document.body.appendChild(overlay);
     closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    overlay.addEventListener('click', function (e) { if (e.target === overlay || e.target === stage) close(); });
   }
   function refit() { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function layout() {
+    if (!current || !ph) return;
+    var small = window.innerWidth <= 720;
+    var padH = small ? 16 : 28;
+    var avail = Math.max(260, overlay.clientWidth - padH);
+    var iw = ph.offsetWidth || current.offsetWidth;
+    var W = Math.min(1100, Math.max(avail, iw));
+    current.style.width = W + 'px';
+    current.style.maxWidth = 'none';
+    var H = current.offsetHeight;
+    var zoom = small ? 1.55 : 1.35;
+    var R = Math.max(W, iw * zoom);
+    var s = R / W;
+    if (s > 1.8) { s = 1.8; R = W * s; }
+    if (s < 1) { s = 1; R = W; }
+    stage.style.width = R + 'px';
+    stage.style.height = (H * s) + 'px';
+    current.style.transform = 'scale(' + s + ')';
+  }
   function open(panel) {
     if (!overlay) build();
     if (current) return;
     lastFocus = document.activeElement;
+    savedStyle = panel.getAttribute('style');
     ph = document.createElement('div');
     ph.className = 'pp-ph';
+    ph.style.width = panel.offsetWidth + 'px';
     ph.style.height = panel.offsetHeight + 'px';
     panel.parentNode.insertBefore(ph, panel);
     stage.appendChild(panel);
     current = panel;
+    panel.style.position = 'absolute';
+    panel.style.left = '0';
+    panel.style.top = '0';
+    panel.style.margin = '0';
+    panel.style.transformOrigin = '0 0';
     overlay.classList.add('open');
     document.body.classList.add('pp-lock');
+    layout();
     overlay.scrollTop = 0;
+    overlay.scrollLeft = 0;
     closeBtn.focus();
     setTimeout(refit, 60);
+    setTimeout(refit, 350);
   }
   function close() {
     if (!current) return;
-    ph.parentNode.insertBefore(current, ph);
+    var panel = current;
+    ph.parentNode.insertBefore(panel, ph);
     ph.remove(); ph = null; current = null;
+    if (savedStyle === null) panel.removeAttribute('style');
+    else panel.setAttribute('style', savedStyle);
+    savedStyle = null;
+    stage.style.width = '';
+    stage.style.height = '';
     overlay.classList.remove('open');
     document.body.classList.remove('pp-lock');
     if (lastFocus && lastFocus.focus) lastFocus.focus();
@@ -138,6 +179,11 @@
     if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.hasAttribute && e.target.hasAttribute('data-panel-pop')) {
       e.preventDefault(); open(e.target);
     }
+  });
+  window.addEventListener('resize', function () {
+    if (!current) return;
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { layout(); refit(); }, 120);
   });
   function dress(scope) {
     var ps = (scope || document).querySelectorAll('[data-panel-pop]');
