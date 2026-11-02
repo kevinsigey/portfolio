@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stocks don't care who wins, they're just glad it's over · Kevin Sigey</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="favicons/research.svg">
+<meta property="og:title" content="Stocks don't care who wins, they're just glad it's over">
+<meta property="og:description" content="Eight midterms, 1994 to 2022: the S&amp;P 500 rose on the Wednesday after the vote in seven of eight, whoever won, and again at sixty days. The index prices the ending, not the winner. What a result moves is sectors, and oil is priced on a blocked strait, not the ballot.">
+<meta property="og:image" content="https://kevinsigey.github.io/portfolio/og/stocks-dont-care-who-wins.png">
+<meta property="og:url" content="https://kevinsigey.github.io/portfolio/stocks-dont-care-who-wins.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stocks don't care who wins, they're just glad it's over">
+<meta name="twitter:description" content="Eight midterms, 1994 to 2022: the S&amp;P 500 rose on the Wednesday after the vote in seven of eight, whoever won, and again at sixty days. The index prices the ending, not the winner. What a result moves is sectors, and oil is priced on a blocked strait, not the ballot.">
+<meta name="twitter:image" content="https://kevinsigey.github.io/portfolio/og/stocks-dont-care-who-wins.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem("ks-mode")==="dark"){document.documentElement.setAttribute("data-mode","dark")}}catch(e){}</script>
+<style>
+:root{
+  --paper:#f4f1ea; --paper-2:#ece8de; --card:#fffdf8; --ink:#1c2027; --ink-2:#45505f; --ink-3:#5f6774;
+  --line:#ddd5c3; --line-soft:#e7e1d2; --accent:#a94a2c; --accent-soft:rgba(169,74,44,.1);
+  --slate:#2f6ea6; --sage:#4d7d33; --gold:#a06f14; --bad:#b3402e; --muted-fill:#c9c1ae;
+  --bad-soft:rgba(179,64,46,.09); --sage-soft:rgba(77,125,51,.10);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --radius:10px; color-scheme:light;
+}
+html[data-mode="dark"]{
+  --paper:#0b0d10; --paper-2:#101318; --card:#14181f; --ink:#eef1f5; --ink-2:#b9c2cf; --ink-3:#8b96a5;
+  --line:#262d38; --line-soft:#1d232d; --accent:#e0865f; --accent-soft:rgba(224,134,95,.14);
+  --slate:#9db8e4; --sage:#a3bc94; --gold:#ddbb62; --bad:#e08a75; --muted-fill:#3a4250;
+  --bad-soft:rgba(224,138,117,.13); --sage-soft:rgba(163,188,148,.13);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
+.wrap{max-width:880px;margin:0 auto;padding:0 28px 90px}
+a{color:var(--accent)}
+::selection{background:var(--accent);color:var(--card)}
+.masthead{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.masthead-inner{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:24px;height:60px}
+.nameplate{font-family:var(--serif);font-size:21px;font-weight:600;white-space:nowrap}
+.masthead .tag{font:12px var(--mono);color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase}
+.mode-toggle{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:999px;padding:6px 12px;font:500 12.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.mode-toggle:hover{color:var(--ink);border-color:var(--ink-3)}
+.mode-toggle .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor}
+html[data-mode="dark"] .mode-toggle .dot{background:currentColor}
+
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);flex:none}
+.monogram{flex:none;display:block;width:36px;height:36px;border-radius:8px}
+.monogram svg{display:block;width:100%;height:100%}
+.monogram .tile{fill:var(--accent)}
+.monogram .ks{fill:var(--card)}
+.site-nav{display:flex;gap:20px;margin-left:26px;font-size:14.5px;overflow-x:auto;scrollbar-width:none}
+.site-nav::-webkit-scrollbar{display:none}
+.site-nav a{text-decoration:none;color:var(--ink-2);white-space:nowrap;padding:6px 0}
+.site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--accent)}
+@media(max-width:720px){.site-nav{display:none}}
+.kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.kicker .hl{color:var(--accent)}
+.hero{padding:64px 0 8px}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(40px,6vw,64px);line-height:1.04;letter-spacing:-.015em;margin:16px 0 20px}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.dek{font-family:var(--serif);font-size:clamp(19px,2.2vw,23px);line-height:1.45;color:var(--ink-2);max-width:56ch}
+.byline{font:13px var(--mono);color:var(--ink-3);margin-top:16px}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);margin-top:44px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+.stat{padding:20px 22px}
+.stat + .stat{border-left:1px solid var(--line)}
+.stat .v{font-family:var(--mono);font-size:28px;font-weight:500;letter-spacing:-.02em}
+.stat-strip.s6 .v{font-size:22px}
+.stat .l{font-size:14px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(27px,3.4vw,36px);line-height:1.12;margin:56px 0 8px}
+h2 .no{color:var(--accent)}
+p{margin:10px 0;color:var(--ink)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 12px;margin:22px 0}
+.panel h3{font-family:var(--serif);font-size:21px;font-weight:600;margin:0 0 10px}
+.cap{font-size:13px;color:var(--ink-3);margin:10px 2px 10px;line-height:1.55}
+.score{display:grid;grid-template-columns:1fr;gap:10px;margin:18px 0}
+.srow{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 17px}
+.srow .badge{font:500 21px var(--mono);white-space:nowrap;min-width:112px}
+.srow .what{font-weight:600}
+.srow .note{color:var(--ink-2);font-size:14.5px}
+.good{color:var(--sage)} .bad{color:var(--bad)} .mid{color:var(--gold)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.cell{border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;background:var(--card)}
+.cell .tag{font:11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.cell .big{font-family:var(--serif);font-size:20px;font-weight:600;margin:5px 0}
+.cell p{font-size:14.5px;margin:4px 0;color:var(--ink-2)}
+.cell.hot{background:var(--bad-soft)}
+.cell.calm{background:var(--sage-soft)}
+.slate{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px}
+.card .d{font:11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.card .t{font-family:var(--mono);font-size:20px;font-weight:500;margin:3px 0}
+.card p{font-size:14px;margin:4px 0;color:var(--ink-2)}
+.card .pend{font:12.5px var(--mono);color:var(--ink-3)}
+.pull{font-family:var(--serif);font-size:23px;line-height:1.45;font-weight:600;border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin:28px 0}
+.subh{font-family:var(--serif);font-size:19px;font-weight:600;margin:20px 0 8px}
+.twrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.twrap table{min-width:660px}
+table{width:100%;border-collapse:collapse;margin:12px 0 6px;font-size:14.5px}
+th{font:500 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:8px 10px;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);vertical-align:top;line-height:1.45}
+td.n,th.n{text-align:right;font-family:var(--mono);font-size:13.5px;color:var(--ink);white-space:nowrap}
+td.deal{color:var(--ink);font-weight:600}
+tr.hl td{background:var(--accent-soft)}
+@media(max-width:720px){table{font-size:13px}td,th{padding:7px 6px}td.n,th.n{font-size:12px}}
+.foot{border-top:1px solid var(--line);margin-top:56px;padding-top:16px;font:13px var(--mono);color:var(--ink-3);line-height:1.7}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono)}
+.f-beat{fill:var(--sage)} .f-miss{fill:var(--bad)} .f-inl{fill:var(--ink-3)} .f-gm{fill:var(--gold)} .f-clay{fill:var(--accent)} .f-slate{fill:var(--slate)}
+.t-ink{fill:var(--ink)} .t-mut{fill:var(--ink-3)} .t-inv{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-clay{stroke:var(--accent)} .s-mut{stroke:var(--ink-3)}
+@media(max-width:720px){.stat-strip{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}.slate,.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.wrap,.masthead-inner{padding:0 18px}.mode-toggle .lbl{display:none}}
+
+
+.callout{border:1px solid var(--line);border-left:4px solid var(--gold);background:var(--card);border-radius:var(--radius);padding:16px 20px;margin:26px 0}
+.callout .big{font-family:var(--serif);font-size:20px;font-weight:600;margin:2px 0 6px}
+.callout p{color:var(--ink-2);font-size:15.5px}
+.mode-toggle svg{width:15px;height:15px;flex:none}
+.mode-toggle .ic-sun{display:none}
+html[data-mode="dark"] .mode-toggle .ic-sun{display:block}
+html[data-mode="dark"] .mode-toggle .ic-moon{display:none}
+
+thead th{background:var(--paper-2);color:var(--ink);border-bottom:2px solid var(--ink-3);padding:10px}
+tbody td{border-bottom:1px solid var(--line)}
+tbody tr:nth-child(even) td{background:var(--paper-2)}
+tbody tr:hover td{background:var(--accent-soft)}
+td strong{color:var(--ink)}
+/* --- premium flow diagram (carried from the oil paper) --- */
+.flow{display:flex;gap:8px;align-items:stretch;margin:8px 0 2px}
+.fstep{flex:1 1 0;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:12px 13px}
+.fstep .fn{font:700 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.fstep p{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin:0}
+.fstep.hot{border-color:var(--accent)}
+.farrow{align-self:center;color:var(--ink-3);font-size:17px;flex:none}
+@media(max-width:720px){.flow{flex-direction:column}.farrow{transform:rotate(90deg)}}
+/* --- executive summary --- */
+.execsum{border:1px solid var(--ink-3);background:var(--paper-2);border-radius:var(--radius);padding:18px 22px 10px;margin:28px 0 4px}
+.execsum .tag{font:700 11.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.execsum p{font-size:15.5px;line-height:1.62;color:var(--ink);margin:0 0 10px}
+/* --- numbered sources --- */
+sup.src{font-size:10px;line-height:0;vertical-align:super;white-space:nowrap}
+sup.src a{color:var(--accent);text-decoration:none;font-weight:700;padding:0 1px}
+sup.src a:hover,sup.src a:focus-visible{text-decoration:underline}
+.foot .meth p{margin:0 0 8px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+ol.srclist{font-size:13.5px;line-height:1.55;color:var(--ink-2);padding-left:24px;margin:10px 0 14px}
+ol.srclist li{margin-bottom:5px}
+ol.srclist a{color:var(--accent)}
+/* --- resolution chart paths --- */
+.p-ind{fill:none;stroke:var(--slate);stroke-width:1.2;opacity:.38}
+.p-split{fill:none;stroke:var(--slate);stroke-width:1.2;opacity:.38;stroke-dasharray:5 4}
+.p-mean{fill:none;stroke:var(--accent);stroke-width:2.8}
+.p-dot{fill:var(--accent)}
+
+/* --- v2 election colors: read in both ks-modes --- */
+.elec-r{color:#b3402e}
+.elec-b{color:#2f6ea6}
+html[data-mode="dark"] .elec-r{color:#e0684f}
+html[data-mode="dark"] .elec-b{color:#7aa7dd}
+.f-r{fill:#b3402e}
+.f-b{fill:#2f6ea6}
+.f-n{fill:#8a8474}
+html[data-mode="dark"] .f-r{fill:#e0684f}
+html[data-mode="dark"] .f-b{fill:#7aa7dd}
+html[data-mode="dark"] .f-n{fill:#6b7686}
+.c-r{fill:#b3402e}
+.c-d{fill:#2f6ea6}
+.c-s{fill:#8a8474;opacity:.75}
+html[data-mode="dark"] .c-r{fill:#e0684f}
+html[data-mode="dark"] .c-d{fill:#7aa7dd}
+html[data-mode="dark"] .c-s{fill:#9aa4b2;opacity:.8}
+.meanmark{fill:var(--ink)}
+.pm-lab{font-size:12.5px;font-weight:700}
+.pm-cite{font-size:12px;color:var(--ink-2);margin-top:8px}
+.repo-link{font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.repo-link a{color:var(--accent)}
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   A marked panel ([data-panel-pop]) opens whole: chart, title, caption,
+   in a full-screen viewer, the way photos open on the Photography page.
+   The viewer zooms (rev. 2, Nov 2026): a toolbar shows the real zoom
+   percentage with minus, plus and Fit controls. 100% is the panel at
+   exactly its in-page width; the panel keeps a wide layout (up to
+   1100px, charts refit on the resize event) and is transform-scaled
+   inside a sizing wrapper set to the scaled dimensions, so the overlay
+   scrolls and pans over the true zoomed size. Pinch zoom still works
+   on top of the transform. */
+[data-panel-pop]{cursor:zoom-in;position:relative}
+[data-panel-pop]:focus-visible{outline:2px solid var(--accent,#b4552d);outline-offset:3px}
+.pp-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--card,#fffdf8);color:var(--ink-2,#8b96a5);border:1px solid var(--line,#ccc);opacity:0;pointer-events:none;transition:opacity .15s;z-index:6}
+[data-panel-pop]:hover .pp-badge,[data-panel-pop]:focus-visible .pp-badge{opacity:.94}
+@media(hover:none){.pp-badge{opacity:.78}}
+.pp-overlay{position:fixed;inset:0;z-index:400;background:rgba(8,10,12,.76);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:none;overflow:auto;overscroll-behavior:contain;padding:26px 14px 44px;box-sizing:border-box}
+.pp-overlay.open{display:block}
+.pp-stage{margin:0 auto;position:relative}
+.pp-zoomwrap{position:relative;margin:0 auto}
+.pp-stage [data-panel-pop]{cursor:default}
+.pp-close{position:fixed;top:12px;right:12px;z-index:410;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(14,16,20,.88);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.pp-close svg{width:19px;height:19px;display:block}
+.pp-tools{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:420;display:flex;align-items:center;gap:2px;background:rgba(14,16,20,.88);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:4px;color:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.pp-zbtn{appearance:none;-webkit-appearance:none;width:34px;height:34px;border-radius:999px;border:0;background:transparent;color:#fff;font-size:19px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0;font-family:inherit}
+.pp-zbtn:hover,.pp-zbtn:active{background:rgba(255,255,255,.18)}
+.pp-zbtn.pp-zfit{width:auto;padding:0 11px;font-size:12px;font-weight:600;letter-spacing:.05em}
+.pp-zlabel{min-width:50px;text-align:center;font-size:12.5px;font-weight:600;letter-spacing:.02em}
+body.pp-lock{overflow:hidden}
+.pp-ph{border:1px dashed var(--line,#ccc);border-radius:8px;box-sizing:border-box}
+@media(max-width:720px){.pp-overlay{padding:14px 8px 30px}}
+/* /panelpop-css */
+
+/* --- v3: metric strip demoted to a supporting strip under the summary --- */
+.stat-strip.sm{margin-top:26px}
+.stat-strip.sm .stat{padding:12px 16px}
+.stat-strip.sm .stat .v{font-size:20px}
+.stat-strip.sm .stat .l{font-size:12px;margin-top:2px;line-height:1.4}
+/* --- v3: the branch record, the table drawn as a visual --- */
+.branches{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.branch{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper-2)}
+.branch .b-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.branch .b-lab{font:700 10.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.branch .b-if{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.25}
+.branch .b-price{font-size:12.5px;color:var(--ink-2);margin-top:2px}
+.chip{flex:none;font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:5px 11px;border:1.5px solid;text-align:center;line-height:1.3}
+.chip small{display:block;font-weight:500;text-transform:none;letter-spacing:0;font-size:10.5px;opacity:.85}
+.chip-rep{color:var(--sage);border-color:var(--sage)}
+.chip-gate{color:var(--gold);border-color:var(--gold)}
+.chip-dem{color:var(--accent);border-color:var(--accent)}
+.branch .b-moves{font-size:14.5px;margin-top:8px}
+.evgroup{font-size:12.5px;color:var(--ink-2);margin-top:12px;font-weight:600}
+.evrow{display:flex;align-items:center;gap:10px;margin-top:7px;font-size:12.5px}
+.evrow .evlab{flex:0 0 168px;color:var(--ink-2)}
+.evrow .evbar{flex:1 1 auto;height:9px;background:var(--line);border-radius:5px;position:relative;min-width:56px}
+.evrow .evbar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--slate)}
+.evrow .evbar i.neg{background:var(--accent)}
+.evrow .evbar .gate{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.evrow .evval{flex:0 0 224px;font-weight:600;color:var(--ink)}
+.branch .b-note{font-size:13px;color:var(--ink-2);margin-top:11px;line-height:1.55}
+@media(max-width:720px){.evrow{flex-wrap:wrap}.evrow .evlab{flex:1 1 100%}.evrow .evval{flex:1 1 100%}}
+/* --- v3: premium chart point pop-ups (the oil paper's popover pattern) --- */
+.ptip{cursor:pointer;outline:none}
+.ptip:focus-visible .pdot{stroke:var(--ink);stroke-width:2.5}
+.ptlab{font-size:11px;font-weight:700}
+#tipop{position:fixed;z-index:500;max-width:min(320px,88vw);background:var(--card);color:var(--ink);border:1px solid var(--ink-3);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.28);padding:12px 14px;font-size:13.5px;line-height:1.55;display:none}
+#tipop.open{display:block}
+#tipop .tt{font:700 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+#tipop p{margin:0;color:var(--ink-2)}
+
+/* --- v4: color discipline: the resolution paths leave slate blue for a
+   neutral gray; red/blue in charts now mean parties or nothing --- */
+.p-ind{stroke:var(--ink-3);opacity:.34}
+.p-split{stroke:var(--ink-3);opacity:.34;stroke-dasharray:5 4}
+/* --- v4: premium point highlight ring + instruction line --- */
+.pring{fill:none;stroke:var(--ink);stroke-width:1.6;opacity:0;transition:opacity .15s ease;pointer-events:none}
+.ptip:hover .pring,.ptip:focus-visible .pring,.ptip.open .pring{opacity:1}
+.pt-hint{font-size:12px;color:var(--ink-3);margin:6px 2px 0}
+
+/* --- v5: the H1's italic tail reads in ink (the desk rule colors h1
+   em accent); title color lives on 'who wins' only --- */
+.hero h1 em{color:inherit}
+/* --- v5: premium rings visible at rest (ink tone, both modes); the
+   hovered, focused or pinned point's ring thickens --- */
+.pring{opacity:1;stroke-width:1.5}
+.ptip:hover .pring,.ptip:focus-visible .pring,.ptip.open .pring{stroke-width:2.6}
+
+</style></head><body>
+<header class="masthead"><div class="masthead-inner">
+<a class="brand" href="index.html" aria-label="Kevin Sigey, home"><span class="monogram"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect class="tile" width="64" height="64" rx="13"/><path class="ks" transform="translate(5.433 45.859) scale(0.01984)" d="M1417 -112 1564 -55V0H964V-50L1081 -98L634 -636H508V-109L659 -55V0H79V-55L234 -109V-1243L79 -1297V-1352H663V-1298L508 -1243V-763H659L1135 -1249L980 -1298V-1352H1455V-1298L1305 -1247L846 -794Z M2351 -1346 2443 -1421H2490L2551 -955L2475 -945L2322 -1202Q2283 -1225 2241 -1238Q2182 -1256 2115 -1256Q1987 -1256 1922.5 -1206.5Q1858 -1157 1858 -1069Q1858 -1009 1886.5 -969.5Q1915 -930 1964.5 -903.0Q2014 -876 2077.0 -855.0Q2140 -834 2209 -813Q2278 -791 2347.0 -762.0Q2416 -733 2473.0 -689.0Q2530 -645 2564.5 -576.5Q2599 -508 2599 -407Q2599 -264 2529.5 -168.5Q2460 -73 2337.0 -24.5Q2214 24 2053 24Q1944 24 1858.5 11.5Q1773 -1 1681 -34L1601 -414H1679L1889 -116Q1949 -102 2018 -102Q2131 -102 2205.0 -127.0Q2279 -152 2315.5 -201.5Q2352 -251 2352 -326Q2352 -395 2317.0 -440.0Q2282 -485 2225.0 -513.5Q2168 -542 2099.5 -563.0Q2031 -584 1964 -606Q1897 -629 1836.0 -658.0Q1775 -687 1728.0 -729.5Q1681 -772 1654.0 -835.0Q1627 -898 1627 -988Q1627 -1109 1687.5 -1196.0Q1748 -1283 1860.5 -1330.0Q1973 -1377 2127 -1377Q2224 -1377 2307 -1358Q2328 -1353 2351 -1346Z"/></svg></span><span class="nameplate">Kevin Sigey</span></a>
+<nav class="site-nav" aria-label="Primary">
+<a href="writing.html" aria-current="page">Research Desk</a>
+<a href="index.html#systems">Systems</a>
+<a href="index.html#experience">Experience</a>
+<a href="photos.html">Photography</a>
+<a href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+</nav>
+<button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Toggle dark mode"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13.2A8.2 8.2 0 1 1 10.8 4 6.6 6.6 0 0 0 20 13.2Z"/><path d="M17.5 4.5l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z" fill="currentColor" stroke="none"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3L19 19M19 5l-1.7 1.7M6.7 17.3L5 19"/></svg><span class="lbl">Light</span></button>
+</div></header>
+<div class="wrap"><header class="hero">
+<p class="kicker">The Midterm Backtest <span class="hl">·</span> Elections, Sectors, Energy</p>
+<h1>Stocks don't care <span class="elec-r">who</span> <span class="elec-b">wins</span>, they're just glad <em>it's over</em></h1>
+<p class="dek">On Tuesday the country picks a Congress, and by Wednesday the commentary will credit the winner for whatever the market does. I ran the last eight midterms, 1994 to 2022, to check. <strong>The winner's identity explains almost none of it. The index moves because the uncertainty ends, sectors move on what the result changes, and oil does not listen to either.</strong></p>
+<p class="byline">Kevin Sigey · November 2, 2026 · Study: the eight midterms of 1994–2022 · Outcome pricing as of October 31 · Oil as of the October 30 close and the November 1 OPEC+ decision</p>
+</header>
+
+<div class="execsum"><div class="tag">Executive summary</div>
+<p>Eight midterms say that who won is the wrong question to ask the market during election week. The S&amp;P 500 rose on the Wednesday after the vote in <strong>seven of eight</strong> cycles, <strong>0.48 percent</strong> on average, and was higher sixty days later in seven of eight, <strong>4.55 percent</strong> on average, under every kind of winner<sup class="src"><a href="#src-1">1</a></sup>. The index does not price the winner. It prices the relief that comes when the question is finally answered.</p>
+<p>Sectors price something narrower: what the result actually changes. Banks rose on the Wednesday in <strong>all four</strong> cycles whose outcome was the expected one, a resolution bid that does not care which party supplies it<sup class="src"><a href="#src-1">1</a></sup>. Healthcare holds the one sharp exception, a relief trade that exists only when government splits and only when Wednesday's gap confirms it. Section 2 draws the branch record: for each outcome, what the record says moves, and how the evidence grades.</p>
+<p>Energy is the exception that proves the rule. In election weeks XLE tracked WTI crude at <strong>0.78 on the Wednesday</strong> and <strong>0.95 across the five sessions after the vote</strong><sup class="src"><a href="#src-1">1</a></sup>. Once oil's move is taken out, what is left belongs to no party. Oil goes into Tuesday priced on a strait running at <strong>48 percent of prewar flows</strong><sup class="src"><a href="#src-7">7</a></sup>, not on the result in Congress.</p>
+</div>
+
+<div class="stat-strip sm">
+<div class="stat"><div class="v">+0.48%</div><div class="l">Average Wednesday after the vote; positive in 7 of 8 midterms<sup class="src"><a href="#src-1">1</a></sup></div></div>
+<div class="stat"><div class="v">+4.55%</div><div class="l">Average return at 60 days; positive in 7 of 8, under every kind of winner<sup class="src"><a href="#src-1">1</a></sup></div></div>
+<div class="stat"><div class="v">4 of 4</div><div class="l">Expected outcomes where banks rose on the Wednesday<sup class="src"><a href="#src-1">1</a></sup></div></div>
+<div class="stat"><div class="v">0.78</div><div class="l">XLE's correlation to WTI on the Wednesday; 0.95 over five sessions<sup class="src"><a href="#src-1">1</a></sup></div></div>
+</div>
+
+<p>Prediction markets have already answered most of the question. What they price for Tuesday is set out below, in the order section 2 follows.</p>
+<div class="panel" data-panel-pop><h3>The priced outcome: a Democratic sweep is the base case</h3>
+<svg viewBox="0 0 820 132" role="img" aria-label="Prediction market pricing for the 2026 midterms: Democratic sweep 71 percent, split Congress 24 percent, Republican sweep 5 percent"><rect x="30" y="34" width="540" height="40" class="f-b" rx="3"/><rect x="570" y="34" width="182" height="40" class="f-n"/><rect x="752" y="34" width="38" height="40" class="f-r" rx="3"/><text x="46" y="59" font-size="13.5" font-weight="700" class="t-inv">Democratic sweep · 71%</text><text x="582" y="59" font-size="13.5" font-weight="700" class="t-ink">Split · 24%</text><line x1="771" y1="74" x2="771" y2="86" class="s-ink" stroke-width="1"/><text x="790" y="104" text-anchor="end" font-size="13" font-weight="700" class="t-ink">Republican sweep · 5%</text><text x="30" y="22" font-size="12" class="t-mut">What the market prices for Tuesday, October 31 snapshot</text></svg>
+<p class="pm-cite">Outcome pricing, October 31, 2026: Polymarket and Kalshi, cross-checked in the author's midterm study<sup class="src"><a href="#src-1">1</a></sup>. A priced outcome is a resolution waiting to happen, and the surprise branches are where the sector map earns its keep.</p></div>
+<h2>1 · The headline: the market prices the ending</h2>
+<p><strong>The midterm trade is not a bet on the winner. It is a bet on the ending.</strong> Across the eight elections, the Wednesday move averaged +0.48 percent and was positive in seven of eight cycles. Sixty days on, the average was +4.55 percent, again positive in seven of eight<sup class="src"><a href="#src-1">1</a></sup>. Grouped by who won, the sixty-day average is positive in every group: +3.4 percent for Republican-favorable cycles, +5.5 percent for the Democratic Congress of 2006, and +5.7 percent for split governments<sup class="src"><a href="#src-1">1</a></sup>. Being glad it is over is not a joke about politics. It is the central fact of the sample, and anyone who claims the winner moves the index has to explain away all three groups at once.</p>
+<div class="panel" data-panel-pop><h3>Eight midterms, one shape: the index after the vote</h3>
+<svg viewBox="0 0 960 404" role="img" aria-label="S&P 500 paths around the eight midterm elections, 1994 to 2022, indexed to the election-day close"><line x1="56" y1="273" x2="788" y2="273" class="s-line" stroke-width="0.7"/><text x="48" y="277" text-anchor="end" font-size="11" class="t-mut">90</text><line x1="56" y1="177" x2="788" y2="177" class="s-ink" stroke-width="1.4"/><text x="48" y="181" text-anchor="end" font-size="11" class="t-mut">100</text><line x1="56" y1="81" x2="788" y2="81" class="s-line" stroke-width="0.7"/><text x="48" y="85" text-anchor="end" font-size="11" class="t-mut">110</text><polyline points="56.0,189.4 65.8,185.9 75.5,180.2 85.3,160.1 95.0,163.6 104.8,174.4 114.6,179.9 124.3,174.8 134.1,187.2 143.8,184.3 153.6,177.0 163.4,175.4 173.1,182.1 182.9,185.6 192.6,176.7 202.4,179.9 212.2,176.7 221.9,183.1 231.7,184.3 241.4,193.9 251.2,214.3 261.0,209.2 270.7,204.8 280.5,200.6 290.2,200.9 300.0,202.2 309.8,211.5 319.5,202.8 329.3,201.9 339.0,201.2 348.8,207.9 358.6,216.9 368.3,213.4 378.1,207.3 387.8,203.8 397.6,199.0 407.4,196.1 417.1,191.6 426.9,190.3 436.6,193.2 446.4,183.2 456.2,186.1 465.9,185.1 475.7,180.0 485.4,184.8 495.2,184.2 505.0,195.4 514.7,190.9 524.5,186.4 534.2,186.4 544.0,185.5 553.8,184.5 563.5,183.5 573.3,182.9 583.0,182.6 592.8,171.3 602.6,165.5 612.3,165.2 622.1,166.2 631.8,171.6 641.6,175.2 651.4,172.3 661.1,171.0 670.9,168.4 680.6,167.4 690.4,163.6 700.2,167.8 709.9,163.9 719.7,164.2 729.4,158.4 739.2,144.6 749.0,140.4 758.7,139.1 768.5,139.1 778.2,139.1 788.0,137.9" class="p-ind"/><polyline points="56.0,212.0 65.8,215.2 75.5,201.5 85.3,213.3 95.0,206.6 104.8,212.0 114.6,213.6 124.3,191.3 134.1,186.1 143.8,170.0 153.6,177.0 163.4,166.8 173.1,153.6 182.9,150.6 192.6,157.6 202.4,160.3 212.2,166.8 221.9,167.9 231.7,158.4 241.4,151.2 251.2,151.2 261.0,145.3 270.7,136.6 280.5,129.1 290.2,105.4 300.0,111.9 309.8,111.9 319.5,104.4 329.3,133.4 339.0,120.5 348.8,123.5 358.6,140.1 368.3,114.0 378.1,109.2 387.8,113.8 397.6,111.9 407.4,126.8 417.1,124.8 426.9,153.9 436.6,128.6 446.4,129.9 456.2,113.9 465.9,109.6 475.7,95.3 485.4,90.7 495.2,68.8 505.0,73.4 514.7,76.1 524.5,59.4 534.2,68.0 544.0,68.0 553.8,70.4 563.5,58.3 573.3,32.4 583.0,37.8 592.8,29.7 602.6,40.2 612.3,59.9 622.1,67.5 631.8,86.1 641.6,58.8 651.4,51.8 661.1,43.2 670.9,72.0 680.6,74.5 690.4,63.7 700.2,44.2 709.9,56.9 719.7,38.8 729.4,30.5 739.2,37.0 749.0,43.7 758.7,32.6 768.5,49.1 778.2,61.5 788.0,59.4" class="p-ind"/><polyline points="56.0,201.3 65.8,194.2 75.5,213.3 85.3,194.2 95.0,200.3 104.8,211.1 114.6,202.2 124.3,211.7 134.1,193.4 143.8,184.5 153.6,177.0 163.4,164.6 173.1,188.3 182.9,199.9 192.6,214.4 202.4,207.1 212.2,206.2 221.9,188.7 231.7,181.7 241.4,191.3 251.2,192.5 261.0,171.6 270.7,153.7 280.5,160.7 290.2,160.0 300.0,178.6 309.8,151.7 319.5,154.8 329.3,153.3 339.0,166.4 348.8,170.8 358.6,181.4 368.3,175.1 378.1,201.5 387.8,189.0 397.6,188.1 407.4,188.2 417.1,203.1 426.9,179.1 436.6,187.4 446.4,198.3 456.2,205.0 465.9,191.8 475.7,191.4 485.4,198.5 495.2,198.0 505.0,219.1 514.7,211.4 524.5,210.2 534.2,180.5 544.0,177.5 553.8,160.7 563.5,163.1 573.3,177.1 583.0,162.3 592.8,159.6 602.6,160.0 612.3,156.8 622.1,166.5 631.8,170.5 641.6,184.8 651.4,199.5 661.1,210.8 670.9,205.2 680.6,229.5 690.4,241.9 700.2,235.3 709.9,228.5 719.7,249.9 729.4,232.9 739.2,231.1 749.0,240.0 758.7,245.5 768.5,249.7 778.2,260.5 788.0,254.3" class="p-ind"/><polyline points="56.0,182.0 65.8,178.8 75.5,175.8 85.3,181.8 95.0,182.5 104.8,182.7 114.6,189.1 124.3,189.6 134.1,191.3 143.8,180.7 153.6,177.0 163.4,174.9 173.1,180.0 182.9,179.6 192.6,177.2 202.4,170.0 212.2,167.3 221.9,164.8 231.7,164.5 241.4,164.0 251.2,163.0 261.0,161.1 270.7,165.0 280.5,178.3 290.2,174.2 300.0,164.2 309.8,163.8 319.5,165.9 329.3,158.5 339.0,154.3 348.8,155.1 358.6,159.4 368.3,157.6 378.1,154.8 387.8,155.5 397.6,154.5 407.4,145.9 417.1,145.8 426.9,148.5 436.6,146.6 446.4,147.2 456.2,150.8 465.9,156.8 475.7,151.1 485.4,144.6 495.2,146.7 505.0,150.8 514.7,152.5 524.5,150.4 534.2,158.3 544.0,153.8 553.8,154.6 563.5,151.3 573.3,147.0 583.0,139.6 592.8,141.5 602.6,141.1 612.3,144.4 622.1,142.5 631.8,145.5 641.6,142.6 651.4,134.6 661.1,146.4 670.9,147.3 680.6,147.8 690.4,142.7 700.2,136.0 709.9,130.0 719.7,128.7 729.4,128.4 739.2,128.1 749.0,125.9 758.7,127.2 768.5,134.7 778.2,138.1 788.0,129.7" class="p-ind"/><polyline points="56.0,198.9 65.8,189.8 75.5,187.7 85.3,186.0 95.0,183.2 104.8,183.0 114.6,185.7 124.3,185.6 134.1,184.8 143.8,184.5 153.6,177.0 163.4,173.2 173.1,154.7 182.9,151.0 192.6,152.8 202.4,159.9 212.2,155.9 221.9,159.6 231.7,171.2 241.4,172.5 251.2,187.5 261.0,187.0 270.7,173.1 280.5,170.4 290.2,171.2 300.0,185.2 309.8,171.2 319.5,182.4 329.3,179.5 339.0,184.8 348.8,164.7 358.6,152.3 368.3,149.6 378.1,150.7 387.8,150.1 397.6,146.5 407.4,142.7 417.1,136.9 426.9,136.3 436.6,135.4 446.4,139.9 456.2,134.2 465.9,133.1 475.7,130.7 485.4,124.3 495.2,121.2 505.0,122.6 514.7,122.2 524.5,120.8 534.2,120.1 544.0,121.7 553.8,121.4 563.5,111.0 573.3,111.5 583.0,106.2 592.8,108.2 602.6,110.3 612.3,111.5 622.1,107.9 631.8,98.7 641.6,100.4 651.4,92.9 661.1,91.1 670.9,101.3 680.6,102.7 690.4,100.4 700.2,94.5 709.9,93.9 719.7,89.9 729.4,87.3 739.2,105.6 749.0,97.9 758.7,81.3 768.5,83.3 778.2,81.0 788.0,78.0" class="p-split"/><polyline points="56.0,210.3 65.8,216.9 75.5,206.2 85.3,199.1 95.0,200.4 104.8,189.7 114.6,191.1 124.3,185.0 134.1,174.2 143.8,173.7 153.6,177.0 163.4,171.0 173.1,167.1 182.9,166.2 192.6,163.2 202.4,162.2 212.2,163.3 221.9,162.2 231.7,161.9 241.4,161.3 251.2,155.7 261.0,157.3 270.7,155.6 280.5,150.3 290.2,147.6 300.0,148.3 309.8,145.8 319.5,147.8 329.3,154.7 339.0,148.4 348.8,144.6 358.6,145.7 368.3,144.0 378.1,150.7 387.8,151.3 397.6,167.1 407.4,162.2 417.1,177.9 426.9,184.4 436.6,192.0 446.4,173.6 456.2,149.8 465.9,145.7 475.7,141.1 485.4,139.8 495.2,139.7 505.0,136.5 514.7,135.1 524.5,140.5 534.2,150.3 544.0,150.9 553.8,168.6 563.5,177.7 573.3,165.8 583.0,148.6 592.8,156.5 602.6,164.2 612.3,166.9 622.1,172.7 631.8,181.5 641.6,169.0 651.4,167.0 661.1,162.1 670.9,147.7 680.6,153.1 690.4,150.8 700.2,163.7 709.9,176.2 719.7,167.3 729.4,179.5 739.2,167.7 749.0,153.7 758.7,157.4 768.5,147.6 778.2,150.3 788.0,154.7" class="p-ind"/><polyline points="56.0,182.2 65.8,211.1 75.5,194.5 85.3,211.0 95.0,216.1 104.8,202.5 114.6,192.6 124.3,182.6 134.1,188.2 143.8,183.0 153.6,177.0 163.4,156.5 173.1,158.3 182.9,167.8 192.6,185.9 202.4,187.6 212.2,194.1 221.9,184.3 231.7,181.8 241.4,197.9 251.2,215.2 261.0,212.1 270.7,218.3 280.5,203.5 290.2,200.4 300.0,178.9 309.8,181.0 319.5,175.2 329.3,162.5 339.0,193.9 348.8,195.4 358.6,217.1 368.3,215.4 378.1,215.2 387.8,210.6 397.6,210.9 407.4,227.9 417.1,245.7 426.9,246.7 436.6,259.9 446.4,274.1 456.2,291.7 465.9,314.0 475.7,272.6 485.4,266.0 495.2,267.1 505.0,259.5 514.7,258.6 524.5,279.5 534.2,250.9 544.0,243.9 553.8,235.6 563.5,231.4 573.3,228.2 583.0,227.8 592.8,233.4 602.6,223.1 612.3,220.8 622.1,213.9 631.8,201.7 641.6,214.3 651.4,212.4 661.1,211.9 670.9,204.1 680.6,211.1 690.4,212.4 700.2,197.8 709.9,189.6 719.7,189.1 729.4,182.5 739.2,178.5 749.0,179.7 758.7,188.8 768.5,187.7 778.2,187.1 788.0,175.0" class="p-split"/><polyline points="56.0,169.7 65.8,176.9 75.5,182.1 85.3,159.4 95.0,166.5 104.8,170.7 114.6,194.8 124.3,204.5 134.1,191.1 143.8,182.1 153.6,177.0 163.4,196.7 173.1,145.2 182.9,135.7 192.6,144.2 202.4,135.7 212.2,143.3 221.9,146.4 231.7,141.9 241.4,145.5 251.2,132.2 261.0,125.9 270.7,126.1 280.5,142.2 290.2,143.9 300.0,112.7 309.8,113.5 319.5,114.6 329.3,133.0 339.0,147.4 348.8,149.1 358.6,141.4 368.3,148.8 378.1,134.6 387.8,127.0 397.6,133.4 407.4,157.9 417.1,169.4 426.9,177.6 436.6,176.3 446.4,162.0 456.2,175.8 465.9,170.3 475.7,174.1 485.4,186.0 495.2,169.0 505.0,171.5 514.7,175.6 524.5,168.2 534.2,179.2 544.0,157.3 553.8,157.9 563.5,151.0 573.3,138.6 583.0,135.0 592.8,131.1 602.6,133.0 612.3,148.7 622.1,155.9 631.8,137.7 641.6,125.8 651.4,126.8 661.1,126.5 670.9,115.4 680.6,113.1 690.4,125.9 700.2,111.0 709.9,100.2 719.7,85.1 729.4,96.3 739.2,102.6 749.0,89.1 758.7,100.6 768.5,109.5 778.2,107.1 788.0,95.1" class="p-split"/><polyline points="56.0,193.2 65.8,196.1 75.5,192.7 85.3,188.1 95.0,189.9 104.8,190.8 114.6,193.6 124.3,190.6 134.1,187.1 143.8,180.4 153.6,177.0 163.4,172.4 173.1,166.2 182.9,167.0 192.6,171.5 202.4,170.3 212.2,171.7 221.9,169.6 231.7,168.2 241.4,172.2 251.2,176.5 261.0,171.2 270.7,166.6 280.5,166.9 290.2,162.9 300.0,160.2 309.8,156.3 319.5,156.0 329.3,159.6 339.0,164.6 348.8,163.9 358.6,169.3 368.3,164.7 378.1,165.5 387.8,162.6 397.6,163.9 407.4,168.5 417.1,174.4 426.9,177.1 436.6,177.4 446.4,176.0 456.2,175.9 465.9,175.8 475.7,167.0 485.4,166.8 495.2,161.8 505.0,166.1 514.7,165.3 524.5,164.4 534.2,161.7 544.0,157.3 553.8,156.7 563.5,153.4 573.3,147.9 583.0,142.5 592.8,141.4 602.6,142.1 612.3,146.8 622.1,149.1 631.8,149.2 641.6,146.3 651.4,144.7 661.1,145.4 670.9,145.2 680.6,149.9 690.4,150.1 700.2,143.8 709.9,142.4 719.7,139.1 729.4,137.0 739.2,136.9 749.0,133.8 758.7,134.1 768.5,137.6 778.2,140.6 788.0,135.5" class="p-mean"/><line x1="154" y1="24" x2="154" y2="330" class="s-ink" stroke-width="1" stroke-dasharray="4 3"/><text x="154" y="352" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">Election day</text><text x="349" y="352" text-anchor="middle" font-size="11.5" class="t-mut">+20 days</text><text x="544" y="352" text-anchor="middle" font-size="11.5" class="t-mut">+40</text><text x="739" y="352" text-anchor="middle" font-size="11.5" class="t-mut">+60</text><text x="56" y="352" text-anchor="middle" font-size="11.5" class="t-mut">−10</text><circle cx="163" cy="172" r="4.5" class="p-dot"/><line x1="163" y1="146" x2="163" y2="163" class="s-line" stroke-width="1" stroke-dasharray="3 3"/><text x="118" y="138" font-size="12" font-weight="700" class="t-ink">Wednesday: +0.48% mean, up 7 of 8</text><circle cx="788" cy="59" r="3.4" class="p-dot"/><text x="797" y="63" font-size="12" class="t-ink">1998</text><circle cx="788" cy="135" r="3.4" class="p-dot"/><text x="797" y="139" font-size="12" font-weight="700" class="t-ink">Mean of the eight</text><circle cx="788" cy="254" r="3.4" class="p-dot"/><text x="797" y="258" font-size="12" class="t-ink">2002</text><text x="56" y="398" font-size="11.5" class="t-mut">Dashed: the split-government cycles (2010, 2018, 2022).</text></svg>
+<p class="cap">SPY indexed to each election-day close. The one down Wednesday, 2022 at −2.06 percent, still finished +8.4 percent at sixty days. The one negative sixty-day window, 2002 at −4.9 percent, came in a winter dominated by the coming Iraq war, not by a verdict on a Republican Senate<sup class="src"><a href="#src-1">1</a></sup>.</p></div>
+<p>What the outcome does change is the size of the move, and it works through surprise rather than identity. Grouping the cycles by winner or by expectation explains only about a tenth of Wednesday's variation, which is close to noise<sup class="src"><a href="#src-1">1</a></sup>. Surprise cycles simply swung harder. The index's average Wednesday move, up or down, was 1.15 percent in surprise cycles against 0.85 percent in expected ones, and sector moves against the index averaged 1.09 percent against 0.75, about 45 percent larger<sup class="src"><a href="#src-1">1</a></sup>. The outcome decides how the story gets told afterwards. Expectations decide how large the move is at the time.</p>
+<p>Two honest discounts apply. The sixty-day average leans on 1998 (+13.8 percent, a dot-com winter) and 2022 (+8.4, a bear-market rally). The endpoint also flatters the path, since 2018's window closed +0.5 percent after falling 14.3 percent along the way<sup class="src"><a href="#src-1">1</a></sup>. The drift is real, but it is not a free ride.</p>
+<h2>2 · The sector map: only what a result changes</h2>
+<p><strong>Sectors do not move on who won. They move on what the win changes:</strong> a law that can now pass, a regulator who answers to someone new, or a tail risk that has just died. Tested branch by branch, most of the familiar election trades fail. The record below is the whole of what the evidence supports: three outcome branches, graded in the study's own terms.</p>
+<div class="panel" data-panel-pop><h3>The branch record: what moves, on what evidence, graded</h3>
+<div class="branches">
+<div class="branch">
+<div class="b-top"><div><div class="b-lab">If Tuesday produces</div><div class="b-if">The expected outcome</div><div class="b-price">This year a Democratic sweep, priced near 71%</div></div><span class="chip chip-rep">Repeats</span></div>
+<div class="b-moves">What the record says moves: <strong>banks, on the Wednesday, whichever party was expected</strong></div>
+<div class="evrow"><span class="evlab">Banks (KBE) · Wednesday</span><span class="evbar"><i class="pos" style="width:25%"></i></span><span class="evval">+0.87% average · rose in 4 of 4 expected cycles</span></div>
+<div class="evrow"><span class="evlab">Banks vs the index · next 20 days</span><span class="evbar"><i class="neg" style="width:93%"></i></span><span class="evval">−3.24% average · lagged in every cycle</span></div>
+<p class="b-note">The bid lasts about two days and is not a hold, because what is being bought is the ending, not the winner<sup class="src"><a href="#src-1">1</a></sup>.</p>
+</div>
+<div class="branch">
+<div class="b-top"><div><div class="b-lab">If Tuesday produces</div><div class="b-if">A split government</div><div class="b-price">Priced near 24%: the surprise</div></div><span class="chip chip-gate">Story, gated<small>E-1 survives</small></span></div>
+<div class="b-moves">What the record says moves: <strong>healthcare relief, bought only when the move confirms it</strong></div>
+<div class="evgroup">Healthcare (XLV) · Wednesdays on split cycles</div>
+<div class="evrow"><span class="evlab">2010</span><span class="evbar"><i class="pos" style="width:2%"></i></span><span class="evval">+0.06%</span></div>
+<div class="evrow"><span class="evlab">2018</span><span class="evbar"><i class="pos" style="width:98%"></i></span><span class="evval">+2.94%</span></div>
+<div class="evrow"><span class="evlab">2022</span><span class="evbar"><i class="neg" style="width:36%"></i></span><span class="evval">−1.08%</span></div>
+<div class="evrow"><span class="evlab">The gated version · 2018, its only firing</span><span class="evbar"><i class="pos" style="width:90%"></i></span><span class="evval">+2.7% through Friday</span></div>
+<p class="b-note">Taken raw, the three Wednesdays are a coin flip. The gated version, which buys only when Wednesday's gap lands between +1.0 and +3.5 percent, fired once, in 2018, and paid. The mechanism also has support from the other side. When Democrats took both chambers in 2006, UnitedHealth fell 3.2 percent on the Wednesday and Humana fell 5.9 percent. A sector that falls when one tail risk arrives can rise when both tail risks die<sup class="src"><a href="#src-1">1</a>,<a href="#src-2">2</a></sup>.</p>
+</div>
+<div class="branch">
+<div class="b-top"><div><div class="b-lab">If Tuesday produces</div><div class="b-if">A Republican sweep</div><div class="b-price">Priced near 5%: the tail</div></div><span class="chip chip-dem">Story, demerit<small>E-2 survives</small></span></div>
+<div class="b-moves">What the record says moves: <strong>banks again, if it happens</strong> (capital relief becomes passable, the one live legislative channel); <strong>clean energy is the short side</strong></div>
+<div class="evgroup">Bank Wednesday gaps in Republican wins, against the E-2 gate of +1.5%</div>
+<div class="evrow"><span class="evlab">2014</span><span class="evbar"><i class="pos" style="width:44%"></i><span class="gate" style="left:94%"></span></span><span class="evval">+0.70%</span></div>
+<div class="evrow"><span class="evlab">2002</span><span class="evbar"><i class="pos" style="width:14%"></i><span class="gate" style="left:94%"></span></span><span class="evval">+0.22%</span></div>
+<div class="evrow"><span class="evlab">Clean energy (TAN) vs the index · 20 days, 2014</span><span class="evbar"><i class="neg" style="width:95%"></i></span><span class="evval">−11.4 points</span></div>
+<p class="b-note">The E-2 gate, which needs a bank gap of at least +1.5 percent on the Wednesday, fired in <strong>zero</strong> historical Republican wins, because sweeps that are priced in tend to arrive quietly. The demerit stands<sup class="src"><a href="#src-1">1</a>,<a href="#src-2">2</a></sup>.</p>
+</div>
+</div>
+<p class="cap">Branches are the study's outcome classes, graded in its own terms: Repeats means the same direction in at least three cycles; Story means one clean cycle plus a mechanism<sup class="src"><a href="#src-1">1</a></sup>. Prices are the study's October 31 snapshot of Polymarket and Kalshi<sup class="src"><a href="#src-1">1</a></sup>. The grid behind the record is partial: sector funds enter the panel only from 2002, so no branch rests on more than six cycles; the Democratic-government class is a single cycle, 2006, so wherever it appears in the underlying file it is one observation, never an average; real estate has two cycles and supports no branch; communications (XLC) is not in the panel at all, because the fund launched in 2018 and has no midterm history here<sup class="src"><a href="#src-1">1</a></sup>.</p>
+<p class="repo-link">The full model, data, and code: <a href="https://github.com/kevinsigey/midterm-elections-model" target="_blank" rel="noopener">github.com/kevinsigey/midterm-elections-model</a></p></div>
+<p>Looked at across the full sector file underneath those branches, the loudest line is not a Wednesday line. <strong>Homebuilders barely move on the Wednesday itself, −0.41 percent on average, then rise over the following sixty days in all five measured cycles, +14.8 percent on average</strong>, the largest drift in the panel, and they beat the index over twenty days too, +4.7 points on average. The five cycles cover Republican, Democratic and split governments alike: whatever midterms do to housing, they do it slowly, as the uncertainty ends and the rate path clears, rather than through any winner<sup class="src"><a href="#src-1">1</a></sup>. The mirror image sits in energy: producers (XOP) lag the index by <strong>7.1 points over twenty days</strong> on average after election weeks, a give-back that section 3 explains. The Wednesday ranking itself is a relief ranking: utilities first (+0.92), solar and materials next, defense and health insurers last. Defensive and rate-sensitive names draw bids when the question closes, while story sectors wait for an actual consequence.</p>
+
+
+<p>The rest of the map is nulls, and the nulls are the finding. <strong>Defense does not move:</strong> the defense ETF's Wednesday averaged −0.16 percent across five cycles and was positive once, and the one big defense print, Boeing at +6.5 percent in 2002, came while the country was building up for Iraq<sup class="src"><a href="#src-1">1</a></sup>. <strong>Clean energy by party does not move:</strong> solar names led the 2022 Wednesday, but 2022's surprise was a Democratic Senate hold, so what rose was the sector tied to the surprise, not a party trade<sup class="src"><a href="#src-1">1</a></sup>. <strong>Small caps get no Wednesday bid:</strong> they lagged the S&amp;P 500 on four of six Wednesdays<sup class="src"><a href="#src-1">1</a></sup>.</p>
+<p>Three trades were refused in advance: the prior study pre-wrote no-trade verdicts for the priced sweep itself (E-3), an unresolved Senate (E-4), and a clean drift (E-5)<sup class="src"><a href="#src-2">2</a></sup>. E-6, extending the banks bid into the priced branch, was proposed on the full sample and not adopted. The pattern is in the record, but no trade was built on it<sup class="src"><a href="#src-1">1</a>,<a href="#src-2">2</a></sup>.</p>
+<h2>3 · The exception: oil cares about neither</h2>
+<p><strong>Energy is the control group.</strong> It looks like the most political sector in the market, full of pipelines, leases, and war. In election weeks, though, it trades crude, and the vote accounts for almost none of its move.</p>
+<p>XLE and WTI futures overlap in six cycles, from 2002 to 2022. Their correlation was <strong>0.78 on the Wednesday</strong> and <strong>0.95 across the five sessions after the vote</strong>, counted from the Monday close. When oil's move is stripped out using each cycle's trailing beta, the return left over was positive in all six cycles, between +0.1 and +3.6 percent, under every kind of outcome. That leftover follows no outcome class, and it sits inside estimation noise<sup class="src"><a href="#src-1">1</a></sup>. The benchmark for ordinary weeks is a weekly correlation of 0.58 over the same years, so election weeks are more dominated by oil, not less<sup class="src"><a href="#src-1">1</a></sup>.</p>
+<div class="panel" data-panel-pop><h3>XLE follows WTI through election week, not the count</h3>
+<svg viewBox="0 0 820 356" role="img" aria-label="XLE versus WTI returns on the Wednesday after each midterm election, 2002 to 2022"><line x1="52" y1="252" x2="792" y2="252" class="s-line" stroke-width="0.7"/><text x="44" y="256" text-anchor="end" font-size="11" class="t-mut">-4%</text><line x1="52" y1="210" x2="792" y2="210" class="s-line" stroke-width="0.7"/><text x="44" y="214" text-anchor="end" font-size="11" class="t-mut">-2%</text><line x1="52" y1="168" x2="792" y2="168" class="s-ink" stroke-width="1.4"/><text x="44" y="172" text-anchor="end" font-size="11" class="t-mut">+0%</text><line x1="52" y1="126" x2="792" y2="126" class="s-line" stroke-width="0.7"/><text x="44" y="130" text-anchor="end" font-size="11" class="t-mut">+2%</text><rect x="78" y="149.1" width="33" height="18.9" class="f-clay" rx="2"/><text x="94" y="142" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+0.90</text><rect x="118" y="168.0" width="33" height="29.8" class="f-beat" rx="2"/><text x="134" y="213" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">-1.42</text><text x="114" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2002</text><rect x="196" y="132.7" width="33" height="35.3" class="f-clay" rx="2"/><text x="212" y="126" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+1.68</text><rect x="236" y="135.9" width="33" height="32.1" class="f-beat" rx="2"/><text x="252" y="129" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+1.53</text><text x="232" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2006</text><rect x="314" y="163.4" width="33" height="4.6" class="f-clay" rx="2"/><text x="330" y="156" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+0.22</text><rect x="354" y="148.3" width="33" height="19.7" class="f-beat" rx="2"/><text x="370" y="141" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+0.94</text><text x="350" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2010</text><rect x="432" y="131.0" width="33" height="37.0" class="f-clay" rx="2"/><text x="448" y="124" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+1.76</text><rect x="472" y="127.5" width="33" height="40.5" class="f-beat" rx="2"/><text x="488" y="120" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+1.93</text><text x="468" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2014</text><rect x="550" y="133.6" width="33" height="34.4" class="f-clay" rx="2"/><text x="566" y="127" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">+1.64</text><rect x="590" y="168.0" width="33" height="18.3" class="f-beat" rx="2"/><text x="606" y="201" text-anchor="middle" font-size="12" font-weight="700" class="t-ink">-0.87</text><text x="586" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2018</text><rect x="668" y="168.0" width="33" height="102.7" class="f-clay" rx="2"/><text x="684" y="262" text-anchor="middle" font-size="12" font-weight="700" class="t-inv">-4.89</text><rect x="708" y="168.0" width="33" height="72.7" class="f-beat" rx="2"/><text x="724" y="232" text-anchor="middle" font-size="12" font-weight="700" class="t-inv">-3.46</text><text x="704" y="296" text-anchor="middle" font-size="13.5" font-weight="700" class="t-ink">2022</text><rect x="52" y="332" width="13" height="13" class="f-clay" rx="2"/><text x="72" y="343" font-size="12" class="t-ink">XLE, Wednesday return</text><rect x="262" y="332" width="13" height="13" class="f-beat" rx="2"/><text x="282" y="343" font-size="12" class="t-ink">WTI crude, Wednesday return</text><text x="792" y="343" text-anchor="end" font-size="12" class="t-mut">Correlation on the Wednesday: 0.78</text></svg>
+<p class="cap">Wednesday returns, Tuesday close to Wednesday close. Where oil moved hard, as in 2022, energy moved with it. In the quiet cycles it sat still, whatever the count said<sup class="src"><a href="#src-1">1</a></sup>.</p></div>
+<p>The story version of events fails on its own names. If Republican strength lifted oil stocks, the surprise cycles would show it, and instead <strong>Exxon fell on the Wednesday in all three of them</strong>, by 0.82 percent in 1994, 1.37 percent in 1998, and 1.32 percent in 2002. That is three for three with the wrong sign<sup class="src"><a href="#src-1">1</a></sup>. The sample's largest energy Wednesday tells the same story: Occidental fell 9.2 percent in 2022 on a day when WTI fell 3.5 percent, which made it an oil day rather than an election day<sup class="src"><a href="#src-1">1</a></sup>.</p>
+<p>Friday ran the same experiment again in real time. Brent rose 2.4 percent on another tanker attack<sup class="src"><a href="#src-5">5</a></sup> while the S&amp;P 500 fell 1.8 percent, and energy followed crude upward through the falling market, with FANG up 2.7 percent, XOM up 2.2 percent, and XLE up 1.9 percent<sup class="src"><a href="#src-11">11</a></sup>. Energy was following the barrel, not the polls.</p>
+<p><strong>What oil is pricing instead is a blockade.</strong> Flows through Hormuz ran at <strong>48 percent of their prewar level</strong> on Kpler's seven-day average to October 26<sup class="src"><a href="#src-7">7</a></sup>, and the EIA assumes <strong>4.5 million barrels a day shut in</strong> through the fourth quarter<sup class="src"><a href="#src-8">8</a></sup>. OPEC+ produced about <strong>4.2 million barrels a day below its targets</strong> in September<sup class="src"><a href="#src-10">10</a></sup> and held its December targets flat on Sunday, the third hold in a row<sup class="src"><a href="#src-9">9</a></sup>. A group producing that far below its own ceiling cannot add supply simply by raising the ceiling. The supply decision that matters is the <strong>November 29 ministerial</strong>.</p>
+<p>The premium bleeds on words, at $2 to $3 per mediation headline<sup class="src"><a href="#src-4">4</a></sup>, and Brent put open interest sits at a record<sup class="src"><a href="#src-5">5</a></sup>, which means the largest hedge in the market pays out on a peace deal. The one political catalyst this week is a decision rather than a result: CENTCOM's commander briefed the President on Iran options on Thursday, and no final decision had been made as of Saturday<sup class="src"><a href="#src-15">15</a>,<a href="#src-5">5</a></sup>. Every reader pays for this whether they trade it or not, because US diesel set a record at <strong>$6.53 a gallon</strong> in September<sup class="src"><a href="#src-16">16</a></sup>.</p>
+<div class="panel" data-panel-pop><h3>The premium's last week, point by point</h3>
+<svg viewBox="0 0 820 372" role="img" aria-label="Brent crude, December contract, documented prices from October 23 to October 30, 2026, with the January contract settle marked at the roll. Each point can be tapped or hovered for its full record."><line x1="82" y1="272" x2="770.0" y2="272" class="s-line" stroke-width="0.7"/><text x="74" y="276" text-anchor="end" font-size="11" class="t-mut">$113</text><line x1="82" y1="205" x2="770.0" y2="205" class="s-line" stroke-width="0.7"/><text x="74" y="209" text-anchor="end" font-size="11" class="t-mut">$115</text><line x1="82" y1="138" x2="770.0" y2="138" class="s-ink" stroke-width="0.7"/><text x="74" y="142" text-anchor="end" font-size="11" class="t-mut">$117</text><line x1="82" y1="71" x2="770.0" y2="71" class="s-line" stroke-width="0.7"/><text x="74" y="75" text-anchor="end" font-size="11" class="t-mut">$119</text><text x="96" y="332" text-anchor="middle" font-size="11.5" class="t-mut">Fri Oct 23</text><text x="372" y="332" text-anchor="middle" font-size="11.5" class="t-mut">Mon Oct 26</text><text x="464" y="332" text-anchor="middle" font-size="11.5" class="t-mut">Tue Oct 27</text><text x="740" y="332" text-anchor="middle" font-size="11.5" class="t-mut">Fri Oct 30</text><polyline points="96,147 372,226 372,178 464,184 740,116" fill="none" class="p-mean" style="stroke:var(--accent)" stroke-width="2.4"/><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$116.72, Friday, October 23 · Settlement" data-tipt="Friday, October 23 · Settlement" data-tip="December Brent settled at $116.72, the close the October front month carried into the final full week. Dow Jones data, as compiled in the premium monitor."><circle cx="96" cy="147" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="96" cy="147" r="9.5"/><circle cx="96" cy="147" r="4.6" class="p-dot pdot"/><text x="96" y="135" text-anchor="middle" class="ptlab t-ink">$116.72</text></g><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$114.38, Monday, October 26 · Intraday low" data-tipt="Monday, October 26 · Intraday low" data-tip="This point is not a settlement. Brent dipped to between $114.25 and $114.51 at midday as the mediation headlines landed. Qatari mediators were in Tehran on Sunday, and the Tehran meeting and the “no strike today” remark followed on Monday. The dip was bought back the same day. The point is plotted at the middle of that range, and the monitor prices headlines like these at $2 to $3 within hours."><circle cx="372" cy="226" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="372" cy="226" r="9.5"/><circle cx="372" cy="226" r="4.6" class="pdot" fill="var(--card)" stroke="var(--accent)" stroke-width="2"/><text x="372" y="250" text-anchor="middle" class="ptlab t-ink">$114.38</text></g><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$115.81, Monday, October 26 · Settlement" data-tipt="Monday, October 26 · Settlement" data-tip="December Brent settled at $115.81, down $0.91 on the day: the mediation dip was intraday, not a closing repricing. Dow Jones Market Data via Morningstar, per the monitor."><circle cx="372" cy="178" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="372" cy="178" r="9.5"/><circle cx="372" cy="178" r="4.6" class="p-dot pdot"/><text x="372" y="166" text-anchor="middle" class="ptlab t-ink">$115.81</text></g><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$115.63, Tuesday, October 27 · Spot quote" data-tipt="Tuesday, October 27 · Spot quote" data-tip="This point is not a settlement. It is an early-hours Finnhub spot quote near $115.63, retrieved at about 2:25 AM CT and logged in the monitor. It is drawn hollow because no settlement exists for this point."><circle cx="464" cy="184" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="464" cy="184" r="9.5"/><circle cx="464" cy="184" r="4.6" class="pdot" fill="var(--card)" stroke="var(--accent)" stroke-width="2"/><text x="472" y="206" text-anchor="start" class="ptlab t-ink">$115.63</text></g><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$117.64, Friday, October 30 · Settlement at expiry" data-tipt="Friday, October 30 · Settlement at expiry" data-tip="December Brent expired at $117.64, up 2.4 percent on the day after another tanker attack, its highest settle of the week. Reuters."><circle cx="740" cy="116" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="740" cy="116" r="9.5"/><circle cx="740" cy="116" r="4.6" class="p-dot pdot"/><text x="734" y="104" text-anchor="end" class="ptlab t-ink">$117.64</text></g><line x1="740" y1="122" x2="740" y2="252" class="s-ink" stroke-width="1" stroke-dasharray="4 3"/><g class="ptip" tabindex="0" role="button" aria-expanded="false" aria-label="$113.43, Friday, October 30 · January contract settle" data-tipt="Friday, October 30 · January contract settle" data-tip="January Brent settled at $113.43 the same day. From Monday it is the front month, so screens will show oil down about four dollars that nobody sold: the dashed drop is the contract switch, not a selloff. Reuters."><circle cx="740" cy="258" r="13" fill="#000" fill-opacity="0" style="pointer-events:all"/><circle class="pring" cx="740" cy="258" r="10.5"/><path d="M 740 251.95199999999977 L 745 257.95199999999977 L 740 263.95199999999977 L 735 257.95199999999977 Z" class="pdot" fill="var(--card)" stroke="var(--gold)" stroke-width="2"/><text x="726" y="280" text-anchor="end" class="ptlab t-ink">$113.43 · Jan</text></g></svg>
+<p class="pt-hint">Hover or tap a point for its full detail.</p>
+<p class="cap">December Brent: solid points are settlements and hollow points are not. Monday's low is plotted at the middle of its recorded range, Tuesday's point is an early spot quote, and the diamond is January's settle, a different contract<sup class="src"><a href="#src-4">4</a>,<a href="#src-5">5</a>,<a href="#src-6">6</a></sup>.</p></div>
+<p>These are the levels the desks are watching into year-end:</p>
+<div class="panel" data-panel-pop><h3>Brent reference levels: where the price sits against every case</h3>
+<svg viewBox="0 0 820 379" role="img" aria-label="Brent crude reference levels from 64 to 125 dollars"><line x1="429" y1="8" x2="429" y2="349" class="s-line" stroke-width="0.7"/><text x="429" y="367" text-anchor="middle" font-size="11" class="t-mut">$60</text><line x1="536" y1="8" x2="536" y2="349" class="s-line" stroke-width="0.7"/><text x="536" y="367" text-anchor="middle" font-size="11" class="t-mut">$80</text><line x1="642" y1="8" x2="642" y2="349" class="s-line" stroke-width="0.7"/><text x="642" y="367" text-anchor="middle" font-size="11" class="t-mut">$100</text><line x1="749" y1="8" x2="749" y2="349" class="s-line" stroke-width="0.7"/><text x="749" y="367" text-anchor="middle" font-size="11" class="t-mut">$120</text><line x1="696" y1="8" x2="696" y2="349" class="s-ink" stroke-width="1.1" stroke-dasharray="4 3"/><text x="8" y="30" font-size="12" class="t-ink">JPMorgan 2027 Brent, peace case</text><circle cx="450" cy="26" r="6" class="f-inl"/><text x="461" y="30" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$64</text><text x="8" y="67" font-size="12" class="t-ink">EIA Q2 2027 avg; JPMorgan 2027 conflict case</text><circle cx="573" cy="63" r="6" class="f-inl"/><text x="584" y="67" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$87</text><text x="8" y="104" font-size="12" class="t-ink">Goldman Sachs base case by year end</text><circle cx="589" cy="100" r="6" class="f-inl"/><text x="600" y="104" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$90</text><text x="8" y="141" font-size="12" class="t-ink">EIA forecast: Brent average, Q4 2026</text><circle cx="669" cy="137" r="6" class="f-gm"/><text x="680" y="141" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$105</text><text x="8" y="178" font-size="12" class="t-ink">Below here, the premium structure cracks</text><circle cx="696" cy="174" r="6" class="f-clay"/><text x="707" y="178" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$110</text><text x="8" y="215" font-size="12" class="t-ink">January Brent, Fri Oct 30: front month from Monday</text><circle cx="714" cy="211" r="6" class="f-clay"/><text x="725" y="215" text-anchor="start" font-size="12.5" font-weight="700" class="t-ink">$113.43</text><text x="8" y="252" font-size="12" class="t-ink">December Brent at expiry, Fri Oct 30</text><circle cx="737" cy="248" r="6" class="f-clay"/><text x="726" y="252" text-anchor="end" font-size="12.5" font-weight="700" class="t-ink">$117.64</text><text x="8" y="289" font-size="12" class="t-ink">Goldman Sachs escalation: attacks intensify</text><circle cx="749" cy="285" r="6" class="f-beat"/><text x="738" y="289" text-anchor="end" font-size="12.5" font-weight="700" class="t-ink">$120</text><text x="8" y="326" font-size="12" class="t-ink">Goldman Sachs 2027 average, deep shortfall</text><circle cx="776" cy="322" r="6" class="f-beat"/><text x="765" y="326" text-anchor="end" font-size="12.5" font-weight="700" class="t-ink">$125</text></svg>
+<p class="cap">Escalation, meaning strikes resumed or transit counts falling, would take Brent through $120, and Goldman's deep-shortfall path averages $125 for 2027<sup class="src"><a href="#src-13">13</a></sup>. The grind case holds spot near the EIA's $105 fourth-quarter path. A verifiable deal would run the exit within hours, with Goldman's $90 case first<sup class="src"><a href="#src-13">13</a></sup> and JPMorgan's peace path at $64<sup class="src"><a href="#src-12">12</a></sup>. January takes over on Monday at $113.43<sup class="src"><a href="#src-5">5</a></sup>, which is $3.43 above the $110 line where the premium structure is said to crack<sup class="src"><a href="#src-14">14</a></sup>.</p></div>
+<p><strong>If oil is the variable, the vehicle question is purity.</strong> XLE is an index, and an index absorbs: its largest holdings are integrated majors whose refining, chemicals and marketing earnings do not track the barrel, plus refiners and pipelines whose profits can rise when crude falls<sup class="src"><a href="#src-17">17</a></sup>. At a 0.31 beta, 10 percent in crude is roughly 3 percent in XLE, and over six months to October 26 it ranked <strong>tenth of sixteen</strong><sup class="src"><a href="#src-3">3</a></sup>. XOP holds producers only, in roughly equal weights<sup class="src"><a href="#src-18">18</a></sup>, so it carries more crude per dollar and reaches 0.71. The top of the ranking is a single name<sup class="src"><a href="#src-3">3</a></sup>.</p>
+<p><strong>Occidental is built like crude.</strong> Correlation <strong>0.74</strong> to WTI, beta <strong>0.50</strong>, purity rank one of sixteen. On days WTI moved more than 2 percent, OXY captured <strong>58 percent of up moves and 49 percent of down moves</strong>; XLE managed 37 and 26<sup class="src"><a href="#src-3">3</a></sup>. The purity is structural. Occidental is one of the largest independent producers in the Permian, and a bigger one since the $12 billion CrownRock acquisition in 2024, producing about <strong>1.43 million barrels of oil equivalent a day</strong><sup class="src"><a href="#src-19">19</a></sup>. Its shareholder base matches: <strong>Berkshire Hathaway owns about 27 percent of the common stock</strong>, roughly <strong>$8.5 billion of 8 percent preferred stock</strong>, and warrants on 83.9 million shares at $59.59<sup class="src"><a href="#src-20">20</a></sup>. Berkshire also bought its chemicals arm, OxyChem, for <strong>$9.7 billion</strong> in January<sup class="src"><a href="#src-21">21</a></sup>, and the company is aiming a strong second quarter, with <strong>$5.1 billion of operating cash flow and about $3 billion of free cash flow</strong>, at debt of $11.8 billion against a $10 billion target<sup class="src"><a href="#src-19">19</a></sup>.</p>
+<p><strong>Purity is not protection.</strong> OXY carries about 23 percent residual volatility, which is the part of its ride that is not oil, against 16.9 percent for XLE, and an index cannot gap on one company's guidance the way a single stock can. XLE is ballast, and that is a use rather than an insult. Occidental's <strong>third-quarter results land on Monday, November 9</strong><sup class="src"><a href="#src-19">19</a></sup>, so anyone who owns it for an oil view also owns the barrel, a balance sheet in the middle of repair, and an earnings print. The ordering for Tuesday is settled, and it points to the strait rather than the count.</p>
+<h2>4 · Limits, and what would change this</h2>
+<p><strong>The sample is eight elections.</strong> Everything above should be read at that size. Sector funds exist only from 2002, so sector cells run on six cycles or fewer, several branches rest on one clean cycle plus a mechanism, and the grades in section 2 say which is which. Earnings season overlaps every midterm: the sample's biggest single 'election mover,' Enphase, down 22.8 percent on the Wednesday of 2014, was reporting its own earnings that day<sup class="src"><a href="#src-1">1</a></sup>. The sixty-day drift, homebuilders included, runs into year-end seasonality, which this design cannot separate from the election itself.</p>
+<p>The study also writes down in advance what would prove it wrong, and this week tests two of those conditions live. A negative bank Wednesday on a confirmed, priced Democratic sweep breaks the four-for-four resolution bid. An in-band healthcare gap on a confirmed split that is down through Friday makes E-1 one-for-two and kills the spec. A surprise branch printing sector dispersion below the expected-cycle norm of about 0.75 kills the amplitude claim<sup class="src"><a href="#src-1">1</a></sup>. Two negative sixty-day windows in split or expected cells would demote the drift to a 1998-to-2022 regime artifact.</p>
+<h2>5 · The conclusion: an ordinary loud week</h2>
+<p>This week is loud because several unrelated things are happening at once. Congress is chosen on Tuesday. The December oil contract gives way to January on Monday. A strike decision is still open in Washington, briefed on Thursday and unmade as of Saturday<sup class="src"><a href="#src-15">15</a>,<a href="#src-5">5</a></sup>, and a jobs report lands on Friday. Any one of these can move a session, and together they make the week sound more dramatic than it is.</p>
+<p>The record puts the week in proportion. The session the eight cycles actually grade is Wednesday's close, and what it graded was the ending rather than the winner, positive in seven of eight cycles under every kind of government<sup class="src"><a href="#src-1">1</a></sup>. Monday's screens will show oil down about four dollars that nobody sold, because December expired at $117.64 and January opens at $113.43<sup class="src"><a href="#src-5">5</a></sup>. That is arithmetic, not news. The energy date with a real decision attached is <strong>November 29</strong>, when OPEC+ next sets supply<sup class="src"><a href="#src-9">9</a></sup>; until then the premium moves on words from a strait, at $2 to $3 a headline<sup class="src"><a href="#src-4">4</a></sup>, rather than on anything Congress does.</p>
+<p>None of this makes the week quiet, and the record does not claim otherwise. It makes a narrower point. Fear is the loudest part of an election week and also the shortest-lived, because once the question closes, the surprise is absorbed and the market goes back to pricing consequences, which is what it was pricing all along. By Wednesday night the winner will be credited with whatever the market does. The eight cycles suggest the credit is misaddressed, and that it changes nothing about what the market does next. This is not a recommendation. It is a record: eight elections, read the same way, with the failures left in.</p>
+<div class="foot">
+<p><strong>Sources and method.</strong></p>
+<div class="meth">
+<p>The midterm study (source 1) covers the eight elections of 1994 to 2022; all returns are adjusted-close total returns. The reaction window is Wednesday's close against Tuesday's; the five, twenty and sixty day windows run from the Monday close before the vote; sector returns are also shown against the S&amp;P 500. Every cut is run twice, by who won and by whether the result was the priced one, because prices respond to the surprise, not to the label. Section 2's 2026 prices are the study's October 31 snapshot (source 1).</p>
+<p><strong>The full model, data, and code behind sections 1 to 3 are public:</strong> <a href="https://github.com/kevinsigey/midterm-elections-model" target="_blank" rel="noopener">github.com/kevinsigey/midterm-elections-model</a>. The branch record in section 2 is drawn from the study's sector file, computed for this paper across every vehicle that file supports: seventeen funds, summarized at their means; the cycle-by-cycle detail is in the repository. Communications (XLC) is absent because the fund launched in 2018 and has no midterm history in the panel; nothing was estimated to fill its place.</p>
+<p>For energy, the same study supplies the election-week decomposition (source 1). The five-session correlation of 0.95 is counted from the Monday close, the study's window convention; from the Tuesday close the same window gives 0.83, and the conclusion is unchanged. The lab (source 3) regresses sixteen energy vehicles on WTI over six months of daily log returns to October 26, 2026; purity is R squared times the absolute beta. The monitor (source 4) logs how the premium responded to individual headlines, and those entries are observations, not estimates.</p>
+<p>Prices are Friday, October 30, 2026 settlements and closes; from Monday, every Brent level reads on the January contract. Where no stable public link exists (bank research, wire copy, the author's files), the entry cites name and date instead.</p>
+</div>
+<ol class="srclist">
+<li id="src-1">Sigey, K., midterm-elections study and price panel, October 31, 2026. Author's event study: index, sector and single-name windows, both cuts, the E-1 and E-2 verdicts, the energy decomposition, and the October 31 cross-checked Polymarket/Kalshi pricing snapshot. Public repository: <a href="https://github.com/kevinsigey/midterm-elections-model" target="_blank" rel="noopener">github.com/kevinsigey/midterm-elections-model</a>.</li>
+<li id="src-2">Sigey, K., election-complex study, October 30, 2026. The prior four-cycle study: the original E-1 and E-2 specifications and the pre-written E-3, E-4 and E-5 refusals.</li>
+<li id="src-3">Sigey, K., oil correlation lab, October 27, 2026. Author's regressions; method as stated above.</li>
+<li id="src-4">Sigey, K., energy premium monitor, October 27, 2026, updated October 30. Author's headline-response log: the Brent settlements, intraday range and early spot quote plotted in section 3.</li>
+<li id="src-5">Reuters reporting, October 30 to November 1, 2026: settlements, the tanker-attack session, record Brent put open interest, Saturday's no-decision report.</li>
+<li id="src-6">Dow Jones Market Data via Morningstar, October 30, 2026: Brent's 13.6 percent October gain; the October 23 and 26 settlements as compiled in the monitor.</li>
+<li id="src-7">Kpler vessel-tracking data via trade-press reporting: Hormuz flows, seven-day average to October 26, 2026.</li>
+<li id="src-8">US Energy Information Administration, <a href="https://www.eia.gov/outlooks/steo/" target="_blank" rel="noopener">Short-Term Energy Outlook</a>, October 2026: the 4.5 million barrel a day shut-in assumption and the $105 fourth-quarter Brent path.</li>
+<li id="src-9">OPEC, <a href="https://www.opec.org/opec_web/en/press_room/28.htm" target="_blank" rel="noopener">statement of the seven core members</a> on December production targets, November 1, 2026, via Reuters.</li>
+<li id="src-10">Argus Media, OPEC+ production survey, September 2026, via trade-press reporting.</li>
+<li id="src-11">Yahoo Finance, equity closing prices, October 30, 2026, retrieved November 1, 2026.</li>
+<li id="src-12">JPMorgan commodity research, as reported: 2027 Brent at $87 in conflict, $64 at peace.</li>
+<li id="src-13">Goldman Sachs commodity research, September and October 2026, as reported: the $120, $90 and $125 cases.</li>
+<li id="src-14">FXEmpire, Brent technical analysis, October 26, 2026: the $110 crack line.</li>
+<li id="src-15">Wall Street Journal, October 29, 2026: the CENTCOM briefing and Gulf preparations.</li>
+<li id="src-16">US Energy Information Administration, <a href="https://www.eia.gov/petroleum/gasdiesel/" target="_blank" rel="noopener">weekly retail diesel price series</a>: record $6.529 a gallon, September 21, 2026.</li>
+<li id="src-17">State Street, <a href="https://www.ssga.com/us/en/intermediary/etfs/energy-select-sector-spdr-fund-xle" target="_blank" rel="noopener">Energy Select Sector SPDR Fund (XLE)</a>: the fund's holdings and index construction.</li>
+<li id="src-18">State Street, <a href="https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-oil-gas-exploration-production-etf-xop" target="_blank" rel="noopener">SPDR S&amp;P Oil &amp; Gas Exploration &amp; Production ETF (XOP)</a>: the fund's equal-weight index construction.</li>
+<li id="src-19">Occidental Petroleum, <a href="https://www.oxy.com/investors/" target="_blank" rel="noopener">investor releases and related reporting</a>: Q2 2026 results; CrownRock (2024); Q3 2026 date.</li>
+<li id="src-20">Berkshire Hathaway, 2026 quarterly reports (Form 10-Q), via <a href="https://www.sec.gov/edgar/browse/?CIK=1067983&amp;owner=exclude" target="_blank" rel="noopener">SEC EDGAR</a>: common stake, 8 percent preferred, warrants.</li>
+<li id="src-21">Reuters, January 2, 2026: Berkshire's $9.7 billion OxyChem acquisition closes.</li>
+</ol>
+<p>Kevin Sigey · MS in Business Analytics, University of Illinois Urbana-Champaign · sigeykevin@gmail.com</p>
+</div>
+</div>
+<div id="tipop" role="dialog" aria-label="About this point"><div class="tt"></div><p></p></div><script>
+(function(){"use strict";var KEY="ks-mode";var root=document.documentElement;
+function read(){try{return localStorage.getItem(KEY)}catch(e){return null}}
+function save(m){try{localStorage.setItem(KEY,m)}catch(e){}}
+function apply(m){if(m==="dark")root.setAttribute("data-mode","dark");else root.removeAttribute("data-mode");
+var b=document.querySelectorAll("[data-mode-toggle]");for(var i=0;i<b.length;i++){var d=m==="dark";
+b[i].setAttribute("aria-pressed",d?"true":"false");var l=b[i].querySelector(".lbl");if(l)l.textContent=d?"Dark":"Light";}}
+apply(read()==="dark"?"dark":"light");
+document.addEventListener("click",function(e){var t=e.target.closest?e.target.closest("[data-mode-toggle]"):null;
+if(!t)return;var n=root.getAttribute("data-mode")==="dark"?"light":"dark";save(n);apply(n);});
+window.addEventListener("storage",function(e){if(e.key===KEY)apply(e.newValue==="dark"?"dark":"light");});})();
+</script>
+<script>
+/* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
+   Clicking a marked panel moves the whole panel (chart, title, caption)
+   into a full-screen viewer; closing returns it to its exact place.
+   Zoom (rev. 2, Nov 2026): the viewer carries a toolbar with minus,
+   plus and Fit controls and a live percentage. 100% means the panel
+   rendered at exactly its in-page width. The panel keeps a wide layout
+   (up to 1100px; a resize event fires so canvas charts refit at that
+   size and stay crisp) and is transform-scaled, origin top centre,
+   inside a sizing wrapper whose width and height are set to the scaled
+   dimensions, so the overlay scrolls and pans over the true zoomed
+   size. On open, a phone-width viewport starts at 150% (or Fit when
+   Fit renders larger); a desktop starts at Fit or 125%, whichever
+   renders larger. Steps run 100, 125, 150, 200, 250 percent.
+   Double-tap toggles Fit and the last percentage. Pinch zoom still
+   works on top of the transform. Interactive elements inside a panel
+   keep their own behavior. This replaces rev. 1's fixed scale (1.55 on
+   phone, 1.35 on desktop), which set the layout width barely wider
+   than the phone itself, centred nothing, and showed the reader no
+   zoom state or control. */
+(function () {
+  "use strict";
+  var overlay = null, stage = null, wrap = null, tools = null, zLabel = null;
+  var closeBtn = null, current = null, ph = null, lastFocus = null;
+  var savedStyle = null, resizeTimer = null;
+  var W = 0, H = 0, IW = 0, curS = 1;
+  var state = "fit", pct = 100, lastPct = 150;
+  var STEPS = [100, 125, 150, 200, 250];
+  var INTERACTIVE = 'a,button,input,select,textarea,summary,label,[data-bucket],[role="slider"]';
+  function build() {
+    overlay = document.createElement('div');
+    overlay.className = 'pp-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Expanded panel');
+    closeBtn = document.createElement('button');
+    closeBtn.className = 'pp-close';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('aria-label', 'Close expanded panel');
+    closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+    tools = document.createElement('div');
+    tools.className = 'pp-tools';
+    tools.setAttribute('role', 'group');
+    tools.setAttribute('aria-label', 'Panel zoom');
+    var bOut = document.createElement('button');
+    bOut.className = 'pp-zbtn';
+    bOut.type = 'button';
+    bOut.setAttribute('aria-label', 'Zoom out');
+    bOut.textContent = '\u2212';
+    zLabel = document.createElement('span');
+    zLabel.className = 'pp-zlabel';
+    zLabel.setAttribute('aria-live', 'polite');
+    zLabel.textContent = 'Fit';
+    var bIn = document.createElement('button');
+    bIn.className = 'pp-zbtn';
+    bIn.type = 'button';
+    bIn.setAttribute('aria-label', 'Zoom in');
+    bIn.textContent = '+';
+    var bFit = document.createElement('button');
+    bFit.className = 'pp-zbtn pp-zfit';
+    bFit.type = 'button';
+    bFit.setAttribute('aria-label', 'Fit panel to screen');
+    bFit.textContent = 'Fit';
+    tools.appendChild(bOut);
+    tools.appendChild(zLabel);
+    tools.appendChild(bIn);
+    tools.appendChild(bFit);
+    bOut.addEventListener('click', function () { stepZoom(-1); });
+    bIn.addEventListener('click', function () { stepZoom(1); });
+    bFit.addEventListener('click', function () { fitZoom(); });
+    stage = document.createElement('div');
+    stage.className = 'pp-stage';
+    wrap = document.createElement('div');
+    wrap.className = 'pp-zoomwrap';
+    stage.appendChild(wrap);
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(tools);
+    overlay.appendChild(stage);
+    document.body.appendChild(overlay);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay || e.target === stage || e.target === wrap) close(); });
+    overlay.addEventListener('dblclick', function (e) {
+      if (!current) return;
+      if (e.target.closest && e.target.closest('.pp-tools,.pp-close')) return;
+      if (e.target.closest && e.target.closest(INTERACTIVE)) return;
+      if (state === 'fit') { state = 'pct'; pct = lastPct; } else { state = 'fit'; }
+      applyZoom();
+      centerH();
+    });
+  }
+  function refit() { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function refitSoon() { setTimeout(refit, 60); setTimeout(refit, 350); }
+  function small() { return window.innerWidth <= 720; }
+  function availW() {
+    var padH = small() ? 16 : 28;
+    return Math.max(260, overlay.clientWidth - padH);
+  }
+  function fitPct() { return IW > 0 ? (availW() / IW) * 100 : 100; }
+  function effPct() { return state === 'fit' ? fitPct() : pct; }
+  function layoutBase() {
+    if (!current) return;
+    var avail = availW();
+    W = Math.min(1100, Math.max(avail, IW));
+    current.style.width = W + 'px';
+    current.style.maxWidth = 'none';
+    H = current.offsetHeight || current.scrollHeight || 0;
+  }
+  function applyZoom() {
+    if (!current) return;
+    var T = state === 'fit' ? availW() : (IW * pct) / 100;
+    var s = W > 0 ? T / W : 1;
+    if (s > 3) { s = 3; T = W * s; }
+    if (s < 0.2) { s = 0.2; T = W * s; }
+    curS = s;
+    stage.style.width = T + 'px';
+    wrap.style.width = T + 'px';
+    wrap.style.height = (H * s) + 'px';
+    current.style.left = ((T - W) / 2) + 'px';
+    current.style.transform = 'scale(' + s + ')';
+    zLabel.textContent = state === 'fit' ? 'Fit' : pct + '%';
+    refitSoon();
+  }
+  function centerH() {
+    if (!wrap || !overlay) return;
+    var wr = wrap.getBoundingClientRect();
+    var orr = overlay.getBoundingClientRect();
+    var mid = wr.left + wr.width / 2;
+    var target = orr.left + overlay.clientWidth / 2;
+    overlay.scrollLeft += Math.round(mid - target);
+  }
+  function stepZoom(dir) {
+    if (!current) return;
+    var eff = effPct();
+    var cand = null;
+    for (var i = 0; i < STEPS.length; i++) {
+      if (dir > 0 && STEPS[i] > eff + 0.5) { cand = STEPS[i]; break; }
+      if (dir < 0 && STEPS[i] < eff - 0.5) cand = STEPS[i];
+    }
+    if (cand !== null) { state = 'pct'; pct = cand; lastPct = cand; }
+    else if (dir > 0 && fitPct() > eff + 0.5) { state = 'fit'; }
+    else if (dir < 0 && fitPct() < eff - 0.5) { state = 'fit'; }
+    else return;
+    applyZoom();
+    centerH();
+  }
+  function fitZoom() {
+    if (!current) return;
+    state = 'fit';
+    applyZoom();
+    centerH();
+  }
+  function open(panel) {
+    if (!overlay) build();
+    if (current) return;
+    lastFocus = document.activeElement;
+    savedStyle = panel.getAttribute('style');
+    IW = panel.offsetWidth || 354;
+    ph = document.createElement('div');
+    ph.className = 'pp-ph';
+    ph.style.width = IW + 'px';
+    ph.style.height = panel.offsetHeight + 'px';
+    panel.parentNode.insertBefore(ph, panel);
+    wrap.appendChild(panel);
+    current = panel;
+    panel.style.position = 'absolute';
+    panel.style.top = '0';
+    panel.style.margin = '0';
+    panel.style.transformOrigin = '50% 0';
+    overlay.classList.add('open');
+    document.body.classList.add('pp-lock');
+    layoutBase();
+    var basePct = small() ? 150 : 125;
+    if (fitPct() >= basePct) { state = 'fit'; }
+    else { state = 'pct'; pct = basePct; lastPct = basePct; }
+    applyZoom();
+    overlay.scrollTop = 0;
+    centerH();
+    closeBtn.focus();
+    refitSoon();
+  }
+  function close() {
+    if (!current) return;
+    var panel = current;
+    ph.parentNode.insertBefore(panel, ph);
+    ph.remove(); ph = null; current = null;
+    if (savedStyle === null) panel.removeAttribute('style');
+    else panel.setAttribute('style', savedStyle);
+    savedStyle = null;
+    stage.style.width = '';
+    wrap.style.width = '';
+    wrap.style.height = '';
+    overlay.classList.remove('open');
+    document.body.classList.remove('pp-lock');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    setTimeout(refit, 60);
+  }
+  document.addEventListener('click', function (e) {
+    if (current) return;
+    var t = e.target;
+    if (!t.closest) return;
+    var panel = t.closest('[data-panel-pop]');
+    if (!panel) return;
+    if (t.closest(INTERACTIVE)) return;
+    open(panel);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (current) {
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === '+' || e.key === '=') { stepZoom(1); return; }
+      if (e.key === '-' || e.key === '_') { stepZoom(-1); return; }
+      if (e.key === '0') { fitZoom(); return; }
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.hasAttribute && e.target.hasAttribute('data-panel-pop')) {
+      e.preventDefault(); open(e.target);
+    }
+  });
+  window.addEventListener('resize', function () {
+    if (!current) return;
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { layoutBase(); applyZoom(); }, 120);
+  });
+  function dress(scope) {
+    var ps = (scope || document).querySelectorAll('[data-panel-pop]');
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      if (!p.hasAttribute('tabindex')) p.setAttribute('tabindex', '0');
+      if (!p.querySelector('.pp-badge')) {
+        var b = document.createElement('span');
+        b.className = 'pp-badge';
+        b.setAttribute('aria-hidden', 'true');
+        b.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>';
+        p.appendChild(b);
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { dress(); });
+  else dress();
+  window.__panelpop = { open: open, close: close, dress: dress, zoomIn: function () { stepZoom(1); }, zoomOut: function () { stepZoom(-1); }, fit: fitZoom,
+    _debug: function () { return { state: state, pct: pct, effPct: Math.round(effPct()), W: W, H: H, IW: IW, s: curS }; } };
+})();
+/* /panelpop-js */
+
+</script>
+<script>
+(function(){var pop=document.getElementById("tipop");if(!pop)return;var tt=pop.querySelector(".tt"),tx=pop.querySelector("p"),pin=null,hov=null;
+var pts=Array.prototype.slice.call(document.querySelectorAll(".ptip"));
+function place(el){var r=el.getBoundingClientRect();pop.style.visibility="hidden";pop.classList.add("open");
+var pw=pop.offsetWidth,ph=pop.offsetHeight;var x=Math.min(Math.max(8,r.left+r.width/2-pw/2),window.innerWidth-pw-8);
+var y=r.bottom+8;if(y+ph>window.innerHeight-8)y=Math.max(8,r.top-ph-8);pop.style.left=x+"px";pop.style.top=y+"px";pop.style.visibility="visible";}
+function current(){return hov||pin;}
+function render(){var el=current();
+pts.forEach(function(e){e.setAttribute("aria-expanded",e===el?"true":"false");});
+if(el){tt.textContent=el.getAttribute("data-tipt")||"";tx.textContent=el.getAttribute("data-tip")||"";place(el);}
+else{pop.classList.remove("open");}}
+function setPin(el){if(pin)pin.classList.remove("open");pin=el;if(pin)pin.classList.add("open");render();}
+pts.forEach(function(el){
+el.addEventListener("mouseenter",function(){hov=el;render();});
+el.addEventListener("mouseleave",function(){if(hov===el){hov=null;render();}});
+el.addEventListener("click",function(e){e.stopPropagation();setPin(el);});
+el.addEventListener("focus",function(){hov=el;render();});
+el.addEventListener("blur",function(){if(hov===el){hov=null;render();}});});
+document.addEventListener("click",function(e){if(!pop.contains(e.target)){hov=null;setPin(null);}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){hov=null;setPin(null);}});
+window.addEventListener("resize",function(){if(current())place(current());});})();
+</script>
+
+<script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body></html>
