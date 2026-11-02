@@ -380,21 +380,26 @@ details.appx .sec-sub{margin-top:4px}
 <style>
 /* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
    A marked panel ([data-panel-pop]) opens whole: chart, title, caption,
-   in a full-screen viewer, the way photos open on the Photography page. */
+   in a full-screen viewer, the way photos open on the Photography page.
+   The viewer zooms (rev. Nov 2026): the panel is laid out at a wide
+   stage width (up to 1100px, charts refit on the resize event) and then
+   transform-scaled to ~1.5x its in-page width, so the pop-out opens
+   genuinely larger than the panel sits in the page. The overlay scrolls
+   to pan; pinch zoom still works on top of the transform. */
 [data-panel-pop]{cursor:zoom-in;position:relative}
 [data-panel-pop]:focus-visible{outline:2px solid var(--accent,#b4552d);outline-offset:3px}
 .pp-badge{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--card,var(--paper,#fffdf8));color:var(--ink-2,var(--muted,#8b96a5));border:1px solid var(--line,#ccc);opacity:0;pointer-events:none;transition:opacity .15s;z-index:6}
 [data-panel-pop]:hover .pp-badge,[data-panel-pop]:focus-visible .pp-badge{opacity:.94}
 @media(hover:none){.pp-badge{opacity:.78}}
-.pp-overlay{position:fixed;inset:0;z-index:400;background:rgba(8,10,12,.76);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:none;overflow-y:auto;overscroll-behavior:contain;padding:26px 14px 44px;box-sizing:border-box}
+.pp-overlay{position:fixed;inset:0;z-index:400;background:rgba(8,10,12,.76);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:none;overflow:auto;overscroll-behavior:contain;padding:26px 14px 44px;box-sizing:border-box}
 .pp-overlay.open{display:block}
-.pp-stage{max-width:920px;margin:0 auto;position:relative}
+.pp-stage{margin:0 auto;position:relative}
 .pp-stage [data-panel-pop]{cursor:default}
 .pp-close{position:fixed;top:12px;right:12px;z-index:410;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(14,16,20,.88);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
 .pp-close svg{width:19px;height:19px;display:block}
 body.pp-lock{overflow:hidden}
 .pp-ph{border:1px dashed var(--line,#ccc);border-radius:8px;box-sizing:border-box}
-@media(max-width:720px){.pp-overlay{padding:14px 8px 30px}.pp-stage{max-width:100%}}
+@media(max-width:720px){.pp-overlay{padding:14px 8px 30px}}
 .pp-badge{background:var(--panel);color:var(--muted);border-color:var(--line)}
 </style>
 </head>
@@ -2128,10 +2133,16 @@ document.getElementById("dl").addEventListener("click",function(){
 /* panelpop: chart-panel pop-out viewer (site-wide, Nov 2026).
    Clicking a marked panel moves the whole panel (chart, title, caption)
    into a full-screen viewer; closing returns it to its exact place.
+   Zoom (rev. Nov 2026): on open the panel is laid out at a wide stage
+   width (up to 1100px; a resize event lets charts refit at that size)
+   and then transform-scaled so it renders ~1.5x its in-page width on a
+   phone and substantially larger on desktop too. The overlay scrolls
+   to pan, and pinch zoom still works on top of the transform.
    Interactive elements inside a panel keep their own behavior. */
 (function () {
   "use strict";
   var overlay = null, stage = null, closeBtn = null, current = null, ph = null, lastFocus = null;
+  var savedStyle = null, resizeTimer = null;
   var INTERACTIVE = 'a,button,input,select,textarea,summary,label,[data-bucket],[role="slider"]';
   function build() {
     overlay = document.createElement('div');
@@ -2150,29 +2161,64 @@ document.getElementById("dl").addEventListener("click",function(){
     overlay.appendChild(stage);
     document.body.appendChild(overlay);
     closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    overlay.addEventListener('click', function (e) { if (e.target === overlay || e.target === stage) close(); });
   }
   function refit() { try { window.dispatchEvent(new Event('resize')); } catch (e) {} }
+  function layout() {
+    if (!current || !ph) return;
+    var small = window.innerWidth <= 720;
+    var padH = small ? 16 : 28;
+    var avail = Math.max(260, overlay.clientWidth - padH);
+    var iw = ph.offsetWidth || current.offsetWidth;
+    var W = Math.min(1100, Math.max(avail, iw));
+    current.style.width = W + 'px';
+    current.style.maxWidth = 'none';
+    var H = current.offsetHeight;
+    var zoom = small ? 1.55 : 1.35;
+    var R = Math.max(W, iw * zoom);
+    var s = R / W;
+    if (s > 1.8) { s = 1.8; R = W * s; }
+    if (s < 1) { s = 1; R = W; }
+    stage.style.width = R + 'px';
+    stage.style.height = (H * s) + 'px';
+    current.style.transform = 'scale(' + s + ')';
+  }
   function open(panel) {
     if (!overlay) build();
     if (current) return;
     lastFocus = document.activeElement;
+    savedStyle = panel.getAttribute('style');
     ph = document.createElement('div');
     ph.className = 'pp-ph';
+    ph.style.width = panel.offsetWidth + 'px';
     ph.style.height = panel.offsetHeight + 'px';
     panel.parentNode.insertBefore(ph, panel);
     stage.appendChild(panel);
     current = panel;
+    panel.style.position = 'absolute';
+    panel.style.left = '0';
+    panel.style.top = '0';
+    panel.style.margin = '0';
+    panel.style.transformOrigin = '0 0';
     overlay.classList.add('open');
     document.body.classList.add('pp-lock');
+    layout();
     overlay.scrollTop = 0;
+    overlay.scrollLeft = 0;
     closeBtn.focus();
     setTimeout(refit, 60);
+    setTimeout(refit, 350);
   }
   function close() {
     if (!current) return;
-    ph.parentNode.insertBefore(current, ph);
+    var panel = current;
+    ph.parentNode.insertBefore(panel, ph);
     ph.remove(); ph = null; current = null;
+    if (savedStyle === null) panel.removeAttribute('style');
+    else panel.setAttribute('style', savedStyle);
+    savedStyle = null;
+    stage.style.width = '';
+    stage.style.height = '';
     overlay.classList.remove('open');
     document.body.classList.remove('pp-lock');
     if (lastFocus && lastFocus.focus) lastFocus.focus();
@@ -2193,6 +2239,11 @@ document.getElementById("dl").addEventListener("click",function(){
     if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.hasAttribute && e.target.hasAttribute('data-panel-pop')) {
       e.preventDefault(); open(e.target);
     }
+  });
+  window.addEventListener('resize', function () {
+    if (!current) return;
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { layout(); refit(); }, 120);
   });
   function dress(scope) {
     var ps = (scope || document).querySelectorAll('[data-panel-pop]');
