@@ -222,7 +222,7 @@
 
   <section class="wrap exhibits" aria-label="Selected evidence">
     <div class="sec-head">
-      <div><p class="kicker">Selected evidence</p><h2>Four exhibits</h2></div>
+      <div><p class="kicker">Selected evidence</p><h2>Three exhibits</h2></div>
     </div>
     <div class="fp-tiles">
       <article class="card fp-tile" data-exhibit="busey">
@@ -239,13 +239,6 @@
         <p>Twelve Intel puts, $3,564 in and $24,000 out when the quarter beat and the guide missed. Realized: +$20,436 in two days.</p>
         <p class="src">IBKR competition book &middot; Oct 2026</p>
         <p class="tile-link"><a href="the-bill-comes-due.html">Read the paper &rarr;</a></p>
-      </article>
-      <article class="card fp-tile" data-exhibit="synchrony">
-        <p class="kicker">Datathon</p>
-        <h3><button class="tile-open" type="button" aria-expanded="false" aria-controls="exhibit-panel">The most accurate model was the wrong one to ship</button></h3>
-        <svg viewBox="0 0 260 64" aria-hidden="true"><line class="axis" x1="0" y1="46" x2="260" y2="46"/><rect class="bar-a" x="14" y="27.5" width="32" height="18.5" rx="2"/><rect class="bar-b" x="79" y="23.6" width="32" height="22.4" rx="2"/><rect class="bar-b" x="144" y="20.2" width="32" height="25.8" rx="2"/><rect class="bar-b" x="209" y="17.2" width="32" height="28.8" rx="2"/><text x="30" y="23.5" text-anchor="middle">1.54%</text><text x="95" y="19.6" text-anchor="middle">1.87%</text><text x="160" y="16.2" text-anchor="middle">2.15%</text><text x="225" y="13.2" text-anchor="middle">2.40%</text><text x="30" y="59" text-anchor="middle">V16</text><text x="95" y="59" text-anchor="middle">V20</text><text x="160" y="59" text-anchor="middle">V21&#8211;25</text><text x="225" y="59" text-anchor="middle">V32</text></svg>
-        <p>Abandon error by model version. Across 30+ versions of the Synchrony staffing forecaster, volume accuracy kept improving while abandon error, the metric that predicts customer pain, climbed. We shipped V16.</p>
-        <p class="src">Synchrony Guardrail Engine &middot; Illinois Datathon 2026</p>
       </article>
       <article class="card fp-tile" data-exhibit="dotfoods">
         <p class="kicker">MSBA capstone</p>
@@ -289,23 +282,6 @@
           <tr><th scope="row">Realized</th><td>+$20,436 in two days</td></tr>
         </table>
         <p><a class="text-link" href="the-bill-comes-due.html">Read the paper: The Bill Comes Due &rarr;</a></p>
-      </div>
-      <div class="exhibit-detail" id="exhibit-synchrony" hidden>
-          <p class="kicker">Datathon</p>
-          <h3>Synchrony Guardrail Engine</h3>
-          <p class="ctx">Staffing forecasts for four client portfolios, across 30+ model versions.</p>
-          <div class="rbars" role="img" aria-label="Abandon error by model version: V16 1.54 percent, V20 1.87 percent, V21 to V25 2.15 percent, V32 2.4 percent.">
-            <div class="rbar"><span>V16</span><span class="track"><span class="fill pick" style="width: 64%"></span></span><span class="val">1.54%</span></div>
-            <div class="rbar"><span>V20</span><span class="track"><span class="fill" style="width: 78%"></span></span><span class="val">1.87%</span></div>
-            <div class="rbar"><span>V21-V25</span><span class="track"><span class="fill" style="width: 90%"></span></span><span class="val">2.15%</span></div>
-            <div class="rbar"><span>V32</span><span class="track"><span class="fill" style="width: 100%"></span></span><span class="val">2.4%</span></div>
-          </div>
-          <p class="note">Abandon error by model version. Volume accuracy kept improving across the same versions.</p>
-          <ul class="callouts">
-            <li>Shipped V16, not the most accurate model.</li>
-            <li>Abandon error is the metric that predicts customer pain.</li>
-          </ul>
-        
       </div>
       <div class="exhibit-detail" id="exhibit-dotfoods" hidden>
           <p class="kicker">MSBA capstone</p>
@@ -387,17 +363,6 @@
       <div class="systems">
         <article class="card system">
           <p class="live"><i aria-hidden="true"></i> Live</p>
-          <h3>Predictor Hub</h3>
-          <p>Six sports prediction models (Premier League, F1, NFL, college football, NBA) running as containers, built and maintained with agentic AI systems. Each pick shows its confidence, its reasoning and its record.</p>
-          <div class="readout">
-            <div><b>13 of 30</b>PL picks made before kickoff, correct</div>
-            <div><b>5 sports</b>one shared design system</div>
-          </div>
-          <div class="links"><a class="text-link" href="https://40-160-91-131.sslip.io" target="_blank" rel="noopener">Open the hub &rarr;</a><a class="text-link" href="https://github.com/kevinsigey/predictor-hub" target="_blank" rel="noopener">Source</a></div>
-          <p class="snap">Snapshot, verified Oct 28, 2026</p>
-        </article>
-        <article class="card system">
-          <p class="live"><i aria-hidden="true"></i> Live</p>
           <h3>Algo Trade Hub</h3>
           <p>Two public paper books, $100k and $1M, run automated strategies that earn their place in the open: ideas are backtested in the workshop, argued on structured debate cards and tracked in a public model tracker before they trade. A live oil dashboard and the prediction journal run alongside.</p>
           <div class="readout">
@@ -407,25 +372,30 @@
           <div class="links"><a class="text-link" href="https://algo.40-160-91-131.sslip.io" target="_blank" rel="noopener">Open the hub &rarr;</a><a class="text-link" href="https://github.com/kevinsigey/algo-trade-hub-prod" target="_blank" rel="noopener">Source</a></div>
           <p class="snap">Snapshot, verified Nov 3, 2026</p>
         </article>
+        <article class="card system">
+          <p class="live"><i aria-hidden="true"></i> Live</p>
+          <h3>Predictor Hub</h3>
+          <p>Five sports prediction models (Premier League, F1, NFL, college football, NBA) running as containers, built and maintained with agentic AI systems. Each pick shows its confidence, its reasoning and its record.</p>
+          <div class="readout">
+            <div><b>13 of 30</b>PL picks made before kickoff, correct</div>
+            <div><b>5 sports</b>one shared design system</div>
+          </div>
+          <div class="links"><a class="text-link" href="https://40-160-91-131.sslip.io" target="_blank" rel="noopener">Open the hub &rarr;</a><a class="text-link" href="https://github.com/kevinsigey/predictor-hub" target="_blank" rel="noopener">Source</a></div>
+          <p class="snap">Snapshot, verified Oct 28, 2026</p>
+        </article>
       </div>
       <div class="lab">
         <article class="card">
-          <p class="kicker">Lab &middot; pipeline running</p>
-          <h4><a class="text-link" href="https://github.com/kevinsigey/Stable-Coin-Analysis" target="_blank" rel="noopener">Stablecoin Remittance Monitor</a></h4>
-          <p>A live monitor of stablecoin remittance flows with a weekly data refresh. An always-on pipeline, not a notebook.</p>
+          <p class="kicker">Lab &middot; monthly refresh</p>
+          <h4><a class="text-link" href="stablecoin-monitor.html">Stablecoin Remittance Monitor</a></h4>
+          <p>Five Dune queries, charted on one tracking page: the daily cost of an on-chain transfer against the $7 digital and $14 traditional benchmarks, plus activity windows, transfer sizes and token preference.</p>
           <p class="tags">SQL &middot; Dune &middot; pipelines</p>
         </article>
         <article class="card">
-          <p class="kicker">Lab &middot; shipped</p>
-          <h4><a class="text-link" href="https://github.com/kevinsigey/FPL_Optimizer" target="_blank" rel="noopener">FPL Scout</a></h4>
-          <p>Four per-position XGBoost models on four seasons of data, live FPL API integration and a Streamlit dashboard with feature-importance explanations.</p>
-          <p class="tags">Python &middot; XGBoost &middot; Streamlit</p>
-        </article>
-        <article class="card">
-          <p class="kicker">Competition entry</p>
-          <h4>Synchrony Guardrail Engine</h4>
-          <p>Illinois Datathon 2026. Staffing forecasts for four client portfolios.</p>
-          <p class="tags">Python &middot; Prophet &middot; XGBoost</p>
+          <p class="kicker">Lab &middot; live app</p>
+          <h4><a class="text-link" href="https://pl.40-160-91-131.sslip.io/#fpl" target="_blank" rel="noopener">FPL Scout</a></h4>
+          <p>Four per-position XGBoost models on four seasons of data, with live FPL API integration and feature-importance explanations, running in the PL Predictor app.</p>
+          <p class="tags">Python &middot; XGBoost &middot; FPL API</p>
         </article>
       </div>
     </div>
