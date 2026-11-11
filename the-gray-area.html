@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>The Gray Area: Using game theory to predict the AI boom</title>
+<style>
+  :root{
+    --bg:#f7f5f0; --panel:#fffdf8; --panel2:#efeadf; --ink:#1c1a16; --ink2:#5a554a; --line:#d9d2c2;
+    --rust:#b3541e; --blue:#1d6fb8; --green:#0e7a5f; --plum:#9c2b3f; --gold:#a87b12;
+    --good:#0e7a5f; --bad:#b02a2a; --mid:#8a6d1d;
+    --shadow:0 1px 3px rgba(30,25,15,.12);
+  }
+  html[data-theme="dark"]{
+    --bg:#141311; --panel:#1e1c18; --panel2:#26231d; --ink:#ece7da; --ink2:#a89f8d; --line:#3a362c;
+    --rust:#e07f3e; --blue:#5ea8e0; --green:#3cb894; --plum:#e0687e; --gold:#d9a92e;
+    --good:#3cb894; --bad:#e06868; --mid:#d9a92e;
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  html[data-theme="light"]{
+    --bg:#f7f5f0; --panel:#fffdf8; --panel2:#efeadf; --ink:#1c1a16; --ink2:#4c473c; --line:#d9d2c2;
+    --rust:#b3541e; --blue:#1d6fb8; --green:#0e7a5f; --plum:#9c2b3f; --gold:#a87b12;
+    --good:#0e7a5f; --bad:#b02a2a; --mid:#8a6d1d;
+    --shadow:0 1px 3px rgba(30,25,15,.12);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45}
+  .wrap{max-width:1060px;margin:0 auto;padding:20px 16px 64px}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15;margin:0}
+  h2{font-size:clamp(22px,3.4vw,30px);margin-bottom:6px}
+  h3{font-size:17px}
+  p{margin:0 0 10px}
+  .lede{color:var(--ink);max-width:74ch;font-size:17.5px}
+  section{margin-top:52px}
+  .secnote{color:var(--ink2);font-size:15.5px;max-width:76ch}
+  button{font:inherit;cursor:pointer}
+  .modebtn{position:fixed;top:10px;right:10px;z-index:50;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;box-shadow:var(--shadow)}
+  /* prediction hero */
+  .predbar{display:flex;height:64px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin:18px 0 8px}
+  .predbar div{display:flex;flex-direction:column;justify-content:center;padding:0 14px;color:#fff;min-width:0}
+  .predbar .pb-stale{background:#6d675a;flex:55}.predbar .pb-boom{background:var(--green);flex:20}.predbar .pb-crash{background:var(--bad);flex:25}
+  .predbar b{font-size:22px;line-height:1}.predbar span{font-size:12px;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .callout{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:8px;padding:14px 16px;box-shadow:var(--shadow)}
+  .callout p:last-child{margin-bottom:0}
+  .dateline{font-size:13px;color:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+  /* map */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 13px;font-size:13.5px}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px}
+  .mapbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:var(--shadow)}
+  svg text{font-family:inherit}
+  .node{cursor:pointer}
+  .node rect{fill:var(--panel2);stroke:var(--line);stroke-width:1.2}
+  .node.sel rect{stroke:var(--ink);stroke-width:2.4}
+  .node text{fill:var(--ink);font-size:14.5px;font-weight:600}
+  .node .sub{font-size:11.5px;font-weight:400;fill:var(--ink2)}
+  .edge{fill:none;stroke-width:2.4;opacity:.55;cursor:pointer}
+  .edge.sel{opacity:1;stroke-width:4}
+  .edge.dim,.node.dim{opacity:.12}
+  .edge.f-money{stroke:var(--blue)} .edge.f-compute{stroke:var(--green)} .edge.f-power{stroke:var(--rust)} .edge.f-rival{stroke:var(--plum);stroke-dasharray:7 5}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:12px;box-shadow:var(--shadow)}
+  .panel h3{margin-bottom:4px}
+  .panel .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .panel .cols div{background:var(--panel2);border-radius:8px;padding:10px 12px;font-size:14px}
+  .panel .cols b{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);margin-bottom:3px}
+  @media(max-width:640px){.panel .cols{grid-template-columns:1fr}}
+  details{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin-top:10px;box-shadow:var(--shadow)}
+  summary{cursor:pointer;padding:12px 16px;font-weight:600;font-size:15px}
+  details .body{padding:0 16px 14px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2)}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  /* model */
+  .funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+  .fstep{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 12px;text-align:center;box-shadow:var(--shadow)}
+  .fstep b{display:block;font-size:clamp(32px,4.6vw,44px);line-height:1;color:var(--plum);font-family:Georgia,serif}
+  .fstep span{font-size:13.5px;color:var(--ink2)}
+  @media(max-width:640px){.funnel{grid-template-columns:1fr 1fr}}
+  .verdictgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+  @media(max-width:760px){.verdictgrid{grid-template-columns:1fr 1fr}}
+  .vcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+  .vcard b{font-family:Georgia,serif;font-size:16px;display:block;margin-bottom:3px}
+  .vcard p{font-size:14.5px;color:var(--ink2);margin:0}
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .preset{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 13px;font-size:14px}
+  .preset[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+  .optgrid{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .opt{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12.5px;background:var(--panel2);color:var(--ink2)}
+  .opt.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .scorebars{display:grid;grid-template-columns:1fr 1fr;gap:4px 22px;margin-top:8px}
+  @media(max-width:640px){.scorebars{grid-template-columns:1fr}}
+  .srow{display:grid;grid-template-columns:128px 1fr 34px;align-items:center;gap:8px;font-size:13px}
+  .sbar{height:9px;background:var(--panel2);border-radius:5px;position:relative;overflow:hidden}
+  .sbar i{position:absolute;top:0;bottom:0;border-radius:5px}
+  .movers{font-size:15px;margin-top:10px}
+  .movers b{color:var(--bad)}
+  /* rivalry */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  @media(max-width:640px){.vs{grid-template-columns:1fr}}
+  .vscard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .vscard h3{font-size:21px}
+  .vscard .tag{font-size:12px;color:var(--ink2);letter-spacing:.05em;text-transform:uppercase}
+  .vsrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .vsrow:last-child{border-bottom:none}
+  .vsrow b{font-variant-numeric:tabular-nums;text-align:right}
+  .sharebar{display:flex;height:20px;border-radius:5px;overflow:hidden;margin:6px 0 2px}
+  .sharebar div{color:#fff;font-size:12px;display:flex;align-items:center;padding:0 8px;white-space:nowrap}
+  /* paths: horizontal boxes, traffic-light rail down the left margin */
+  .paths{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+  .path{display:grid;grid-template-columns:108px 1fr;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+  .prail{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:16px 8px;text-align:center;color:#fff;background:#8a6d1d}
+  .path.boom .prail{background:var(--good)} .path.crash .prail{background:var(--bad)}
+  .prail .prail-name{font-weight:700;font-size:15.5px;letter-spacing:.02em;line-height:1.2}
+  .prail .prail-pct{font-family:Georgia,serif;font-size:27px;line-height:1}
+  .pbody{padding:14px 18px}
+  .pbody p{font-size:15px}
+  .pbody ul{margin:8px 0 0;padding-left:17px;font-size:14.5px}
+  .pbody li{margin-bottom:5px}
+  @media(min-width:760px){.pbody ul{columns:2;column-gap:28px}.pbody ul li{break-inside:avoid}}
+  @media(max-width:520px){.path{grid-template-columns:76px 1fr}.prail .prail-pct{font-size:21px}.prail .prail-name{font-size:13px}.pbody{padding:12px 13px}}
+  .checks{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+  @media(max-width:820px){.checks{grid-template-columns:1fr 1fr}}
+  .check{background:var(--panel2);border-radius:10px;padding:11px 13px;font-size:14.5px}
+  .check b{display:block;font-size:15px}
+  /* big metrics: number carries the point, words stay the same size */
+  .bignum{font-family:Georgia,serif;color:var(--plum);line-height:.95;letter-spacing:-.02em}
+  .veto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+  @media(max-width:860px){.veto-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.veto-grid{grid-template-columns:1fr}}
+  .veto-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .veto-card .bignum{font-size:clamp(44px,6vw,58px);display:block}
+  .veto-card p{font-size:14.5px;margin:8px 0 0}
+  .veto-bar{height:10px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:12px}
+  .veto-bar i{display:block;height:100%;background:var(--plum);border-radius:99px}
+  .veto-bar-label{font-size:12.5px;color:var(--ink2);margin-top:5px}
+  /* model takeaways: conclusions first, visual, no reading three cards to get it */
+  .takeaways{margin-top:18px}
+  .takeaways-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .takeaways-head h3{font-size:20px}
+  .takeaways-head span{font-size:14px;color:var(--ink2)}
+  .take-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px}
+  @media(max-width:860px){.take-grid{grid-template-columns:1fr}}
+  .take-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .take-card .bignum{font-size:clamp(46px,6vw,60px);display:block}
+  .take-card .take-title{font-weight:700;font-size:16.5px;line-height:1.25;margin-top:6px}
+  .take-card p{font-size:14.5px;margin:6px 0 0}
+  .take-bar{height:12px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:12px;display:flex}
+  .take-bar i{display:block;height:100%}
+  .take-bar .fill-plum{background:var(--plum)} .take-bar .fill-mute{background:var(--line)}
+  .take-shrink{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--ink2)}
+  .take-shrink .bar-now{height:12px;background:var(--plum);border-radius:99px;flex:0 0 100%}
+  .score-vs{display:grid;grid-template-columns:82px minmax(0,1fr) 28px;gap:10px;align-items:center;font-size:13.5px;margin-top:7px}
+  .score-vs>span:first-child{white-space:nowrap}
+  .score-vs .track{height:10px;background:var(--panel2);border-radius:99px;overflow:hidden;min-width:0}
+  .score-vs .track i{display:block;height:100%;background:var(--ink)}
+  .loopwrap{align-items:center}
+  .arc-bg{fill:var(--panel);stroke:var(--line);stroke-width:1}
+  /* credit */
+  .hbar{display:grid;grid-template-columns:110px 1fr 86px;gap:10px;align-items:center;font-size:14px;margin:7px 0}
+  .hbar .track{height:16px;background:var(--panel2);border-radius:4px;position:relative}
+  .hbar .fill{position:absolute;top:0;bottom:0;left:0;background:var(--bad);border-radius:4px;opacity:.85}
+  .hbar .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .creditgrid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  @media(max-width:760px){.creditgrid{grid-template-columns:1fr}}
+  .src{font-size:14px;color:var(--ink2);line-height:1.5}
+  .src a{color:var(--blue)}
+  footer{margin-top:48px;border-top:1px solid var(--line);padding-top:14px}
+  .kicker{font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--rust);font-weight:700}
+  @media(max-width:640px){header{padding-top:36px}.predbar{height:56px}.predbar b{font-size:19px}}
+  /* map interaction */
+  .hint{font-size:14.5px;color:var(--ink2);margin:2px 0 10px}
+  .hint b{color:var(--ink)}
+  .edge:hover{opacity:1;stroke-width:4.5}
+  .node:hover rect{stroke:var(--ink);stroke-width:2.2}
+  .panel .mpmeta{margin:0 0 8px;color:var(--ink2);font-size:14.5px}
+  .mpstrip{border-top:2px solid var(--line);background:var(--panel2);border-radius:0 0 8px 8px;margin:10px -16px -14px;padding:12px 16px;font-size:15.5px;line-height:1.5}
+  .mpstrip b{color:var(--rust)}
+  tr.crow{cursor:pointer}
+  tr.crow:hover td{background:var(--panel2)}
+  /* player tiles */
+  .pstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+  @media(max-width:820px){.pstrip{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.pstrip{grid-template-columns:1fr}}
+  .ptile{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px;box-shadow:var(--shadow)}
+  .ptile svg{flex:0 0 26px;width:26px;height:26px;color:var(--rust);margin-top:2px}
+  .ptile b{display:block;font-size:15.5px;line-height:1.25}
+  .ptile .pv{display:block;font-size:13.5px;color:var(--ink2);margin-top:2px;line-height:1.35}
+  .ptile .ps{margin-left:auto;font-family:Georgia,serif;font-size:24px;white-space:nowrap}
+  .ptile .ps.up{color:var(--good)} .ptile .ps.down{color:var(--bad)}
+  .ptile.hot{border:2px solid var(--rust)}
+  .ptile.hot .pv{color:var(--ink);font-weight:600}
+  .up{color:var(--good);font-weight:700}.down{color:var(--bad);font-weight:700}
+  .gatechips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .gchip{background:var(--panel2);border-radius:8px;padding:9px 14px;font-size:14.5px}
+  .gchip b{font-family:Georgia,serif;font-size:26px;color:var(--plum);vertical-align:-2px;margin-right:4px}
+  .minifacts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  @media(max-width:760px){.minifacts{grid-template-columns:1fr}}
+  .minifact{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14.5px;box-shadow:var(--shadow)}
+  .minifact b{display:block;font-family:Georgia,serif;font-size:40px;line-height:1;color:var(--plum);margin-bottom:4px}
+  /* credit loop + donut */
+  .loopwrap{display:grid;grid-template-columns:1.25fr .75fr;gap:20px;align-items:start;margin:18px 0 6px}
+  @media(max-width:820px){.loopwrap{grid-template-columns:1fr}}
+  .loopflow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .lnode{flex:1 1 118px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;box-shadow:var(--shadow)}
+  .lnode b{display:block;font-size:15px}
+  .lnode span{font-size:13px;color:var(--ink2);line-height:1.35;display:block}
+  .larrow{align-self:center;font-size:20px;color:var(--rust);padding:0 5px;font-weight:700}
+  .lreturn{margin-top:10px;background:var(--panel2);border-radius:8px;padding:10px 14px;font-size:14.5px}
+  .donutbox{text-align:center}
+  .donutbox svg{max-width:230px;width:100%}
+  .legend{text-align:left;font-size:14px;margin-top:8px}
+  .legend div{display:flex;gap:8px;margin:5px 0;align-items:flex-start}
+  .legend .sw{flex:0 0 13px;width:13px;height:13px;border-radius:3px;margin-top:3px}
+  /* rivalry inline refs */
+  .refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  @media(max-width:820px){.refgrid{grid-template-columns:1fr}}
+  .refcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 15px;box-shadow:var(--shadow)}
+  .refcard h3{font-size:16px;margin-bottom:5px}
+  .refcard p{font-size:14.5px;margin:0}
+
+  /* game tiles, grouped, each with its own dropdown */
+  .ggroup{margin-top:20px}
+  .ggroup h4{font-family:Georgia,serif;font-size:17px;margin:0 0 3px}
+  .ggroup .gdesc{font-size:14px;color:var(--ink2);margin:0 0 4px;max-width:76ch}
+  .gtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+  @media(max-width:820px){.gtiles{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.gtiles{grid-template-columns:1fr}}
+  .gtile{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px;box-shadow:var(--shadow)}
+  .gtop{display:flex;gap:11px;align-items:flex-start}
+  .gtile svg{flex:0 0 28px;width:28px;height:28px;color:var(--rust);margin-top:2px}
+  .gtile b{display:block;font-size:15.5px;line-height:1.25}
+  .gtile .gv{display:block;font-size:13px;color:var(--ink2);margin-top:2px;line-height:1.35}
+  .gtile .gs{margin-left:auto;font-family:Georgia,serif;font-size:20px;white-space:nowrap}
+  .gtile .gs.up{color:var(--good)} .gtile .gs.down{color:var(--bad)}
+  .gtile.hot{border:2px solid var(--rust)}
+  .gtile details.tiledrop{border:none;background:transparent;box-shadow:none;margin-top:6px;border-radius:0}
+  .gtile details.tiledrop summary{padding:5px 0 2px;font-size:13.5px;font-weight:600;color:var(--blue)}
+  .gtile .tilebody{font-size:13.5px;line-height:1.5;padding:4px 0 2px;color:var(--ink)}
+  .gtile .tilebody b{display:inline;font-size:13.5px}
+  .flag{font-size:17px;line-height:1}
+  .connlist{margin:8px 0 0;padding:0;list-style:none}
+  .connlist li{margin:5px 0}
+  .connlink{background:none;border:none;color:var(--blue);font-size:15px;text-align:left;padding:2px 0;text-decoration:underline;text-underline-offset:3px}
+  /* brand logo marks */
+  .logomark{width:44px;height:44px;color:var(--ink);margin-bottom:8px}
+  /* traffic light paths */
+  .traffic{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:14px 0 4px;background:var(--panel);box-shadow:var(--shadow)}
+  .traffic div{flex:1;display:flex;align-items:center;gap:9px;justify-content:center;padding:11px 6px;font-weight:700;font-size:15px;min-width:0;text-align:center}
+  .traffic .tl-dot{flex:0 0 16px;width:16px;height:16px;border-radius:50%}
+  .traffic .tl-stale{background:color-mix(in srgb,var(--gold) 16%,var(--panel))}
+  .traffic .tl-boom{background:color-mix(in srgb,var(--good) 14%,var(--panel))}
+  .traffic .tl-crash{background:color-mix(in srgb,var(--bad) 12%,var(--panel))}
+  @media(max-width:520px){.traffic div{font-size:12.5px;gap:5px;padding:9px 3px}.traffic .tl-dot{flex-basis:12px;width:12px;height:12px}}
+  /* circular credit loop */
+  .loopcircle{width:100%;max-width:560px;margin:0 auto;display:block}
+  .loopwrap{align-items:start}
+  .loopwrap>div{min-width:0}
+  .donutbox{padding-top:2px}
+  .donutbox svg{height:auto}
+  .loopnode rect{fill:var(--panel);stroke:var(--line)}
+  .loopnode text{fill:var(--ink);font-weight:700}
+  .loopnode .lsub{fill:var(--ink2);font-weight:400}
+  .arclabel{font-size:12.5px;font-weight:700;fill:var(--rust)}
+  .arcnum{font-size:15px;font-weight:800;fill:var(--ink)}
+  .factchips{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+  .fchip{background:var(--panel2);border-radius:8px;padding:9px 13px;font-size:14px}
+  .fchip b{font-family:Georgia,serif;font-size:24px;color:var(--plum);vertical-align:-3px;margin-right:3px}
+  footer a{color:var(--blue)}
+  /* compact state bullets + player table with hover popouts */
+  .sc-bullets{margin:2px 0 0;padding-left:16px;font-size:13.5px;line-height:1.45;color:var(--ink);text-align:left}
+  .sc-bullets li{margin:2px 0}
+  .statesum ul{margin:4px 0 0;padding-left:18px}
+  .statesum li{margin:2px 0}
+  .ptable-wrap{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px 14px 10px}
+  table.ptable{font-size:14px}
+  table.ptable th,table.ptable td{padding:8px 8px}
+  table.ptable .grouprow td{background:var(--panel2);font-weight:700;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);padding-top:9px;padding-bottom:9px}
+  table.ptable .prow{cursor:default;outline:none}
+  table.ptable .prow.hovered td,table.ptable .prow.focused td{background:color-mix(in srgb,var(--panel2) 65%,var(--panel))}
+  table.ptable .hotrow td{background:color-mix(in srgb,var(--rust) 10%,var(--panel))}
+  table.ptable .pcell{position:relative;min-width:150px}
+  .pname{font-weight:700}
+  .psub{display:block;font-size:12.5px;color:var(--ink2);font-weight:400;margin-top:1px}
+  .popout{display:block;visibility:hidden;opacity:0;pointer-events:none;position:absolute;left:0;top:calc(100% - 2px);z-index:60;width:min(360px,84vw);background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.22);padding:12px 14px;font-size:13.5px;line-height:1.5;color:var(--ink);white-space:normal;text-transform:none;letter-spacing:0;transition:opacity .12s ease,visibility .12s}
+  .popout.pop-up{top:auto;bottom:calc(100% - 2px)}
+  table.ptable .prow.hovered .popout,table.ptable .prow.focused .popout{visibility:visible;opacity:1;pointer-events:auto}
+  .ptable-wrap{overflow:visible;position:relative;transition:border-color .25s ease,box-shadow .25s ease}
+  .ptable-wrap.flash{border-color:var(--rust);box-shadow:0 0 0 3px color-mix(in srgb,var(--rust) 38%,transparent),var(--shadow)}
+  table.ptable .scorecell{font-family:Georgia,serif;font-size:19px;text-align:right;white-space:nowrap}
+  @media(max-width:520px){table.ptable{font-size:13px}table.ptable th,table.ptable td{padding:7px 5px}table.ptable .pcell{min-width:118px}.popout{width:min(320px,80vw)}}
+  /* take-list additions */
+  .node:focus{outline:none}.node:focus rect{stroke:var(--ink);stroke-width:2.6}
+  .edge:focus{outline:none;opacity:1;stroke-width:4.5}
+  .methodnote{font-size:14.5px;color:var(--ink2);line-height:1.55;margin-top:10px}
+  .methodnote b{color:var(--ink)}
+  .honesty{font-size:13.5px;color:var(--ink2);border-left:3px solid var(--line);padding:2px 0 2px 10px;margin-top:10px}
+  .vcharts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+  @media(max-width:820px){.vcharts{grid-template-columns:1fr}}
+  .vchart{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);min-width:0}
+  .vchart h3{margin:0 0 4px;font-size:16px}
+  .vplot{position:relative;height:210px;margin-top:34px;display:flex;align-items:flex-end;gap:12px;border-bottom:1px solid var(--line)}
+  .vcol{flex:1;height:100%;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
+  .vbar{width:100%;max-width:64px}
+  .vcol .vbar:first-of-type{border-radius:5px 5px 0 0}
+  .vval{font-size:13px;font-weight:700;margin-bottom:4px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .vgap{width:100%;max-width:64px;border:2px dashed var(--plum);border-bottom:0;border-radius:5px 5px 0 0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:var(--plum);order:-1;box-sizing:border-box}
+  .vcol .vbar.vtop{order:-1;border-radius:0}
+  .vline{position:absolute;left:0;right:0;border-top:2px dashed var(--bad);z-index:1}
+  .vline i{position:absolute;right:0;top:-18px;font-style:normal;font-size:11.5px;font-weight:700;color:var(--bad)}
+  .vchart .src{margin-top:10px}
+  .vlabs{display:flex;gap:12px;margin-top:6px}
+  .vlabs span{flex:1;text-align:center;font-size:12.5px;line-height:1.25;min-width:0}
+  .demandviz{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin:18px 0;box-shadow:var(--shadow)}
+  .demandviz h3{margin-bottom:4px}
+  .drow{display:grid;grid-template-columns:190px 1fr 92px;gap:10px;align-items:center;font-size:14px;margin:10px 0}
+  @media(max-width:640px){.drow{grid-template-columns:1fr;gap:4px}.drow .dval{text-align:left!important}}
+  .dtrack{height:18px;background:var(--panel2);border-radius:5px;position:relative;overflow:hidden}
+  .dfill{position:absolute;top:0;bottom:0;left:0;border-radius:5px}
+  .dfill.req{background:var(--plum)} .dfill.id{background:var(--blue)}
+  .dval{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  .riskstrip{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:16px 0 6px}
+  @media(max-width:760px){.riskstrip{grid-template-columns:1fr}.riskstrip .rarr{transform:rotate(90deg);justify-self:center}}
+  .rbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);font-size:14.5px}
+  .rbox b{display:block;font-size:15px;margin-bottom:3px}
+  .rbox .bignum{font-size:34px}
+  .rarr{align-self:center;font-size:20px;color:var(--rust);font-weight:700}
+  /* try-the-game: four plain-English state cards + compact readout */
+  .statecards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 10px}
+  @media(max-width:860px){.statecards{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.statecards{grid-template-columns:1fr}}
+  .statecard{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 13px;box-shadow:var(--shadow);color:var(--ink);display:flex;flex-direction:column;gap:5px}
+  .statecard[aria-pressed="true"]{border:2px solid var(--ink);padding:11px 12px}
+  .statecard .sc-tag{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--rust)}
+  .statecard .sc-name{font-family:Georgia,serif;font-size:18px;line-height:1.15;font-weight:700}
+  .statecard .sc-plain{font-size:13.5px;line-height:1.4;color:var(--ink)}
+  .statecard .sc-logic{font-size:13px;line-height:1.4;color:var(--ink2)}
+  .statecard .sc-logic b{color:var(--ink)}
+  .statecard .sc-verdict{margin-top:auto;font-size:13px;font-weight:700}
+  .statecard .sc-verdict.holds{color:var(--good)} .statecard .sc-verdict.falls{color:var(--bad)} .statecard .sc-verdict.part{color:var(--mid)}
+  .statecard .sc-tests{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+  .statecard .sc-test{font-size:11px;font-weight:700;letter-spacing:.05em;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--ink2)}
+  .statecard .sc-test.on{border:2px solid var(--good);color:var(--good);padding:1px 7px}
+  .statesum{background:var(--panel2);border-radius:10px;padding:12px 15px;font-size:15px;line-height:1.5}
+  .statesum b{font-family:Georgia,serif}
+  .switchlabel{font-size:13px;color:var(--ink2);margin:12px 0 0}
+  #model .optgrid{gap:5px;margin:6px 0}
+  #model .opt{font-size:12px;padding:4px 9px}
+  #model .ggroup{margin-top:14px}
+  #model .gtile{padding:9px 11px}
+  #model .gtiles{gap:8px}
+  .history{margin-top:22px}
+  .hgrid{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .hrow{display:grid;grid-template-columns:170px 1fr 1fr;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  @media(max-width:760px){.hrow{grid-template-columns:1fr}}
+  .hrow .hname{font-family:Georgia,serif;font-weight:700;font-size:17px;line-height:1.25}
+  .hrow .hname span{display:block;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:400;font-size:13px;color:var(--ink2);margin-top:3px}
+  .hrow p{font-size:14.5px;margin:0}
+  .hrow .hbig{font-family:Georgia,serif;color:var(--plum);font-size:26px;line-height:1.05;display:block;margin-bottom:3px}
+  /* ---- scenario board ---- */
+  .gb{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-top:10px}
+  .gb-scen{display:flex;flex-wrap:wrap;gap:8px}
+  .gb-sbtn{flex:1 1 150px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:10px;padding:8px 12px;text-align:left;display:flex;flex-direction:column;gap:2px}
+  .gb-sbtn[hidden]{display:none}
+  .gb-li{display:inline-flex;gap:6px;align-items:center}
+  .gb-sbtn .t{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--rust);font-weight:700}
+  .gb-sbtn .n{font-family:Georgia,serif;font-size:15.5px;font-weight:700;line-height:1.2}
+  .gb-sbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .gb-sbtn[aria-pressed="true"] .t{color:var(--gold)}
+  .gb-head{margin:16px 0 4px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+  .gb-verdict{font-family:Georgia,serif;font-size:clamp(19px,2.6vw,23px);line-height:1.2}
+  .gb-verdict.holds{color:var(--good)} .gb-verdict.part{color:var(--mid)} .gb-verdict.falls{color:var(--bad)}
+  .gb-tests{display:flex;gap:6px}
+  .gb-test{font-size:12px;font-weight:700;border-radius:99px;padding:3px 9px;border:1px solid var(--line);color:var(--ink2)}
+  .gb-test.on{border-color:var(--good);color:var(--good)}
+  .gb-sub{font-size:14.5px;color:var(--ink2);margin:2px 0 4px}
+  .gb-wl{font-size:14.5px;margin:0 0 6px}
+  .gb-wl .up{color:var(--good)} .gb-wl .dn{color:var(--bad);font-weight:700}
+  .gb-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin:10px 0 6px;align-items:center}
+  .gb-tag{font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 8px;white-space:nowrap;justify-self:end}
+  .tag-settled{background:var(--panel2);color:var(--ink2)}
+  .tag-deterred{background:color-mix(in srgb,var(--blue) 16%,transparent);color:var(--blue)}
+  .tag-bluffed{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--mid)}
+  .tag-free{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+  .gb-body{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:16px;margin-top:4px}
+  @media(max-width:820px){.gb-body{grid-template-columns:1fr}}
+  .gb-axis{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;gap:10px;font-size:11.5px;color:var(--ink2);padding:0 6px}
+  .gb-axis span:nth-child(2){display:flex;justify-content:space-between}
+  .gb-grp{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);margin:10px 6px 2px;font-weight:700}
+  .gb-row{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;gap:10px;align-items:center;width:100%;background:none;border:0;border-radius:8px;padding:5px 6px;color:var(--ink);text-align:left}
+  .gb-row:hover{background:var(--panel2)}
+  .gb-row.sel{background:var(--panel2);box-shadow:inset 3px 0 0 var(--ink)}
+  .gb-name{font-weight:700;font-size:14px;line-height:1.15}
+  .gb-name small{display:block;font-weight:400;color:var(--ink2);font-size:12px}
+  .gb-track{position:relative;height:22px}
+  .gb-track::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:var(--ink2);opacity:.45}
+  .gb-bar{position:absolute;top:4px;height:14px;border-radius:4px;transition:left .45s ease,width .45s ease}
+  .gb-bar.pos{background:var(--good)} .gb-bar.neg{background:var(--bad)}
+  .gb-val{position:absolute;top:2px;font-size:12.5px;font-weight:700;white-space:nowrap;transition:left .45s ease}
+  .gb-detail{background:var(--panel2);border-radius:12px;padding:14px 15px;font-size:14.5px;align-self:start;position:sticky;top:12px}
+  .gb-detail h4{font-family:Georgia,serif;font-size:19px;margin:0}
+  .gb-detail .ds{color:var(--ink2);font-size:13px;margin:2px 0 8px}
+  .gb-detail .dscore{font-family:Georgia,serif;font-size:28px;line-height:1}
+  .gb-detail .dscore span{font-family:inherit;font-size:14px;margin-left:6px}
+  .gb-detail ul{margin:6px 0 8px;padding-left:18px} .gb-detail li{margin-bottom:6px}
+  .gb-detail .dnote{font-size:13.5px;color:var(--ink2);border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+  .gb-levers{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+  .gb-levers summary{cursor:pointer;font-weight:700}
+  .gb-lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:10px}
+  .gb-lp{background:var(--panel2);border-radius:10px;padding:8px 10px}
+  .gb-lp b{font-size:13px;display:block;margin-bottom:5px}
+  .lv{font-size:12.5px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink2);padding:4px 10px;margin:0 4px 4px 0}
+  .lv[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+  .lv.changed{box-shadow:0 0 0 2px var(--gold)}
+  @media(max-width:560px){.gb-row,.gb-axis{grid-template-columns:96px minmax(0,1fr) 78px;gap:6px}.gb-name small{display:none}.gb-name{font-size:13px}.gb-tag{font-size:10.5px;padding:2px 6px}}
+  .mpath{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1.25fr);gap:6px;align-items:stretch;margin-top:12px}
+  .mfork{display:grid;gap:8px}
+  .mstep{display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ink);box-shadow:var(--shadow)}
+  .mstep:hover,.mstep:focus-visible{border-color:var(--ink)}
+  .ms-n{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--rust);font-weight:700}
+  .ms-v{font-family:Georgia,serif;font-size:19px;line-height:1.15}
+  .ms-v.holds{color:var(--good)} .ms-v.part{color:var(--mid)} .ms-v.falls{color:var(--bad)}
+  .ms-t{font-size:14px;color:var(--ink2);line-height:1.4}
+  .ms-go,.seeit{font-size:12.5px;font-weight:700;color:var(--blue);margin-top:auto;padding-top:4px}
+  .seeit{display:inline-block;background:none;border:0;padding:8px 0 0;cursor:pointer}
+  .marr{font-size:22px;color:var(--ink2);align-self:center;text-align:center}
+  .take-grid.two{grid-template-columns:1fr 1fr;margin-top:12px}
+  @media(max-width:860px){.mpath{grid-template-columns:1fr}.marr{transform:rotate(90deg);line-height:1}}
+  @media(max-width:700px){.take-grid.two{grid-template-columns:1fr}}
+  .bo-wrap{overflow-x:auto;margin-top:12px;-webkit-overflow-scrolling:touch}
+  .bo{min-width:640px;display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .bo-h,.bo-r{display:grid;grid-template-columns:140px repeat(3,minmax(0,1fr))}
+  .bo-h span,.bo-r span{padding:10px 12px;font-size:14px;border-top:1px solid var(--line)}
+  .bo-h span{border-top:0;font-size:12.5px;color:var(--ink2)}
+  .bo-h b{display:block;font-family:Georgia,serif;font-size:17px;color:var(--ink)}
+  .bo-r span[role=rowheader]{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+  .bo .bo-ai{background:color-mix(in srgb,var(--gold) 9%,var(--panel))}
+  .bo-tag{display:inline-block;font-style:normal;font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 8px;margin-top:5px}
+  .bo-tag.crash{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+  .bo-tag.stale{background:color-mix(in srgb,#6d675a 22%,transparent);color:var(--ink)}
+  .bo-tag.open{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--mid)}
+  .rflow{margin:14px 0 6px}
+  .rf-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+  .rf-step{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px}
+  .rf-step:not(:last-child)::after{content:"→";position:absolute;right:-17px;top:50%;transform:translateY(-50%);color:var(--rust);font-weight:700;font-size:18px}
+  .rf-n{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--rust);font-weight:700}
+  .rf-step b{font-size:15px}
+  .rf-big{font-family:Georgia,serif;color:var(--plum);font-size:30px;line-height:1.05}
+  .rf-t{font-size:13.5px;color:var(--ink2)}
+  .rf-hot{border-color:var(--rust);box-shadow:0 0 0 1px var(--rust)}
+  .rf-gauge{position:relative;display:block;height:14px;margin:6px 0 20px;background:var(--panel2);border-radius:4px}
+  .rf-gauge .clog{position:absolute;left:0;width:40%;top:0;bottom:0;background:color-mix(in srgb,var(--bad) 22%,transparent);border-radius:4px 0 0 4px}
+  .rf-gauge .band{position:absolute;left:45%;width:10%;top:-3px;bottom:-3px;background:var(--rust);border-radius:3px}
+  .rf-gauge .gl{position:absolute;top:17px;font-size:11px;color:var(--ink2)}
+  .rf-vis{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:12.5px;color:var(--ink2);margin-top:14px}
+  .rf-vis i{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ink),transparent)}
+  .rf-back{margin:10px 0 0;font-size:14px;border:1px dashed var(--rust);border-radius:10px;padding:8px 12px}
+  @media(max-width:900px){.rf-steps{grid-template-columns:1fr 1fr}.rf-step:nth-child(2)::after{display:none}}
+  @media(max-width:520px){.rf-steps{grid-template-columns:1fr}.rf-step:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-19px;transform:translateX(-50%)}.rf-step:nth-child(2)::after{display:block}}
+  .tiers{margin:4px 0 14px;padding-left:20px;font-size:15.5px}
+  .tiers li{margin-bottom:3px}
+  .take-card.labs{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;margin-top:12px}
+  .labs-r{border-left:1px solid var(--line);padding-left:22px}
+  .labs-r .bignum{font-size:clamp(40px,5vw,52px);display:block}
+  .labs-src{grid-column:1/-1;margin:0}
+  @media(max-width:700px){.take-card.labs{grid-template-columns:1fr}.labs-r{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:14px}}
+  :root{--z-wash:#56677a;--z-labs:#7a55a8;--z-build:#93700f;--z-land:#55732e}
+  html[data-theme="dark"]{--z-wash:#a3b5c9;--z-labs:#bb9de4;--z-build:#d9a92e;--z-land:#a2c470}
+  .zlabel{font-size:11.5px;font-weight:800;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<button class="modebtn" id="modeBtn" type="button">Night mode</button>
+<div class="wrap">
+
+<header>
+  <p class="dateline">Kevin Sigey · Dated November 10, 2026 · CoreWeave print added the same evening · A prediction, graded later</p>
+  <h1 style="font-size:clamp(30px,5.4vw,46px);margin:8px 0 8px">The Gray Area: Using game theory to predict the AI boom</h1>
+  <p class="lede">Twelve players are building, funding, permitting and policing the AI build-out at the same time. The builders want infinite growth, but the power the grid can supply is very much finite, and the people who ration it (utilities, voters, mayors, commissions) are already saying no, or saying yes at full price. I modelled the whole thing as a game, with every player, every lever and 24,576 possible worlds, and the punchline is that today isn't one of the stable ones. <b>My call is that nobody wins outright: it'll be a stalemate on the grid's terms until new information changes the chessboard.</b> Below is my prediction, the game behind it, the supporting evidence, and the dates I think the game will begin to change.</p>
+  <div class="predbar" role="img" aria-label="Prediction: stalemate 55 percent, boom 20 percent, crash 25 percent">
+    <div class="pb-stale"><b>55%</b><span>Stalemate</span></div>
+    <div class="pb-boom"><b>20%</b><span>Boom</span></div>
+    <div class="pb-crash"><b>25%</b><span>Crash</span></div>
+  </div>
+  <p class="src">These odds are my judgment rather than a model output, because the model tells you which worlds can survive, not how likely each one is or how fast we get there.</p>
+  <div class="callout">
+    <p><b>The short version.</b> Most of the probability sits in the gray area, where we stay roughly where we are until something forces a move. If we do leave, crash is the likelier exit, while boom is the long shot because the model gives it nothing to stand on: a boom where the grid stops charging full cost never holds. The gray area isn't calm either, since the strong builders keep growing on the grid's terms while the weak ones, small firms and leveraged neoclouds whose debt costs more than their revenue, fold or get bought.</p>
+  </div>
+</header>
+
+<section id="board">
+  <p class="kicker">The board</p>
+  <h2>12 players, 4 kinds of connection</h2>
+  <p class="secnote">The board covers the labs, hyperscalers, chip firms, leveraged neoclouds, the money, Washington, the states, the grid and China. Underneath all of it is the one thing nobody can print, which is land that can carry a campus and grid capacity you can actually connect this decade, so whoever rations that holds the cards.</p>
+  <p class="hint"><b>Hover or tap a player</b> for all its connections, or a line for just that one.</p>
+  <div class="chips" id="famChips">
+    <button class="chip" data-fam="all" aria-pressed="true">All connections</button>
+    <button class="chip" data-fam="money" aria-pressed="false"><span class="dot" style="background:var(--blue)"></span>Money &amp; guarantees</button>
+    <button class="chip" data-fam="compute" aria-pressed="false"><span class="dot" style="background:var(--green)"></span>Compute &amp; capacity</button>
+    <button class="chip" data-fam="power" aria-pressed="false"><span class="dot" style="background:var(--rust)"></span>Permission &amp; power</button>
+    <button class="chip" data-fam="rival" aria-pressed="false"><span class="dot" style="background:var(--plum)"></span>Rivalry &amp; discipline</button>
+  </div>
+  <div class="mapbox">
+    <svg id="map" viewBox="0 0 960 600" width="100%" role="group" aria-label="Players and connections map"></svg>
+  </div>
+  <div class="panel" id="mapPanel" aria-live="polite">
+    <h3 id="mpTitle">All connections, the general picture</h3>
+    <p class="mpmeta" id="mpMeta">Four families, 19 connections. Start with the dashed red line: OpenAI and Anthropic are not on the same team. Each lab's IPO costs the other 2 points, and its mega-commitments cost the other 1.</p>
+    <div class="mpstrip" id="mpStrip">Blue is money, green is compute, rust is permission and power, dashed is rivalry. Pick a player to start.</div>
+  </div>
+  <div class="callout" style="margin-top:12px"><b>One move to know before the game: the SEC's "escalate."</b> Today the SEC only asks circular deals to be disclosed. Escalating is a lever it can pull, and it means challenging how those deals are booked as revenue: when a supplier invests in a lab and the lab spends that money back on the supplier's cloud or chips, the supplier counts it as a sale. If the SEC rules that circular revenue can't be counted that way, filings get restated, and that threat is what keeps OpenAI from listing.</div>
+  <details>
+    <summary>All connections, grouped, the table</summary>
+    <div class="body" id="connTables"></div>
+  </details>
+</section>
+
+<section id="model">
+  <p class="kicker">The game</p>
+  <h2>The game: why the middle holds, and why it won't forever</h2>
+  <p class="lede" style="margin-top:6px"><b>Twelve players, fifteen levers, 24,576 possible worlds.</b> That's 32,768 combinations minus the 8,192 where neoclouds borrow money nobody is lending them. Every player scores each lever from −3 to +3 based on what it has at stake, and once every world runs through four stability tests the headline is simple: <b>today isn't stable.</b></p>
+  <div class="funnel">
+    <div class="fstep"><b>24,576</b><span>possible worlds</span></div>
+    <div class="fstep"><b>6,735</b><span>stable once any answer counts (GMR, SMR)</span></div>
+    <div class="fstep"><b>1,090</b><span>stable on believable threats alone (SEQ)</span></div>
+    <div class="fstep"><b>1</b><span>stable with no threats needed (Nash)</span></div>
+  </div>
+  <ul class="tiers">
+    <li><b style="color:var(--good)">Stable:</b> nobody has a move worth making, or every move meets a believable answer.</li>
+    <li><b style="color:var(--mid)">Fragile:</b> held in place partly by bluffs.</li>
+    <li><b style="color:var(--bad)">Unstable:</b> someone can move, and nothing stops them.</li>
+  </ul>
+  <div class="callout">
+    <p><b>Today is unstable.</b> Four players would gain by moving (OpenAI, the SEC, the Fed and the grid), and while three of those moves can be answered, the grid's can't. Charging data centres full cost for their power, which AEP Ohio and Virginia already do, is worth +3 to the grid, and no single reply costs it more than 1.</p>
+    <p><b>Flip gatekeeping on and you get the gray area.</b> It's fragile: every tempting move now has an answer, but the SEC's and the Fed's answers are bluffs. That's the stalemate. The build-out keeps going on the grid's terms, slower, pricier and with strings attached, until new information calls a bluff.</p>
+    <p class="src" style="margin:8px 0 0">Gatekeeping never switches back off either. It's on in every stable world the model finds (54–58% if players can gang up on a reply).</p>
+  </div>
+  <details>
+    <summary>How to read the four tests: Nash, GMR, SMR and SEQ, and what GMCR is</summary>
+    <div class="body">
+      <div class="verdictgrid" style="margin-top:2px">
+        <div class="vcard"><b>Nash: nobody wants to move</b><p>Nobody at the table has any move that pays, even before anyone answers. The strictest test. Only 1 world in 24,576 passes it.</p></div>
+        <div class="vcard"><b>GMR: every gain gets answered</b><p>Someone might gain by moving, but another player can answer in a way that leaves the mover no better off. If every tempting move has an answer like that, the world holds.</p></div>
+        <div class="vcard"><b>SMR: even the comeback fails</b><p>Like GMR, except the mover also gets to answer the answer. If they still cannot come out ahead, the world holds.</p></div>
+        <div class="vcard"><b>SEQ: the threat has to be believable</b><p>Like GMR, except the answer only counts if the player making it would actually want to make it. Empty threats do not hold a world together.</p></div>
+      </div>
+      <p class="secnote"><b>What GMCR is.</b> The Graph Model for Conflict Resolution (Fang, Hipel &amp; Kilgour, 1993) is a way of solving conflicts with many decision-makers, vetoes and sanctions, where no honest dollar payoff exists for a ballot measure or a permit. It needs only three things: who can move, what their options are, and how they rank the outcomes. Every possible combination of options is a state. A state is an equilibrium under a test when no player can do better by leaving it, once the replies that test allows are counted. That is the whole engine behind the numbers above: 12 players, 15 options, 24,576 feasible states, each one checked under all four tests.</p>
+      <p class="methodnote"><b>How the scores work.</b> Classic GMCR ranks outcomes in strict order, best to worst, for each player. This model scores the documented preference behind each ranking on a scale from −3 to +3 for each lever and adds the scores. The total is a straight-line stand-in for the ranking. It keeps the order the evidence supports, and it makes the size of a gain or a loss visible. The main result does not depend on any one score. Gatekeeping gains 3 and can lose at most 1 to any single reply. That gap is wider than any single weight in the table. Two sets of weights are settings, not measured values: the cross-lab rivalry weights, −2 on each other's IPOs and −1 on each other's commitments, set from the comparable-pricing evidence, and the weights for the seven players added beyond the core five. They are documented analyst settings, and the sensitivity checks behind the robust worlds are run across them.</p>
+      <p class="methodnote"><b>What everyone can see.</b> The model gives every player the same board. Every lever, and every other player's position, is visible to all twelve. Real life is not like that. Debt sits in vehicles that do not report in full. Rate cases are filed on schedules the builders do not control. Commitments surface in filings months after they are signed. That gap between the board in the model and the board in real life is the point. The middle holds while the information is incomplete. It moves when new filings, new tariffs or new prices change what everyone can see.</p>
+    </div>
+  </details>
+
+  <h3 style="margin-top:20px">Try the game</h3>
+  <p class="secnote">Pick a world and the bars show who's up and who's down versus today, while the tags show who wants out and what's stopping them. Click anyone for the detail.</p>
+  <div class="gb" id="gb">
+    <div class="gb-scen" id="gbScen" role="group" aria-label="Scenarios"></div>
+    <div aria-live="polite">
+      <div class="gb-head"><div class="gb-verdict" id="gbVerdict"></div><div class="gb-tests" id="gbTests"></div></div>
+      <p class="gb-sub" id="gbSub"></p>
+      <p class="gb-wl" id="gbWL"></p>
+    </div>
+    <div class="gb-legend"><span class="gb-li"><span class="gb-tag tag-settled">Settled</span>no move pays</span><span class="gb-li"><span class="gb-tag tag-deterred">Deterred</span>a move pays, a believable answer stops it</span><span class="gb-li"><span class="gb-tag tag-bluffed">Bluffed</span>held back only by an empty threat</span><span class="gb-li"><span class="gb-tag tag-free">Free to move</span>a move pays and nothing stops it</span></div>
+    <div class="gb-body">
+      <div>
+        <div class="gb-axis"><span>Player · score</span><span><em>worse than today</em><em>better</em></span><span style="text-align:right">Status</span></div>
+        <div id="gbChart"></div>
+      </div>
+      <aside class="gb-detail" id="gbDetail" aria-live="polite"></aside>
+    </div>
+    <details class="gb-levers"><summary>Flip the levers yourself: 15 levers, any world</summary>
+      <div class="gb-lgrid" id="gbLevers"></div>
+      <p class="hint" style="margin-top:6px">Gold rings mark levers changed from today. Neoclouds can't expand on leverage with lenders off, so flipping one can flip the other.</p>
+    </details>
+  </div>
+
+  <div class="takeaways">
+    <div class="takeaways-head"><h3>What the model says</h3><span>The story in four worlds. Click one to load it in the game.</span></div>
+    <div class="mpath">
+      <button type="button" class="mstep" data-scen="today"><span class="ms-n">1 · Today</span><span class="ms-v falls">Unstable</span><span class="ms-t">The grid gets +3 for charging full cost and nobody can undo it, so it moves, and in Ohio and Virginia it already has.</span><span class="ms-go">Load in the game ↑</span></button>
+      <div class="marr" aria-hidden="true">→</div>
+      <button type="button" class="mstep" data-scen="gray"><span class="ms-n">2 · The gray area</span><span class="ms-v part">Fragile: held by bluffs</span><span class="ms-t">Every tempting move now has an answer, but two of them are bluffs, since nobody would actually pay to punish the SEC for escalating or the Fed for stepping in.</span><span class="ms-go">Load in the game ↑</span></button>
+      <div class="marr" aria-hidden="true">→</div>
+      <div class="mfork">
+        <button type="button" class="mstep" data-scen="nash"><span class="ms-n">3a · If nothing breaks: drift</span><span class="ms-v holds">Stable · the one settled world</span><span class="ms-t">The SEC escalates, the Fed steps in, and OpenAI lists because it has nothing left to fear. Building carries on under the grid's terms and tighter rules, which is where the players walk themselves.</span><span class="ms-go">Load in the game ↑</span></button>
+        <button type="button" class="mstep" data-scen="strike"><span class="ms-n">3b · If a shock hits: the money stops</span><span class="ms-v holds">Stable · 620 of 1,090 credible worlds</span><span class="ms-t">It's the most common stable ending (57%), yet nobody picks it, because lenders would rather keep lending. It takes an outside shock, but once that shock lands, it sticks.</span><span class="ms-go">Load in the game ↑</span></button>
+      </div>
+    </div>
+    <div class="take-card labs">
+      <div>
+        <div class="take-title">The labs: Anthropic is comfortable, OpenAI is deterred</div>
+        <div style="margin-top:10px">
+          <div class="score-vs"><span>OpenAI</span><span class="track"><i style="width:55%"></i></span><b>11</b></div>
+          <div class="score-vs"><span>Anthropic</span><span class="track"><i style="width:70%"></i></span><b>14</b></div>
+        </div>
+        <p>Anthropic is ahead on today's scores and has no move worth making. OpenAI does, by listing now, but it holds off because the SEC would answer by escalating and actually wants to. The rivalry is real, since each lab loses points when the other lists or signs bigger commitments, but it decides who's winning inside the gray area rather than which path we end up on.</p>
+        <button type="button" class="seeit" data-scen="today" data-player="OpenAI">See OpenAI held back in the game ↑</button>
+      </div>
+      <div class="labs-r">
+        <span class="bignum">1,090 → 342</span>
+        <div class="take-title">The SEC is the hinge of the whole game</div>
+        <div class="take-shrink" role="img" aria-label="Believably stable worlds fall from 1090 to 342 if the SEC loses its appetite to escalate"><div style="flex:1"><div style="height:12px;background:var(--plum);border-radius:99px;width:100%"></div><div style="height:12px;background:var(--line);border-radius:99px;width:31%;margin-top:5px"></div></div></div>
+        <p>That threat isn't only holding OpenAI back. If you take away the SEC's appetite to escalate, the believably stable worlds drop about 69%, whereas doing the same to the Fed only cuts them by about a third.</p>
+      </div>
+      <p class="src labs-src">Enterprise LLM API spend: Anthropic 55%, OpenAI 31% (<a href="https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/" target="_blank" rel="noopener">Menlo Ventures, Nov 3, 2026</a>). Menlo is an Anthropic investor, so take the split as directional.</p>
+    </div>
+  </div>
+</section>
+
+<section id="credit">
+  <p class="kicker">Supporting evidence, credit</p>
+  <h2>The stress shows up in credit first, and it's concentrated</h2>
+  <p class="secnote">Looking at the ouroboros that is lending in the AI industry, the glaring statistic is that <b>55% of investment into AI firms comes from other AI firms</b> (BIS, 2021–25). The industry is mostly feeding itself, so a failure at one stop lands on its trading partners too.</p>
+  <div class="loopwrap">
+    <div>
+      <h3 style="margin-bottom:6px">The ouroboros: how the money circles back</h3>
+      <svg class="loopcircle" viewBox="-20 0 640 470" role="img" aria-label="Ouroboros of circular financing, a Nordic serpent biting its own tail: hyperscalers stake the labs and sell them cloud capacity, the labs place orders, neoclouds order chips and capacity against a 132.5 billion dollar CoreWeave backlog, and chip suppliers return guarantees while revenue commitments flow back. The IMF totals across 14 circular deals, 300 billion dollars of equity, 650 billion of debt, 1.4 trillion of commitments and 253 billion of backstop caps, are shown in the centre, not pinned to single arrows.">
+        <g style="--rust:#e07f3e;--bg:#141311;--ink:#ece7da">
+        <path d="M400.7 122.8 L402.1 123.5 L403.5 124.2 L404.9 124.9 L406.2 125.6 L407.6 126.4 L409.0 127.1 L410.3 127.9 L411.7 128.6 L413.0 129.4 L414.3 130.2 L415.7 131.0 L417.0 131.8 L418.3 132.6 L419.6 133.4 L420.9 134.3 L422.1 135.1 L423.4 135.9 L424.7 136.8 L425.9 137.7 L427.1 138.5 L428.4 139.4 L429.6 140.3 L430.8 141.2 L432.0 142.1 L433.2 143.0 L434.4 143.9 L435.5 144.9 L436.7 145.8 L437.8 146.7 L439.0 147.7 L440.1 148.7 L441.2 149.6 L442.3 150.6 L443.4 151.6 L444.5 152.6 L445.5 153.6 L446.6 154.6 L447.7 155.6 L448.7 156.6 L449.7 157.7 L450.7 158.7 L451.7 159.7 L452.7 160.8 L453.7 161.8 L454.7 162.9 L455.6 164.0 L456.6 165.0 L457.5 166.1 L458.4 167.2 L459.3 168.3 L460.2 169.4 L461.1 170.5 L462.0 171.6 L462.9 172.7 L463.7 173.9 L464.5 175.0 L465.4 176.1 L466.2 177.3 L467.0 178.4 L467.8 179.6 L468.5 180.7 L469.3 181.9 L470.0 183.1 L470.8 184.2 L471.5 185.4 L472.2 186.6 L472.9 187.8 L473.6 189.0 L474.2 190.2 L474.9 191.4 L475.5 192.6 L476.2 193.8 L476.8 195.0 L477.4 196.2 L478.0 197.5 L478.5 198.7 L479.1 199.9 L479.6 201.2 L480.2 202.4 L480.7 203.6 L481.2 204.9 L481.7 206.1 L482.2 207.4 L482.6 208.7 L483.1 209.9 L483.5 211.2 L483.9 212.4 L484.4 213.7 L484.8 215.0 L485.1 216.3 L485.5 217.5 L485.8 218.8 L486.2 220.1 L486.5 221.4 L486.8 222.7 L487.1 224.0 L487.4 225.2 L487.7 226.5 L487.9 227.8 L488.2 229.1 L488.4 230.4 L488.6 231.7 L488.8 233.0 L489.0 234.3 L489.1 235.6 L489.3 236.9 L489.4 238.2 L489.5 239.5 L489.6 240.8 L489.7 242.1 L489.8 243.5 L489.9 244.8 L489.9 246.1 L490.0 247.4 L490.0 248.7 L490.0 250.0 L490.0 251.3 L490.0 252.6 L489.9 253.9 L489.9 255.2 L489.8 256.5 L489.7 257.9 L489.6 259.2 L489.5 260.5 L489.4 261.8 L489.3 263.1 L489.1 264.4 L489.0 265.7 L488.8 267.0 L488.6 268.3 L488.4 269.6 L488.2 270.9 L487.9 272.2 L487.7 273.5 L487.4 274.8 L487.1 276.0 L486.8 277.3 L486.5 278.6 L486.2 279.9 L485.8 281.2 L485.5 282.5 L485.1 283.7 L484.8 285.0 L484.4 286.3 L483.9 287.6 L483.5 288.8 L483.1 290.1 L482.6 291.3 L482.2 292.6 L481.7 293.9 L481.2 295.1 L480.7 296.4 L480.2 297.6 L479.6 298.8 L479.1 300.1 L478.5 301.3 L478.0 302.5 L477.4 303.8 L476.8 305.0 L476.2 306.2 L475.5 307.4 L474.9 308.6 L474.2 309.8 L473.6 311.0 L472.9 312.2 L472.2 313.4 L471.5 314.6 L470.8 315.8 L470.0 316.9 L469.3 318.1 L468.5 319.3 L467.8 320.4 L467.0 321.6 L466.2 322.7 L465.4 323.9 L464.5 325.0 L463.7 326.1 L462.9 327.3 L462.0 328.4 L461.1 329.5 L460.2 330.6 L459.3 331.7 L458.4 332.8 L457.5 333.9 L456.6 335.0 L455.6 336.0 L454.7 337.1 L453.7 338.2 L452.7 339.2 L451.7 340.3 L450.7 341.3 L449.7 342.3 L448.7 343.4 L447.7 344.4 L446.6 345.4 L445.5 346.4 L444.5 347.4 L443.4 348.4 L442.3 349.4 L441.2 350.4 L440.1 351.3 L439.0 352.3 L437.8 353.3 L436.7 354.2 L435.5 355.1 L434.4 356.1 L433.2 357.0 L432.0 357.9 L430.8 358.8 L429.6 359.7 L428.4 360.6 L427.1 361.5 L425.9 362.3 L424.7 363.2 L423.4 364.1 L422.1 364.9 L420.9 365.7 L419.6 366.6 L418.3 367.4 L417.0 368.2 L415.7 369.0 L414.3 369.8 L413.0 370.6 L411.7 371.4 L410.3 372.1 L409.0 372.9 L407.6 373.6 L406.2 374.4 L404.9 375.1 L403.5 375.8 L402.1 376.5 L400.7 377.2 L399.3 377.9 L397.9 378.6 L396.4 379.2 L395.0 379.9 L393.6 380.6 L392.1 381.2 L390.7 381.8 L389.2 382.4 L387.7 383.1 L386.3 383.7 L384.8 384.2 L383.3 384.8 L381.8 385.4 L380.3 385.9 L378.8 386.5 L377.3 387.0 L375.8 387.6 L374.2 388.1 L372.7 388.6 L371.2 389.1 L369.6 389.6 L368.1 390.0 L366.5 390.5 L365.0 391.0 L363.4 391.4 L361.9 391.8 L360.3 392.2 L358.7 392.7 L357.1 393.1 L355.6 393.4 L354.0 393.8 L352.4 394.2 L350.8 394.5 L349.2 394.9 L347.6 395.2 L346.0 395.5 L344.4 395.9 L342.7 396.2 L341.1 396.4 L339.5 396.7 L337.9 397.0 L336.3 397.2 L334.6 397.5 L333.0 397.7 L331.4 397.9 L329.7 398.2 L328.1 398.4 L326.4 398.5 L324.8 398.7 L323.2 398.9 L321.5 399.0 L319.9 399.2 L318.2 399.3 L316.6 399.4 L314.9 399.5 L313.3 399.6 L311.6 399.7 L309.9 399.8 L308.3 399.9 L306.6 399.9 L305.0 399.9 L303.3 400.0 L301.7 400.0 L300.0 400.0 L298.3 400.0 L296.7 400.0 L295.0 399.9 L293.4 399.9 L291.7 399.9 L290.1 399.8 L288.4 399.7 L286.7 399.6 L285.1 399.5 L283.4 399.4 L281.8 399.3 L280.1 399.2 L278.5 399.0 L276.8 398.9 L275.2 398.7 L273.6 398.5 L271.9 398.4 L270.3 398.2 L268.6 397.9 L267.0 397.7 L265.4 397.5 L263.7 397.2 L262.1 397.0 L260.5 396.7 L258.9 396.4 L257.3 396.2 L255.6 395.9 L254.0 395.5 L252.4 395.2 L250.8 394.9 L249.2 394.5 L247.6 394.2 L246.0 393.8 L244.4 393.4 L242.9 393.1 L241.3 392.7 L239.7 392.2 L238.1 391.8 L236.6 391.4 L235.0 391.0 L233.5 390.5 L231.9 390.0 L230.4 389.6 L228.8 389.1 L227.3 388.6 L225.8 388.1 L224.2 387.6 L222.7 387.0 L221.2 386.5 L219.7 385.9 L218.2 385.4 L216.7 384.8 L215.2 384.2 L213.7 383.7 L212.3 383.1 L210.8 382.4 L209.3 381.8 L207.9 381.2 L206.4 380.6 L205.0 379.9 L203.6 379.2 L202.1 378.6 L200.7 377.9 L199.3 377.2 L197.9 376.5 L196.5 375.8 L195.1 375.1 L193.8 374.4 L192.4 373.6 L191.0 372.9 L189.7 372.1 L188.3 371.4 L187.0 370.6 L185.7 369.8 L184.3 369.0 L183.0 368.2 L181.7 367.4 L180.4 366.6 L179.1 365.7 L177.9 364.9 L176.6 364.1 L175.3 363.2 L174.1 362.3 L172.9 361.5 L171.6 360.6 L170.4 359.7 L169.2 358.8 L168.0 357.9 L166.8 357.0 L165.6 356.1 L164.5 355.1 L163.3 354.2 L162.2 353.3 L161.0 352.3 L159.9 351.3 L158.8 350.4 L157.7 349.4 L156.6 348.4 L155.5 347.4 L154.5 346.4 L153.4 345.4 L152.3 344.4 L151.3 343.4 L150.3 342.3 L149.3 341.3 L148.3 340.3 L147.3 339.2 L146.3 338.2 L145.3 337.1 L144.4 336.0 L143.4 335.0 L142.5 333.9 L141.6 332.8 L140.7 331.7 L139.8 330.6 L138.9 329.5 L138.0 328.4 L137.1 327.3 L136.3 326.1 L135.5 325.0 L134.6 323.9 L133.8 322.7 L133.0 321.6 L132.2 320.4 L131.5 319.3 L130.7 318.1 L130.0 316.9 L129.2 315.8 L128.5 314.6 L127.8 313.4 L127.1 312.2 L126.4 311.0 L125.8 309.8 L125.1 308.6 L124.5 307.4 L123.8 306.2 L123.2 305.0 L122.6 303.8 L122.0 302.5 L121.5 301.3 L120.9 300.1 L120.4 298.8 L119.8 297.6 L119.3 296.4 L118.8 295.1 L118.3 293.9 L117.8 292.6 L117.4 291.3 L116.9 290.1 L116.5 288.8 L116.1 287.6 L115.6 286.3 L115.2 285.0 L114.9 283.7 L114.5 282.5 L114.2 281.2 L113.8 279.9 L113.5 278.6 L113.2 277.3 L112.9 276.0 L112.6 274.8 L112.3 273.5 L112.1 272.2 L111.8 270.9 L111.6 269.6 L111.4 268.3 L111.2 267.0 L111.0 265.7 L110.9 264.4 L110.7 263.1 L110.6 261.8 L110.5 260.5 L110.4 259.2 L110.3 257.9 L110.2 256.5 L110.1 255.2 L110.1 253.9 L110.0 252.6 L110.0 251.3 L110.0 250.0 L110.0 248.7 L110.0 247.4 L110.1 246.1 L110.1 244.8 L110.2 243.5 L110.3 242.1 L110.4 240.8 L110.5 239.5 L110.6 238.2 L110.7 236.9 L110.9 235.6 L111.0 234.3 L111.2 233.0 L111.4 231.7 L111.6 230.4 L111.8 229.1 L112.1 227.8 L112.3 226.5 L112.6 225.2 L112.9 224.0 L113.2 222.7 L113.5 221.4 L113.8 220.1 L114.2 218.8 L114.5 217.5 L114.9 216.3 L115.2 215.0 L115.6 213.7 L116.1 212.4 L116.5 211.2 L116.9 209.9 L117.4 208.7 L117.8 207.4 L118.3 206.1 L118.8 204.9 L119.3 203.6 L119.8 202.4 L120.4 201.2 L120.9 199.9 L121.5 198.7 L122.0 197.5 L122.6 196.2 L123.2 195.0 L123.8 193.8 L124.5 192.6 L125.1 191.4 L125.8 190.2 L126.4 189.0 L127.1 187.8 L127.8 186.6 L128.5 185.4 L129.2 184.2 L130.0 183.1 L130.7 181.9 L131.5 180.7 L132.2 179.6 L133.0 178.4 L133.8 177.3 L134.6 176.1 L135.5 175.0 L136.3 173.9 L137.1 172.7 L138.0 171.6 L138.9 170.5 L139.8 169.4 L140.7 168.3 L141.6 167.2 L142.5 166.1 L143.4 165.0 L144.4 164.0 L145.3 162.9 L146.3 161.8 L147.3 160.8 L148.3 159.7 L149.3 158.7 L150.3 157.7 L151.3 156.6 L152.3 155.6 L153.4 154.6 L154.5 153.6 L155.5 152.6 L156.6 151.6 L157.7 150.6 L158.8 149.6 L159.9 148.7 L161.0 147.7 L162.2 146.7 L163.3 145.8 L164.5 144.9 L165.6 143.9 L166.8 143.0 L168.0 142.1 L169.2 141.2 L170.4 140.3 L171.6 139.4 L172.9 138.5 L174.1 137.7 L175.3 136.8 L176.6 135.9 L177.9 135.1 L179.1 134.3 L180.4 133.4 L181.7 132.6 L183.0 131.8 L184.3 131.0 L185.7 130.2 L187.0 129.4 L188.3 128.6 L189.7 127.9 L191.0 127.1 L192.4 126.4 L193.8 125.6 L195.1 124.9 L196.5 124.2 L197.9 123.5 L199.3 122.8 L200.7 122.1 L202.1 121.4 L203.6 120.8 L205.0 120.1 L206.4 119.4 L207.9 118.8 L209.3 118.2 L210.8 117.6 L212.3 116.9 L213.7 116.3 L215.2 115.8 L216.7 115.2 L218.2 114.6 L219.7 114.1 L221.2 113.5 L222.7 113.0 L224.2 112.4 L225.8 111.9 L227.3 111.4 L228.8 110.9 L230.4 110.4 L231.9 110.0 L233.5 109.5 L235.0 109.0 L236.6 108.6 L238.1 108.2 L239.7 107.8 L241.3 107.3 L242.9 106.9 L244.4 106.6 L246.0 106.2 L247.6 105.8" fill="none" stroke="var(--rust)" stroke-width="27" stroke-linecap="round"/>
+        <path d="M400.7 122.8 L402.1 123.5 L403.5 124.2 L404.9 124.9 L406.2 125.6 L407.6 126.4 L409.0 127.1 L410.3 127.9 L411.7 128.6 L413.0 129.4 L414.3 130.2 L415.7 131.0 L417.0 131.8 L418.3 132.6 L419.6 133.4 L420.9 134.3 L422.1 135.1 L423.4 135.9 L424.7 136.8 L425.9 137.7 L427.1 138.5 L428.4 139.4 L429.6 140.3 L430.8 141.2 L432.0 142.1 L433.2 143.0 L434.4 143.9 L435.5 144.9 L436.7 145.8 L437.8 146.7 L439.0 147.7 L440.1 148.7 L441.2 149.6 L442.3 150.6 L443.4 151.6 L444.5 152.6 L445.5 153.6 L446.6 154.6 L447.7 155.6 L448.7 156.6 L449.7 157.7 L450.7 158.7 L451.7 159.7 L452.7 160.8 L453.7 161.8 L454.7 162.9 L455.6 164.0 L456.6 165.0 L457.5 166.1 L458.4 167.2 L459.3 168.3 L460.2 169.4 L461.1 170.5 L462.0 171.6 L462.9 172.7 L463.7 173.9 L464.5 175.0 L465.4 176.1 L466.2 177.3 L467.0 178.4 L467.8 179.6 L468.5 180.7 L469.3 181.9 L470.0 183.1 L470.8 184.2 L471.5 185.4 L472.2 186.6 L472.9 187.8 L473.6 189.0 L474.2 190.2 L474.9 191.4 L475.5 192.6 L476.2 193.8 L476.8 195.0 L477.4 196.2 L478.0 197.5 L478.5 198.7 L479.1 199.9 L479.6 201.2 L480.2 202.4 L480.7 203.6 L481.2 204.9 L481.7 206.1 L482.2 207.4 L482.6 208.7 L483.1 209.9 L483.5 211.2 L483.9 212.4 L484.4 213.7 L484.8 215.0 L485.1 216.3 L485.5 217.5 L485.8 218.8 L486.2 220.1 L486.5 221.4 L486.8 222.7 L487.1 224.0 L487.4 225.2 L487.7 226.5 L487.9 227.8 L488.2 229.1 L488.4 230.4 L488.6 231.7 L488.8 233.0 L489.0 234.3 L489.1 235.6 L489.3 236.9 L489.4 238.2 L489.5 239.5 L489.6 240.8 L489.7 242.1 L489.8 243.5 L489.9 244.8 L489.9 246.1 L490.0 247.4 L490.0 248.7 L490.0 250.0 L490.0 251.3 L490.0 252.6 L489.9 253.9 L489.9 255.2 L489.8 256.5 L489.7 257.9 L489.6 259.2 L489.5 260.5 L489.4 261.8 L489.3 263.1 L489.1 264.4 L489.0 265.7 L488.8 267.0 L488.6 268.3 L488.4 269.6 L488.2 270.9 L487.9 272.2 L487.7 273.5 L487.4 274.8 L487.1 276.0 L486.8 277.3 L486.5 278.6 L486.2 279.9 L485.8 281.2 L485.5 282.5 L485.1 283.7 L484.8 285.0 L484.4 286.3 L483.9 287.6 L483.5 288.8 L483.1 290.1 L482.6 291.3 L482.2 292.6 L481.7 293.9 L481.2 295.1 L480.7 296.4 L480.2 297.6 L479.6 298.8 L479.1 300.1 L478.5 301.3 L478.0 302.5 L477.4 303.8 L476.8 305.0 L476.2 306.2 L475.5 307.4 L474.9 308.6 L474.2 309.8 L473.6 311.0 L472.9 312.2 L472.2 313.4 L471.5 314.6 L470.8 315.8 L470.0 316.9 L469.3 318.1 L468.5 319.3 L467.8 320.4 L467.0 321.6 L466.2 322.7 L465.4 323.9 L464.5 325.0 L463.7 326.1 L462.9 327.3 L462.0 328.4 L461.1 329.5 L460.2 330.6 L459.3 331.7 L458.4 332.8 L457.5 333.9 L456.6 335.0 L455.6 336.0 L454.7 337.1 L453.7 338.2 L452.7 339.2 L451.7 340.3 L450.7 341.3 L449.7 342.3 L448.7 343.4 L447.7 344.4 L446.6 345.4 L445.5 346.4 L444.5 347.4 L443.4 348.4 L442.3 349.4 L441.2 350.4 L440.1 351.3 L439.0 352.3 L437.8 353.3 L436.7 354.2 L435.5 355.1 L434.4 356.1 L433.2 357.0 L432.0 357.9 L430.8 358.8 L429.6 359.7 L428.4 360.6 L427.1 361.5 L425.9 362.3 L424.7 363.2 L423.4 364.1 L422.1 364.9 L420.9 365.7 L419.6 366.6 L418.3 367.4 L417.0 368.2 L415.7 369.0 L414.3 369.8 L413.0 370.6 L411.7 371.4 L410.3 372.1 L409.0 372.9 L407.6 373.6 L406.2 374.4 L404.9 375.1 L403.5 375.8 L402.1 376.5 L400.7 377.2 L399.3 377.9 L397.9 378.6 L396.4 379.2 L395.0 379.9 L393.6 380.6 L392.1 381.2 L390.7 381.8 L389.2 382.4 L387.7 383.1 L386.3 383.7 L384.8 384.2 L383.3 384.8 L381.8 385.4 L380.3 385.9 L378.8 386.5 L377.3 387.0 L375.8 387.6 L374.2 388.1 L372.7 388.6 L371.2 389.1 L369.6 389.6 L368.1 390.0 L366.5 390.5 L365.0 391.0 L363.4 391.4 L361.9 391.8 L360.3 392.2 L358.7 392.7 L357.1 393.1 L355.6 393.4 L354.0 393.8 L352.4 394.2 L350.8 394.5 L349.2 394.9 L347.6 395.2 L346.0 395.5 L344.4 395.9 L342.7 396.2 L341.1 396.4 L339.5 396.7 L337.9 397.0 L336.3 397.2 L334.6 397.5 L333.0 397.7 L331.4 397.9 L329.7 398.2 L328.1 398.4 L326.4 398.5 L324.8 398.7 L323.2 398.9 L321.5 399.0 L319.9 399.2 L318.2 399.3 L316.6 399.4 L314.9 399.5 L313.3 399.6 L311.6 399.7 L309.9 399.8 L308.3 399.9 L306.6 399.9 L305.0 399.9 L303.3 400.0 L301.7 400.0 L300.0 400.0 L298.3 400.0 L296.7 400.0 L295.0 399.9 L293.4 399.9 L291.7 399.9 L290.1 399.8 L288.4 399.7 L286.7 399.6 L285.1 399.5 L283.4 399.4 L281.8 399.3 L280.1 399.2 L278.5 399.0 L276.8 398.9 L275.2 398.7 L273.6 398.5 L271.9 398.4 L270.3 398.2 L268.6 397.9 L267.0 397.7 L265.4 397.5 L263.7 397.2 L262.1 397.0 L260.5 396.7 L258.9 396.4 L257.3 396.2 L255.6 395.9 L254.0 395.5 L252.4 395.2 L250.8 394.9 L249.2 394.5 L247.6 394.2 L246.0 393.8 L244.4 393.4 L242.9 393.1 L241.3 392.7 L239.7 392.2 L238.1 391.8 L236.6 391.4 L235.0 391.0 L233.5 390.5 L231.9 390.0 L230.4 389.6 L228.8 389.1 L227.3 388.6 L225.8 388.1 L224.2 387.6 L222.7 387.0 L221.2 386.5 L219.7 385.9 L218.2 385.4 L216.7 384.8 L215.2 384.2 L213.7 383.7 L212.3 383.1 L210.8 382.4 L209.3 381.8 L207.9 381.2 L206.4 380.6 L205.0 379.9 L203.6 379.2 L202.1 378.6 L200.7 377.9 L199.3 377.2 L197.9 376.5 L196.5 375.8 L195.1 375.1 L193.8 374.4 L192.4 373.6 L191.0 372.9 L189.7 372.1 L188.3 371.4 L187.0 370.6 L185.7 369.8 L184.3 369.0 L183.0 368.2 L181.7 367.4 L180.4 366.6 L179.1 365.7 L177.9 364.9 L176.6 364.1 L175.3 363.2 L174.1 362.3 L172.9 361.5 L171.6 360.6 L170.4 359.7 L169.2 358.8 L168.0 357.9 L166.8 357.0 L165.6 356.1 L164.5 355.1 L163.3 354.2 L162.2 353.3 L161.0 352.3 L159.9 351.3 L158.8 350.4 L157.7 349.4 L156.6 348.4 L155.5 347.4 L154.5 346.4 L153.4 345.4 L152.3 344.4 L151.3 343.4 L150.3 342.3 L149.3 341.3 L148.3 340.3 L147.3 339.2 L146.3 338.2 L145.3 337.1 L144.4 336.0 L143.4 335.0 L142.5 333.9 L141.6 332.8 L140.7 331.7 L139.8 330.6 L138.9 329.5 L138.0 328.4 L137.1 327.3 L136.3 326.1 L135.5 325.0 L134.6 323.9 L133.8 322.7 L133.0 321.6 L132.2 320.4 L131.5 319.3 L130.7 318.1 L130.0 316.9 L129.2 315.8 L128.5 314.6 L127.8 313.4 L127.1 312.2 L126.4 311.0 L125.8 309.8 L125.1 308.6 L124.5 307.4 L123.8 306.2 L123.2 305.0 L122.6 303.8 L122.0 302.5 L121.5 301.3 L120.9 300.1 L120.4 298.8 L119.8 297.6 L119.3 296.4 L118.8 295.1 L118.3 293.9 L117.8 292.6 L117.4 291.3 L116.9 290.1 L116.5 288.8 L116.1 287.6 L115.6 286.3 L115.2 285.0 L114.9 283.7 L114.5 282.5 L114.2 281.2 L113.8 279.9 L113.5 278.6 L113.2 277.3 L112.9 276.0 L112.6 274.8 L112.3 273.5 L112.1 272.2 L111.8 270.9 L111.6 269.6 L111.4 268.3 L111.2 267.0 L111.0 265.7 L110.9 264.4 L110.7 263.1 L110.6 261.8 L110.5 260.5 L110.4 259.2 L110.3 257.9 L110.2 256.5 L110.1 255.2 L110.1 253.9 L110.0 252.6 L110.0 251.3 L110.0 250.0 L110.0 248.7 L110.0 247.4 L110.1 246.1 L110.1 244.8 L110.2 243.5 L110.3 242.1 L110.4 240.8 L110.5 239.5 L110.6 238.2 L110.7 236.9 L110.9 235.6 L111.0 234.3 L111.2 233.0 L111.4 231.7 L111.6 230.4 L111.8 229.1 L112.1 227.8 L112.3 226.5 L112.6 225.2 L112.9 224.0 L113.2 222.7 L113.5 221.4 L113.8 220.1 L114.2 218.8 L114.5 217.5 L114.9 216.3 L115.2 215.0 L115.6 213.7 L116.1 212.4 L116.5 211.2 L116.9 209.9 L117.4 208.7 L117.8 207.4 L118.3 206.1 L118.8 204.9 L119.3 203.6 L119.8 202.4 L120.4 201.2 L120.9 199.9 L121.5 198.7 L122.0 197.5 L122.6 196.2 L123.2 195.0 L123.8 193.8 L124.5 192.6 L125.1 191.4 L125.8 190.2 L126.4 189.0 L127.1 187.8 L127.8 186.6 L128.5 185.4 L129.2 184.2 L130.0 183.1 L130.7 181.9 L131.5 180.7 L132.2 179.6 L133.0 178.4 L133.8 177.3 L134.6 176.1 L135.5 175.0 L136.3 173.9 L137.1 172.7 L138.0 171.6 L138.9 170.5 L139.8 169.4 L140.7 168.3 L141.6 167.2 L142.5 166.1 L143.4 165.0 L144.4 164.0 L145.3 162.9 L146.3 161.8 L147.3 160.8 L148.3 159.7 L149.3 158.7 L150.3 157.7 L151.3 156.6 L152.3 155.6 L153.4 154.6 L154.5 153.6 L155.5 152.6 L156.6 151.6 L157.7 150.6 L158.8 149.6 L159.9 148.7 L161.0 147.7 L162.2 146.7 L163.3 145.8 L164.5 144.9 L165.6 143.9 L166.8 143.0 L168.0 142.1 L169.2 141.2 L170.4 140.3 L171.6 139.4 L172.9 138.5 L174.1 137.7 L175.3 136.8 L176.6 135.9 L177.9 135.1 L179.1 134.3 L180.4 133.4 L181.7 132.6 L183.0 131.8 L184.3 131.0 L185.7 130.2 L187.0 129.4 L188.3 128.6 L189.7 127.9 L191.0 127.1 L192.4 126.4 L193.8 125.6 L195.1 124.9 L196.5 124.2 L197.9 123.5 L199.3 122.8 L200.7 122.1 L202.1 121.4 L203.6 120.8 L205.0 120.1 L206.4 119.4 L207.9 118.8 L209.3 118.2 L210.8 117.6 L212.3 116.9 L213.7 116.3 L215.2 115.8 L216.7 115.2 L218.2 114.6 L219.7 114.1 L221.2 113.5 L222.7 113.0 L224.2 112.4 L225.8 111.9 L227.3 111.4 L228.8 110.9 L230.4 110.4 L231.9 110.0 L233.5 109.5 L235.0 109.0 L236.6 108.6 L238.1 108.2 L239.7 107.8 L241.3 107.3 L242.9 106.9 L244.4 106.6 L246.0 106.2 L247.6 105.8" fill="none" stroke="color-mix(in srgb,var(--rust) 55%,var(--ink))" stroke-width="27" stroke-linecap="round" opacity=".0"/>
+        <path d="M406.5 111.0 L404.9 110.5 L403.3 110.0 L401.6 109.6 L400.0 109.2 L398.3 108.7 L396.7 108.3 L395.0 107.9 L393.4 107.6 L391.7 107.2 L390.1 106.8 L388.4 106.5 L386.8 106.1 L385.1 105.8 L383.5 105.5 L381.8 105.2 L380.1 104.9 L378.5 104.6 L376.8 104.3 L375.1 104.0 L373.4 103.8 L371.8 103.5 L370.1 103.3 L368.4 103.1 L366.8 102.9 L365.1 102.7 L363.4 102.5 L361.7 102.3 L360.1 102.1 L358.4 101.9 L356.7 101.8 L355.0 101.6 L353.3 101.5 L351.7 101.4 L350.0 101.3 L348.3 101.1 L346.6 101.0 L345.0 101.0 L343.3 100.9 L341.6 100.8 L339.9 100.7 L338.3 100.7 L336.6 100.6 L334.9 100.5 L333.2 100.5 L331.6 100.4 L329.9 100.4 L328.2 100.3 L326.6 100.3 L326.3 102.7 L327.9 103.0 L329.5 103.3 L331.1 103.7 L332.7 104.1 L334.3 104.5 L335.9 104.9 L337.5 105.4 L339.1 105.8 L340.6 106.3 L342.2 106.8 L343.7 107.3 L345.3 107.9 L346.8 108.4 L348.4 109.0 L349.9 109.5 L351.4 110.1 L352.9 110.7 L354.4 111.3 L355.9 111.9 L357.4 112.6 L358.8 113.2 L360.3 113.9 L361.8 114.5 L363.2 115.2 L364.6 115.9 L366.1 116.6 L367.5 117.3 L368.9 118.1 L370.3 118.8 L371.7 119.5 L373.1 120.3 L374.4 121.1 L375.8 121.8 L377.1 122.6 L378.5 123.4 L379.8 124.2 L381.1 125.0 L382.4 125.9 L383.7 126.7 L385.0 127.6 L386.3 128.4 L387.5 129.3 L388.8 130.1 L390.0 131.0 L391.2 131.9 L392.5 132.8 L393.7 133.7 L394.8 134.6 Z" fill="var(--rust)"/>
+        <path d="M411.7 128.6 L413.4 128.7 L415.2 128.8 L416.9 128.9 L418.7 129.0 L420.4 129.3 L422.0 129.6 L423.6 130.0 L425.2 130.5 L426.7 131.1 L428.1 131.8 L429.4 132.6 L430.7 133.5 L431.9 134.5 L433.0 135.6 L434.1 136.8 L435.0 138.1 L435.9 139.5 L436.8 140.9 L437.5 142.4 L438.2 143.9 L438.9 145.5 L439.5 147.1 L440.0 148.7 L440.6 150.3 L441.1 151.9 L441.7 153.5 L442.2 155.0 L442.8 156.5 L443.4 157.9 L444.1 159.3 L444.8 160.6 L445.5 161.8 L446.4 162.9 L447.3 164.0 L448.2 165.0 L449.3 165.9 L450.4 166.8 L451.6 167.6 L452.8 168.3 L454.1 169.0 L455.5 169.7 L456.9 170.3 L458.4 170.9 L459.9 171.5 L461.4 172.1 L463.0 172.7 L464.5 173.3 L466.0 173.9 L467.5 174.6 L468.9 175.4 L470.3 176.1 L471.6 177.0 L472.8 177.9 L474.0 178.9 L475.0 179.9 L476.0 181.0 L476.8 182.2 L477.5 183.5 L478.1 184.8 L478.6 186.1 L479.0 187.6 L479.3 189.0 L479.4 190.5 L479.5 192.1 L479.5 193.7 L479.4 195.2 L479.3 196.8 L479.1 198.4 L478.9 200.0 L478.7 201.6 L478.5 203.1 L478.2 204.7 L478.1 206.2 L477.9 207.6 L477.8 209.0 L477.8 210.4 L477.8 211.8 L477.9 213.1 L478.1 214.3 L478.4 215.6 L478.9 216.8 L479.4 217.9 L480.0 219.1 L480.6 220.2 L481.4 221.3 L482.3 222.4 L483.2 223.5 L484.2 224.6 L485.2 225.7 L486.3 226.8 L487.3 227.9 L488.4 229.1 L489.5 230.2 L490.5 231.4 L491.5 232.6 L492.4 233.9 L493.2 235.1 L494.0 236.4 L494.6 237.7 L495.1 239.0 L495.6 240.4 L495.8 241.7 L496.0 243.1 L496.0 244.5 L495.9 245.9 L495.7 247.3 L495.4 248.6 L494.9 250.0 L494.3 251.4 L493.6 252.7 L492.9 254.0 L492.1 255.3 L491.2 256.6 L490.3 257.9 L489.3 259.1 L488.4 260.4 L487.4 261.6 L486.5 262.8 L485.6 264.0 L484.8 265.1 L484.1 266.3 L483.4 267.5 L482.8 268.6 L482.3 269.8 L481.9 271.0 L481.6 272.2 L481.4 273.5 L481.3 274.7 L481.3 276.0 L481.3 277.3 L481.5 278.7 L481.7 280.1 L482.0 281.5 L482.4 282.9 L482.7 284.4 L483.1 285.9 L483.5 287.4 L483.9 288.9 L484.3 290.5 L484.6 292.0 L484.8 293.6 L485.0 295.1 L485.1 296.7 L485.1 298.2 L485.1 299.7 L484.9 301.1 L484.5 302.5 L484.1 303.9 L483.6 305.2 L482.9 306.4 L482.1 307.6 L481.2 308.8 L480.2 309.9 L479.1 310.9 L477.9 311.8 L476.7 312.8 L475.3 313.6 L474.0 314.4 L472.5 315.2 L471.1 316.0 L469.7 316.7 L468.2 317.4 L466.8 318.1 L465.4 318.8 L464.0 319.5 L462.7 320.3 L461.4 321.0 L460.2 321.9 L459.1 322.7 L458.1 323.6 L457.1 324.6 L456.3 325.6 L455.5 326.7 L454.8 327.9 L454.1 329.2 L453.5 330.5 L453.0 331.8 L452.5 333.3 L452.1 334.8 L451.7 336.3 L451.3 337.9 L450.9 339.5 L450.5 341.1 L450.1 342.7 L449.7 344.3 L449.2 346.0 L448.6 347.5 L448.1 349.1 L447.4 350.6 L446.7 352.0 L445.9 353.4 L445.0 354.7 L444.0 355.9 L442.9 357.0 L441.8 358.0 L440.5 358.9 L439.2 359.8 L437.8 360.5 L436.4 361.1 L434.8 361.7 L433.3 362.1 L431.6 362.5 L430.0 362.8 L428.3 363.0 L426.5 363.2 L424.8 363.4 L423.1 363.6 L421.3 363.7 L419.6 363.9 L418.0 364.0 L416.3 364.2 L414.7 364.5 L413.1 364.8 L411.6 365.2 L410.1 365.6 L408.7 366.1 L407.3 366.7 L406.0 367.4 L404.7 368.2 L403.5 369.1 L402.3 370.1 L401.1 371.2 L400.0 372.3 L398.9 373.6 L397.8 374.8 L396.7 376.2 L395.6 377.6 L394.6 379.0 L393.5 380.4 L392.4 381.8 L391.2 383.2 L390.1 384.6 L388.9 385.9 L387.7 387.1 L386.4 388.3 L385.1 389.4 L383.7 390.5 L382.3 391.4 L380.8 392.2 L379.3 392.9 L377.8 393.4 L376.2 393.9 L374.5 394.2 L372.9 394.4 L371.2 394.5 L369.4 394.5 L367.7 394.4 L365.9 394.2 L364.1 393.9 L362.3 393.6 L360.5 393.2 L358.7 392.8 L357.0 392.4 L355.2 391.9 L353.4 391.5 L351.7 391.1 L350.0 390.8 L348.3 390.5 L346.6 390.3 L344.9 390.2 L343.3 390.2 L341.7 390.2 L340.1 390.4 L338.5 390.6 L336.9 391.0 L335.4 391.4 L333.8 392.0 L332.3 392.7 L330.8 393.4 L329.2 394.2 L327.7 395.1 L326.2 396.0 L324.6 397.0 L323.1 398.0 L321.5 399.0 L319.9 400.0 L318.3 400.9 L316.7 401.8 L315.1 402.7 L313.5 403.5 L311.8 404.2 L310.2 404.8 L308.5 405.3 L306.8 405.7 L305.1 406.0 L303.4 406.2 L301.7 406.2 L300.0 406.1 L298.3 405.8 L296.6 405.5 L294.9 405.0 L293.2 404.4 L291.6 403.8 L289.9 403.0 L288.3 402.2 L286.7 401.3 L285.0 400.4 L283.4 399.4 L281.9 398.5 L280.3 397.5 L278.7 396.6 L277.2 395.7 L275.6 394.8 L274.1 394.0 L272.5 393.3 L271.0 392.7 L269.4 392.1 L267.8 391.7 L266.3 391.4 L264.7 391.1 L263.1 391.0 L261.5 391.0 L259.8 391.0 L258.2 391.2 L256.5 391.4 L254.8 391.7 L253.1 392.1 L251.3 392.5 L249.6 393.0 L247.8 393.4 L246.0 393.9 L244.2 394.3 L242.4 394.7 L240.7 395.1 L238.9 395.4 L237.1 395.7 L235.3 395.8 L233.6 395.9 L231.9 395.8 L230.2 395.7 L228.6 395.4 L226.9 395.0 L225.4 394.5 L223.8 393.8 L222.4 393.1 L220.9 392.2 L219.5 391.2 L218.2 390.1 L216.9 389.0 L215.6 387.7 L214.4 386.4 L213.2 385.1 L212.0 383.7 L210.9 382.3 L209.7 380.9 L208.6 379.5 L207.5 378.2 L206.4 376.9 L205.3 375.6 L204.1 374.4 L203.0 373.3 L201.8 372.2 L200.6 371.2 L199.3 370.4 L198.0 369.6 L196.7 368.9 L195.3 368.3 L193.8 367.8 L192.3 367.4 L190.8 367.0 L189.2 366.8 L187.6 366.6 L185.9 366.4 L184.2 366.2 L182.5 366.1 L180.8 366.0 L179.0 365.9 L177.3 365.8 L175.6 365.6 L173.8 365.4 L172.2 365.1 L170.5 364.8 L168.9 364.4 L167.3 363.9 L165.9 363.3 L164.4 362.6 L163.1 361.8 L161.8 360.9 L160.6 359.9 L159.5 358.9 L158.5 357.7 L157.6 356.4 L156.7 355.1 L155.9 353.6 L155.2 352.2 L154.6 350.6 L154.0 349.1 L153.5 347.5 L153.0 345.8 L152.5 344.2 L152.1 342.6 L151.6 341.0 L151.2 339.4 L150.8 337.9 L150.3 336.4 L149.8 335.0 L149.2 333.6 L148.6 332.3 L147.9 331.1 L147.1 329.9 L146.3 328.8 L145.4 327.8 L144.4 326.8 L143.4 325.9 L142.2 325.1 L141.0 324.3 L139.7 323.6 L138.4 322.8 L137.0 322.1 L135.6 321.5 L134.1 320.8 L132.7 320.1 L131.2 319.4 L129.7 318.7 L128.3 318.0 L126.9 317.2 L125.5 316.4 L124.2 315.5 L123.0 314.6 L121.8 313.6 L120.8 312.5 L119.9 311.4 L119.0 310.3 L118.3 309.0 L117.7 307.7 L117.2 306.4 L116.9 305.0 L116.6 303.5 L116.5 302.1 L116.4 300.5 L116.5 299.0 L116.6 297.5 L116.8 295.9 L117.1 294.3 L117.4 292.8 L117.7 291.2 L118.1 289.7 L118.4 288.2 L118.7 286.7 L119.0 285.2 L119.3 283.8 L119.5 282.4 L119.6 281.0 L119.6 279.7 L119.6 278.4 L119.5 277.2 L119.2 275.9 L118.9 274.7 L118.4 273.5 L117.9 272.3 L117.3 271.2 L116.6 270.0 L115.8 268.9 L114.9 267.7 L114.0 266.6 L113.1 265.4 L112.1 264.2 L111.1 263.0 L110.1 261.8 L109.2 260.6 L108.2 259.3 L107.4 258.0 L106.6 256.7 L105.9 255.4 L105.2 254.1 L104.7 252.7 L104.3 251.4 L104.0 250.0 L103.9 248.6 L103.8 247.2 L103.9 245.9 L104.2 244.5 L104.5 243.1 L105.0 241.8 L105.6 240.5 L106.3 239.2 L107.1 237.9 L108.0 236.6 L108.9 235.4 L109.9 234.2 L110.9 233.0 L111.9 231.8 L113.0 230.6 L114.0 229.5 L115.0 228.4 L115.9 227.3 L116.8 226.1 L117.7 225.0 L118.4 223.9 L119.1 222.7 L119.6 221.6 L120.1 220.4 L120.5 219.2 L120.7 218.0 L120.9 216.7 L121.0 215.4 L121.0 214.1 L120.9 212.7 L120.8 211.3 L120.6 209.8 L120.4 208.4 L120.1 206.8 L119.8 205.3 L119.5 203.7 L119.3 202.2 L119.0 200.6 L118.9 199.0 L118.7 197.4 L118.7 195.9 L118.7 194.3 L118.8 192.8 L119.0 191.4 L119.4 189.9 L119.8 188.5 L120.4 187.2 L121.0 185.9 L121.8 184.7 L122.7 183.6 L123.7 182.5 L124.8 181.5 L126.0 180.6 L127.3 179.7 L128.6 178.9 L130.0 178.1 L131.5 177.4 L133.0 176.7 L134.5 176.0 L136.0 175.4 L137.5 174.8 L139.0 174.1 L140.4 173.5 L141.8 172.9 L143.2 172.2 L144.5 171.5 L145.7 170.7 L146.9 169.9 L148.0 169.0 L149.0 168.1 L149.9 167.0 L150.8 166.0 L151.6 164.8 L152.3 163.6 L153.0 162.3 L153.6 160.9 L154.1 159.5 L154.7 158.0 L155.2 156.5 L155.7 154.9 L156.2 153.3 L156.7 151.7 L157.2 150.1 L157.8 148.5 L158.4 146.9 L159.0 145.3 L159.7 143.8 L160.5 142.4 L161.4 141.0 L162.3 139.7 L163.3 138.4 L164.3 137.3 L165.5 136.2 L166.7 135.3 L168.1 134.5 L169.5 133.7 L170.9 133.1 L172.5 132.6 L174.0 132.1 L175.7 131.8 L177.4 131.5 L179.1 131.3 L180.8 131.1 L182.5 131.0 L184.3 130.9 L186.1 130.9 L187.8 130.8 L189.5 130.7 L191.2 130.6 L192.9 130.5 L194.5 130.3 L196.1 130.1 L197.7 129.8 L199.2 129.4 L200.6 128.9 L202.1 128.3 L203.4 127.7 L204.7 126.9 L206.0 126.1 L207.3 125.1 L208.5 124.1 L209.7 123.0 L210.9 121.8 L212.1 120.5 L213.2 119.2 L214.4 117.9 L215.5 116.5 L216.7 115.2" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M411.7 128.6 L413.4 128.7 L415.2 128.8 L416.9 128.9 L418.7 129.0 L420.4 129.3 L422.0 129.6 L423.6 130.0 L425.2 130.5 L426.7 131.1 L428.1 131.8 L429.4 132.6 L430.7 133.5 L431.9 134.5 L433.0 135.6 L434.1 136.8 L435.0 138.1 L435.9 139.5 L436.8 140.9 L437.5 142.4 L438.2 143.9 L438.9 145.5 L439.5 147.1 L440.0 148.7 L440.6 150.3 L441.1 151.9 L441.7 153.5 L442.2 155.0 L442.8 156.5 L443.4 157.9 L444.1 159.3 L444.8 160.6 L445.5 161.8 L446.4 162.9 L447.3 164.0 L448.2 165.0 L449.3 165.9 L450.4 166.8 L451.6 167.6 L452.8 168.3 L454.1 169.0 L455.5 169.7 L456.9 170.3 L458.4 170.9 L459.9 171.5 L461.4 172.1 L463.0 172.7 L464.5 173.3 L466.0 173.9 L467.5 174.6 L468.9 175.4 L470.3 176.1 L471.6 177.0 L472.8 177.9 L474.0 178.9 L475.0 179.9 L476.0 181.0 L476.8 182.2 L477.5 183.5 L478.1 184.8 L478.6 186.1 L479.0 187.6 L479.3 189.0 L479.4 190.5 L479.5 192.1 L479.5 193.7 L479.4 195.2 L479.3 196.8 L479.1 198.4 L478.9 200.0 L478.7 201.6 L478.5 203.1 L478.2 204.7 L478.1 206.2 L477.9 207.6 L477.8 209.0 L477.8 210.4 L477.8 211.8 L477.9 213.1 L478.1 214.3 L478.4 215.6 L478.9 216.8 L479.4 217.9 L480.0 219.1 L480.6 220.2 L481.4 221.3 L482.3 222.4 L483.2 223.5 L484.2 224.6 L485.2 225.7 L486.3 226.8 L487.3 227.9 L488.4 229.1 L489.5 230.2 L490.5 231.4 L491.5 232.6 L492.4 233.9 L493.2 235.1 L494.0 236.4 L494.6 237.7 L495.1 239.0 L495.6 240.4 L495.8 241.7 L496.0 243.1 L496.0 244.5 L495.9 245.9 L495.7 247.3 L495.4 248.6 L494.9 250.0 L494.3 251.4 L493.6 252.7 L492.9 254.0 L492.1 255.3 L491.2 256.6 L490.3 257.9 L489.3 259.1 L488.4 260.4 L487.4 261.6 L486.5 262.8 L485.6 264.0 L484.8 265.1 L484.1 266.3 L483.4 267.5 L482.8 268.6 L482.3 269.8 L481.9 271.0 L481.6 272.2 L481.4 273.5 L481.3 274.7 L481.3 276.0 L481.3 277.3 L481.5 278.7 L481.7 280.1 L482.0 281.5 L482.4 282.9 L482.7 284.4 L483.1 285.9 L483.5 287.4 L483.9 288.9 L484.3 290.5 L484.6 292.0 L484.8 293.6 L485.0 295.1 L485.1 296.7 L485.1 298.2 L485.1 299.7 L484.9 301.1 L484.5 302.5 L484.1 303.9 L483.6 305.2 L482.9 306.4 L482.1 307.6 L481.2 308.8 L480.2 309.9 L479.1 310.9 L477.9 311.8 L476.7 312.8 L475.3 313.6 L474.0 314.4 L472.5 315.2 L471.1 316.0 L469.7 316.7 L468.2 317.4 L466.8 318.1 L465.4 318.8 L464.0 319.5 L462.7 320.3 L461.4 321.0 L460.2 321.9 L459.1 322.7 L458.1 323.6 L457.1 324.6 L456.3 325.6 L455.5 326.7 L454.8 327.9 L454.1 329.2 L453.5 330.5 L453.0 331.8 L452.5 333.3 L452.1 334.8 L451.7 336.3 L451.3 337.9 L450.9 339.5 L450.5 341.1 L450.1 342.7 L449.7 344.3 L449.2 346.0 L448.6 347.5 L448.1 349.1 L447.4 350.6 L446.7 352.0 L445.9 353.4 L445.0 354.7 L444.0 355.9 L442.9 357.0 L441.8 358.0 L440.5 358.9 L439.2 359.8 L437.8 360.5 L436.4 361.1 L434.8 361.7 L433.3 362.1 L431.6 362.5 L430.0 362.8 L428.3 363.0 L426.5 363.2 L424.8 363.4 L423.1 363.6 L421.3 363.7 L419.6 363.9 L418.0 364.0 L416.3 364.2 L414.7 364.5 L413.1 364.8 L411.6 365.2 L410.1 365.6 L408.7 366.1 L407.3 366.7 L406.0 367.4 L404.7 368.2 L403.5 369.1 L402.3 370.1 L401.1 371.2 L400.0 372.3 L398.9 373.6 L397.8 374.8 L396.7 376.2 L395.6 377.6 L394.6 379.0 L393.5 380.4 L392.4 381.8 L391.2 383.2 L390.1 384.6 L388.9 385.9 L387.7 387.1 L386.4 388.3 L385.1 389.4 L383.7 390.5 L382.3 391.4 L380.8 392.2 L379.3 392.9 L377.8 393.4 L376.2 393.9 L374.5 394.2 L372.9 394.4 L371.2 394.5 L369.4 394.5 L367.7 394.4 L365.9 394.2 L364.1 393.9 L362.3 393.6 L360.5 393.2 L358.7 392.8 L357.0 392.4 L355.2 391.9 L353.4 391.5 L351.7 391.1 L350.0 390.8 L348.3 390.5 L346.6 390.3 L344.9 390.2 L343.3 390.2 L341.7 390.2 L340.1 390.4 L338.5 390.6 L336.9 391.0 L335.4 391.4 L333.8 392.0 L332.3 392.7 L330.8 393.4 L329.2 394.2 L327.7 395.1 L326.2 396.0 L324.6 397.0 L323.1 398.0 L321.5 399.0 L319.9 400.0 L318.3 400.9 L316.7 401.8 L315.1 402.7 L313.5 403.5 L311.8 404.2 L310.2 404.8 L308.5 405.3 L306.8 405.7 L305.1 406.0 L303.4 406.2 L301.7 406.2 L300.0 406.1 L298.3 405.8 L296.6 405.5 L294.9 405.0 L293.2 404.4 L291.6 403.8 L289.9 403.0 L288.3 402.2 L286.7 401.3 L285.0 400.4 L283.4 399.4 L281.9 398.5 L280.3 397.5 L278.7 396.6 L277.2 395.7 L275.6 394.8 L274.1 394.0 L272.5 393.3 L271.0 392.7 L269.4 392.1 L267.8 391.7 L266.3 391.4 L264.7 391.1 L263.1 391.0 L261.5 391.0 L259.8 391.0 L258.2 391.2 L256.5 391.4 L254.8 391.7 L253.1 392.1 L251.3 392.5 L249.6 393.0 L247.8 393.4 L246.0 393.9 L244.2 394.3 L242.4 394.7 L240.7 395.1 L238.9 395.4 L237.1 395.7 L235.3 395.8 L233.6 395.9 L231.9 395.8 L230.2 395.7 L228.6 395.4 L226.9 395.0 L225.4 394.5 L223.8 393.8 L222.4 393.1 L220.9 392.2 L219.5 391.2 L218.2 390.1 L216.9 389.0 L215.6 387.7 L214.4 386.4 L213.2 385.1 L212.0 383.7 L210.9 382.3 L209.7 380.9 L208.6 379.5 L207.5 378.2 L206.4 376.9 L205.3 375.6 L204.1 374.4 L203.0 373.3 L201.8 372.2 L200.6 371.2 L199.3 370.4 L198.0 369.6 L196.7 368.9 L195.3 368.3 L193.8 367.8 L192.3 367.4 L190.8 367.0 L189.2 366.8 L187.6 366.6 L185.9 366.4 L184.2 366.2 L182.5 366.1 L180.8 366.0 L179.0 365.9 L177.3 365.8 L175.6 365.6 L173.8 365.4 L172.2 365.1 L170.5 364.8 L168.9 364.4 L167.3 363.9 L165.9 363.3 L164.4 362.6 L163.1 361.8 L161.8 360.9 L160.6 359.9 L159.5 358.9 L158.5 357.7 L157.6 356.4 L156.7 355.1 L155.9 353.6 L155.2 352.2 L154.6 350.6 L154.0 349.1 L153.5 347.5 L153.0 345.8 L152.5 344.2 L152.1 342.6 L151.6 341.0 L151.2 339.4 L150.8 337.9 L150.3 336.4 L149.8 335.0 L149.2 333.6 L148.6 332.3 L147.9 331.1 L147.1 329.9 L146.3 328.8 L145.4 327.8 L144.4 326.8 L143.4 325.9 L142.2 325.1 L141.0 324.3 L139.7 323.6 L138.4 322.8 L137.0 322.1 L135.6 321.5 L134.1 320.8 L132.7 320.1 L131.2 319.4 L129.7 318.7 L128.3 318.0 L126.9 317.2 L125.5 316.4 L124.2 315.5 L123.0 314.6 L121.8 313.6 L120.8 312.5 L119.9 311.4 L119.0 310.3 L118.3 309.0 L117.7 307.7 L117.2 306.4 L116.9 305.0 L116.6 303.5 L116.5 302.1 L116.4 300.5 L116.5 299.0 L116.6 297.5 L116.8 295.9 L117.1 294.3 L117.4 292.8 L117.7 291.2 L118.1 289.7 L118.4 288.2 L118.7 286.7 L119.0 285.2 L119.3 283.8 L119.5 282.4 L119.6 281.0 L119.6 279.7 L119.6 278.4 L119.5 277.2 L119.2 275.9 L118.9 274.7 L118.4 273.5 L117.9 272.3 L117.3 271.2 L116.6 270.0 L115.8 268.9 L114.9 267.7 L114.0 266.6 L113.1 265.4 L112.1 264.2 L111.1 263.0 L110.1 261.8 L109.2 260.6 L108.2 259.3 L107.4 258.0 L106.6 256.7 L105.9 255.4 L105.2 254.1 L104.7 252.7 L104.3 251.4 L104.0 250.0 L103.9 248.6 L103.8 247.2 L103.9 245.9 L104.2 244.5 L104.5 243.1 L105.0 241.8 L105.6 240.5 L106.3 239.2 L107.1 237.9 L108.0 236.6 L108.9 235.4 L109.9 234.2 L110.9 233.0 L111.9 231.8 L113.0 230.6 L114.0 229.5 L115.0 228.4 L115.9 227.3 L116.8 226.1 L117.7 225.0 L118.4 223.9 L119.1 222.7 L119.6 221.6 L120.1 220.4 L120.5 219.2 L120.7 218.0 L120.9 216.7 L121.0 215.4 L121.0 214.1 L120.9 212.7 L120.8 211.3 L120.6 209.8 L120.4 208.4 L120.1 206.8 L119.8 205.3 L119.5 203.7 L119.3 202.2 L119.0 200.6 L118.9 199.0 L118.7 197.4 L118.7 195.9 L118.7 194.3 L118.8 192.8 L119.0 191.4 L119.4 189.9 L119.8 188.5 L120.4 187.2 L121.0 185.9 L121.8 184.7 L122.7 183.6 L123.7 182.5 L124.8 181.5 L126.0 180.6 L127.3 179.7 L128.6 178.9 L130.0 178.1 L131.5 177.4 L133.0 176.7 L134.5 176.0 L136.0 175.4 L137.5 174.8 L139.0 174.1 L140.4 173.5 L141.8 172.9 L143.2 172.2 L144.5 171.5 L145.7 170.7 L146.9 169.9 L148.0 169.0 L149.0 168.1 L149.9 167.0 L150.8 166.0 L151.6 164.8 L152.3 163.6 L153.0 162.3 L153.6 160.9 L154.1 159.5 L154.7 158.0 L155.2 156.5 L155.7 154.9 L156.2 153.3 L156.7 151.7 L157.2 150.1 L157.8 148.5 L158.4 146.9 L159.0 145.3 L159.7 143.8 L160.5 142.4 L161.4 141.0 L162.3 139.7 L163.3 138.4 L164.3 137.3 L165.5 136.2 L166.7 135.3 L168.1 134.5 L169.5 133.7 L170.9 133.1 L172.5 132.6 L174.0 132.1 L175.7 131.8 L177.4 131.5 L179.1 131.3 L180.8 131.1 L182.5 131.0 L184.3 130.9 L186.1 130.9 L187.8 130.8 L189.5 130.7 L191.2 130.6 L192.9 130.5 L194.5 130.3 L196.1 130.1 L197.7 129.8 L199.2 129.4 L200.6 128.9 L202.1 128.3 L203.4 127.7 L204.7 126.9 L206.0 126.1 L207.3 125.1 L208.5 124.1 L209.7 123.0 L210.9 121.8 L212.1 120.5 L213.2 119.2 L214.4 117.9 L215.5 116.5 L216.7 115.2" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+        <path d="M411.7 128.6 L412.6 130.2 L413.5 131.6 L414.4 133.1 L415.3 134.5 L416.2 135.9 L417.1 137.3 L418.1 138.5 L419.1 139.7 L420.1 140.8 L421.2 141.8 L422.4 142.7 L423.6 143.6 L424.8 144.3 L426.1 145.0 L427.5 145.6 L428.9 146.1 L430.4 146.6 L432.0 147.0 L433.5 147.3 L435.1 147.7 L436.8 148.0 L438.5 148.3 L440.1 148.6 L441.8 148.9 L443.5 149.3 L445.1 149.7 L446.7 150.2 L448.3 150.7 L449.8 151.3 L451.2 151.9 L452.6 152.7 L453.9 153.5 L455.1 154.4 L456.2 155.5 L457.2 156.6 L458.2 157.7 L459.0 159.0 L459.7 160.3 L460.4 161.8 L460.9 163.2 L461.4 164.8 L461.8 166.3 L462.1 167.9 L462.3 169.5 L462.6 171.2 L462.8 172.8 L462.9 174.5 L463.1 176.1 L463.3 177.6 L463.4 179.2 L463.7 180.7 L463.9 182.2 L464.2 183.6 L464.6 184.9 L465.1 186.2 L465.6 187.5 L466.2 188.6 L466.9 189.7 L467.7 190.8 L468.5 191.8 L469.5 192.8 L470.5 193.7 L471.6 194.6 L472.8 195.5 L474.0 196.4 L475.3 197.2 L476.6 198.1 L477.9 199.0 L479.3 199.8 L480.6 200.7 L481.9 201.7 L483.2 202.6 L484.4 203.6 L485.5 204.7 L486.6 205.8 L487.5 206.9 L488.4 208.1 L489.1 209.3 L489.8 210.5 L490.3 211.8 L490.6 213.2 L490.9 214.6 L491.0 216.0 L491.1 217.4 L491.0 218.9 L490.7 220.3 L490.4 221.8 L490.0 223.3 L489.6 224.8 L489.1 226.3 L488.5 227.7 L487.9 229.2 L487.3 230.6 L486.7 232.0 L486.1 233.4 L485.5 234.8 L485.0 236.1 L484.6 237.4 L484.2 238.7 L483.9 240.0 L483.7 241.3 L483.6 242.6 L483.6 243.8 L483.7 245.0 L483.9 246.3 L484.2 247.5 L484.6 248.8 L485.1 250.0 L485.7 251.3 L486.3 252.5 L487.0 253.8 L487.7 255.1 L488.5 256.5 L489.2 257.8 L490.0 259.2 L490.7 260.6 L491.4 262.0 L492.0 263.4 L492.6 264.8 L493.1 266.2 L493.5 267.7 L493.8 269.1 L494.0 270.5 L494.0 271.9 L493.9 273.3 L493.7 274.7 L493.4 276.0 L493.0 277.4 L492.4 278.6 L491.7 279.9 L490.9 281.1 L490.0 282.3 L489.0 283.4 L487.9 284.6 L486.8 285.6 L485.6 286.7 L484.4 287.7 L483.2 288.7 L481.9 289.7 L480.7 290.6 L479.5 291.6 L478.4 292.6 L477.3 293.5 L476.3 294.5 L475.3 295.5 L474.4 296.6 L473.7 297.6 L473.0 298.7 L472.4 299.9 L471.9 301.1 L471.4 302.3 L471.1 303.6 L470.9 304.9 L470.7 306.3 L470.5 307.8 L470.5 309.3 L470.4 310.8 L470.4 312.3 L470.4 313.9 L470.4 315.5 L470.4 317.2 L470.4 318.8 L470.3 320.4 L470.2 322.0 L470.0 323.6 L469.7 325.2 L469.3 326.7 L468.8 328.1 L468.3 329.5 L467.6 330.9 L466.9 332.1 L466.0 333.3 L465.0 334.4 L463.9 335.5 L462.8 336.4 L461.5 337.3 L460.2 338.1 L458.8 338.8 L457.3 339.5 L455.8 340.0 L454.2 340.6 L452.6 341.1 L451.0 341.5 L449.4 342.0 L447.7 342.4 L446.1 342.8 L444.6 343.3 L443.0 343.7 L441.5 344.2 L440.1 344.8 L438.7 345.4 L437.4 346.1 L436.2 346.8 L435.0 347.6 L433.9 348.5 L432.8 349.5 L431.8 350.5 L430.9 351.6 L430.0 352.9 L429.1 354.2 L428.3 355.5 L427.5 356.9 L426.8 358.4 L426.0 359.9 L425.3 361.4 L424.5 363.0 L423.7 364.5 L422.9 366.1 L422.1 367.6 L421.2 369.1 L420.3 370.5 L419.3 371.9 L418.2 373.2 L417.1 374.4 L415.9 375.6 L414.7 376.6 L413.4 377.5 L412.0 378.3 L410.5 379.0 L409.0 379.6 L407.5 380.0 L405.8 380.4 L404.2 380.7 L402.5 380.9 L400.8 381.0 L399.0 381.0 L397.2 380.9 L395.4 380.9 L393.6 380.7 L391.9 380.6 L390.1 380.5 L388.3 380.3 L386.6 380.2 L384.9 380.2 L383.2 380.1 L381.5 380.2 L379.9 380.3 L378.3 380.5 L376.7 380.8 L375.2 381.2 L373.8 381.7 L372.3 382.3 L370.9 383.0 L369.5 383.8 L368.1 384.6 L366.7 385.6 L365.4 386.6 L364.1 387.7 L362.7 388.9 L361.4 390.1 L360.0 391.3 L358.7 392.5 L357.3 393.8 L355.9 395.0 L354.5 396.1 L353.1 397.2 L351.6 398.3 L350.1 399.2 L348.6 400.1 L347.0 400.9 L345.4 401.6 L343.8 402.1 L342.2 402.5 L340.5 402.8 L338.8 403.0 L337.1 403.0 L335.4 403.0 L333.7 402.8 L332.0 402.5 L330.2 402.1 L328.5 401.6 L326.7 401.1 L325.0 400.4 L323.2 399.8 L321.5 399.1 L319.8 398.4 L318.1 397.7 L316.4 397.0 L314.7 396.4 L313.0 395.8 L311.4 395.2 L309.7 394.8 L308.1 394.4 L306.5 394.1 L304.8 393.9 L303.2 393.8 L301.6 393.8 L300.0 393.9 L298.4 394.1 L296.8 394.5 L295.1 394.9 L293.5 395.4 L291.8 395.9 L290.2 396.6 L288.5 397.2 L286.8 398.0 L285.1 398.7 L283.4 399.4 L281.7 400.2 L280.0 400.9 L278.3 401.5 L276.5 402.1 L274.8 402.6 L273.1 403.1 L271.3 403.4 L269.6 403.6 L267.9 403.7 L266.2 403.7 L264.5 403.6 L262.8 403.4 L261.2 403.0 L259.5 402.5 L257.9 401.8 L256.4 401.1 L254.8 400.3 L253.3 399.3 L251.8 398.3 L250.3 397.3 L248.9 396.1 L247.5 395.0 L246.1 393.8 L244.7 392.6 L243.3 391.4 L241.9 390.2 L240.6 389.1 L239.2 388.0 L237.8 387.0 L236.4 386.0 L235.0 385.2 L233.6 384.4 L232.2 383.7 L230.7 383.2 L229.2 382.7 L227.7 382.3 L226.1 382.1 L224.5 381.9 L222.9 381.8 L221.2 381.8 L219.5 381.8 L217.8 381.9 L216.1 382.0 L214.3 382.2 L212.5 382.4 L210.7 382.6 L209.0 382.7 L207.2 382.8 L205.4 382.9 L203.6 382.9 L201.9 382.9 L200.2 382.8 L198.5 382.5 L196.8 382.2 L195.3 381.8 L193.7 381.2 L192.3 380.6 L190.9 379.8 L189.5 378.9 L188.2 377.9 L187.0 376.8 L185.9 375.7 L184.8 374.4 L183.7 373.0 L182.7 371.6 L181.8 370.2 L180.9 368.7 L180.1 367.1 L179.3 365.6 L178.4 364.0 L177.6 362.5 L176.9 361.0 L176.0 359.6 L175.2 358.2 L174.4 356.8 L173.5 355.5 L172.6 354.3 L171.6 353.2 L170.6 352.2 L169.5 351.2 L168.3 350.3 L167.1 349.5 L165.9 348.8 L164.5 348.2 L163.1 347.6 L161.7 347.1 L160.2 346.6 L158.6 346.2 L157.0 345.8 L155.4 345.4 L153.8 345.0 L152.2 344.6 L150.5 344.2 L148.9 343.7 L147.3 343.2 L145.8 342.7 L144.3 342.0 L142.8 341.4 L141.4 340.6 L140.1 339.8 L138.9 338.9 L137.8 337.9 L136.8 336.8 L135.9 335.6 L135.1 334.4 L134.4 333.0 L133.8 331.7 L133.3 330.2 L132.8 328.7 L132.5 327.2 L132.2 325.6 L132.0 324.0 L131.9 322.3 L131.8 320.7 L131.7 319.1 L131.7 317.5 L131.6 315.9 L131.6 314.3 L131.5 312.8 L131.4 311.3 L131.2 309.8 L131.0 308.4 L130.7 307.1 L130.3 305.8 L129.9 304.6 L129.4 303.4 L128.7 302.2 L128.0 301.1 L127.2 300.1 L126.3 299.1 L125.3 298.1 L124.3 297.1 L123.1 296.2 L122.0 295.3 L120.8 294.3 L119.5 293.4 L118.3 292.4 L117.0 291.5 L115.7 290.5 L114.5 289.5 L113.4 288.4 L112.2 287.4 L111.2 286.2 L110.3 285.1 L109.4 283.9 L108.7 282.7 L108.0 281.4 L107.5 280.1 L107.1 278.8 L106.9 277.4 L106.8 276.0 L106.8 274.6 L106.9 273.2 L107.1 271.7 L107.5 270.3 L107.9 268.8 L108.4 267.4 L109.0 266.0 L109.7 264.5 L110.3 263.1 L111.0 261.7 L111.8 260.3 L112.5 259.0 L113.1 257.7 L113.8 256.3 L114.4 255.0 L114.9 253.8 L115.4 252.5 L115.7 251.2 L116.0 250.0 L116.2 248.8 L116.2 247.5 L116.2 246.3 L116.1 245.0 L115.8 243.8 L115.5 242.5 L115.1 241.2 L114.6 239.9 L114.1 238.6 L113.5 237.2 L112.9 235.9 L112.2 234.5 L111.5 233.1 L110.9 231.6 L110.3 230.2 L109.7 228.7 L109.2 227.3 L108.7 225.8 L108.4 224.3 L108.1 222.9 L108.0 221.4 L107.9 220.0 L108.0 218.6 L108.2 217.2 L108.5 215.9 L109.0 214.5 L109.6 213.3 L110.3 212.0 L111.1 210.8 L112.0 209.7 L113.0 208.5 L114.1 207.5 L115.3 206.4 L116.5 205.4 L117.8 204.5 L119.1 203.5 L120.4 202.6 L121.7 201.7 L122.9 200.8 L124.2 200.0 L125.4 199.1 L126.5 198.2 L127.6 197.2 L128.6 196.3 L129.6 195.3 L130.4 194.2 L131.2 193.2 L131.8 192.0 L132.4 190.9 L132.9 189.6 L133.3 188.3 L133.6 187.0 L133.9 185.6 L134.1 184.1 L134.3 182.6 L134.4 181.1 L134.6 179.5 L134.7 177.9 L134.8 176.3 L134.9 174.6 L135.1 173.0 L135.3 171.4 L135.6 169.7 L135.9 168.2 L136.3 166.6 L136.8 165.2 L137.4 163.7 L138.1 162.4 L138.9 161.1 L139.7 159.9 L140.7 158.7 L141.8 157.7 L143.0 156.7 L144.2 155.9 L145.6 155.1 L147.0 154.4 L148.5 153.8 L150.0 153.2 L151.6 152.7 L153.2 152.3 L154.9 151.9 L156.5 151.5 L158.2 151.1 L159.8 150.8 L161.5 150.4 L163.1 150.1 L164.6 149.7 L166.1 149.2 L167.6 148.8 L169.0 148.2 L170.4 147.6 L171.7 146.9 L172.9 146.1 L174.1 145.3 L175.2 144.3 L176.3 143.3 L177.3 142.2 L178.2 141.0 L179.2 139.7 L180.1 138.4 L180.9 137.0 L181.8 135.6 L182.6 134.1 L183.5 132.6 L184.4 131.1 L185.3 129.5 L186.2 128.0 L187.1 126.6 L188.1 125.1 L189.1 123.7 L190.2 122.4 L191.4 121.2 L192.6 120.1 L193.9 119.0 L195.2 118.1 L196.6 117.2 L198.0 116.5 L199.5 115.9 L201.1 115.5 L202.7 115.1 L204.4 114.8 L206.1 114.6 L207.8 114.6 L209.5 114.6 L211.3 114.7 L213.1 114.8 L214.9 115.0 L216.7 115.2" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M411.7 128.6 L412.6 130.2 L413.5 131.6 L414.4 133.1 L415.3 134.5 L416.2 135.9 L417.1 137.3 L418.1 138.5 L419.1 139.7 L420.1 140.8 L421.2 141.8 L422.4 142.7 L423.6 143.6 L424.8 144.3 L426.1 145.0 L427.5 145.6 L428.9 146.1 L430.4 146.6 L432.0 147.0 L433.5 147.3 L435.1 147.7 L436.8 148.0 L438.5 148.3 L440.1 148.6 L441.8 148.9 L443.5 149.3 L445.1 149.7 L446.7 150.2 L448.3 150.7 L449.8 151.3 L451.2 151.9 L452.6 152.7 L453.9 153.5 L455.1 154.4 L456.2 155.5 L457.2 156.6 L458.2 157.7 L459.0 159.0 L459.7 160.3 L460.4 161.8 L460.9 163.2 L461.4 164.8 L461.8 166.3 L462.1 167.9 L462.3 169.5 L462.6 171.2 L462.8 172.8 L462.9 174.5 L463.1 176.1 L463.3 177.6 L463.4 179.2 L463.7 180.7 L463.9 182.2 L464.2 183.6 L464.6 184.9 L465.1 186.2 L465.6 187.5 L466.2 188.6 L466.9 189.7 L467.7 190.8 L468.5 191.8 L469.5 192.8 L470.5 193.7 L471.6 194.6 L472.8 195.5 L474.0 196.4 L475.3 197.2 L476.6 198.1 L477.9 199.0 L479.3 199.8 L480.6 200.7 L481.9 201.7 L483.2 202.6 L484.4 203.6 L485.5 204.7 L486.6 205.8 L487.5 206.9 L488.4 208.1 L489.1 209.3 L489.8 210.5 L490.3 211.8 L490.6 213.2 L490.9 214.6 L491.0 216.0 L491.1 217.4 L491.0 218.9 L490.7 220.3 L490.4 221.8 L490.0 223.3 L489.6 224.8 L489.1 226.3 L488.5 227.7 L487.9 229.2 L487.3 230.6 L486.7 232.0 L486.1 233.4 L485.5 234.8 L485.0 236.1 L484.6 237.4 L484.2 238.7 L483.9 240.0 L483.7 241.3 L483.6 242.6 L483.6 243.8 L483.7 245.0 L483.9 246.3 L484.2 247.5 L484.6 248.8 L485.1 250.0 L485.7 251.3 L486.3 252.5 L487.0 253.8 L487.7 255.1 L488.5 256.5 L489.2 257.8 L490.0 259.2 L490.7 260.6 L491.4 262.0 L492.0 263.4 L492.6 264.8 L493.1 266.2 L493.5 267.7 L493.8 269.1 L494.0 270.5 L494.0 271.9 L493.9 273.3 L493.7 274.7 L493.4 276.0 L493.0 277.4 L492.4 278.6 L491.7 279.9 L490.9 281.1 L490.0 282.3 L489.0 283.4 L487.9 284.6 L486.8 285.6 L485.6 286.7 L484.4 287.7 L483.2 288.7 L481.9 289.7 L480.7 290.6 L479.5 291.6 L478.4 292.6 L477.3 293.5 L476.3 294.5 L475.3 295.5 L474.4 296.6 L473.7 297.6 L473.0 298.7 L472.4 299.9 L471.9 301.1 L471.4 302.3 L471.1 303.6 L470.9 304.9 L470.7 306.3 L470.5 307.8 L470.5 309.3 L470.4 310.8 L470.4 312.3 L470.4 313.9 L470.4 315.5 L470.4 317.2 L470.4 318.8 L470.3 320.4 L470.2 322.0 L470.0 323.6 L469.7 325.2 L469.3 326.7 L468.8 328.1 L468.3 329.5 L467.6 330.9 L466.9 332.1 L466.0 333.3 L465.0 334.4 L463.9 335.5 L462.8 336.4 L461.5 337.3 L460.2 338.1 L458.8 338.8 L457.3 339.5 L455.8 340.0 L454.2 340.6 L452.6 341.1 L451.0 341.5 L449.4 342.0 L447.7 342.4 L446.1 342.8 L444.6 343.3 L443.0 343.7 L441.5 344.2 L440.1 344.8 L438.7 345.4 L437.4 346.1 L436.2 346.8 L435.0 347.6 L433.9 348.5 L432.8 349.5 L431.8 350.5 L430.9 351.6 L430.0 352.9 L429.1 354.2 L428.3 355.5 L427.5 356.9 L426.8 358.4 L426.0 359.9 L425.3 361.4 L424.5 363.0 L423.7 364.5 L422.9 366.1 L422.1 367.6 L421.2 369.1 L420.3 370.5 L419.3 371.9 L418.2 373.2 L417.1 374.4 L415.9 375.6 L414.7 376.6 L413.4 377.5 L412.0 378.3 L410.5 379.0 L409.0 379.6 L407.5 380.0 L405.8 380.4 L404.2 380.7 L402.5 380.9 L400.8 381.0 L399.0 381.0 L397.2 380.9 L395.4 380.9 L393.6 380.7 L391.9 380.6 L390.1 380.5 L388.3 380.3 L386.6 380.2 L384.9 380.2 L383.2 380.1 L381.5 380.2 L379.9 380.3 L378.3 380.5 L376.7 380.8 L375.2 381.2 L373.8 381.7 L372.3 382.3 L370.9 383.0 L369.5 383.8 L368.1 384.6 L366.7 385.6 L365.4 386.6 L364.1 387.7 L362.7 388.9 L361.4 390.1 L360.0 391.3 L358.7 392.5 L357.3 393.8 L355.9 395.0 L354.5 396.1 L353.1 397.2 L351.6 398.3 L350.1 399.2 L348.6 400.1 L347.0 400.9 L345.4 401.6 L343.8 402.1 L342.2 402.5 L340.5 402.8 L338.8 403.0 L337.1 403.0 L335.4 403.0 L333.7 402.8 L332.0 402.5 L330.2 402.1 L328.5 401.6 L326.7 401.1 L325.0 400.4 L323.2 399.8 L321.5 399.1 L319.8 398.4 L318.1 397.7 L316.4 397.0 L314.7 396.4 L313.0 395.8 L311.4 395.2 L309.7 394.8 L308.1 394.4 L306.5 394.1 L304.8 393.9 L303.2 393.8 L301.6 393.8 L300.0 393.9 L298.4 394.1 L296.8 394.5 L295.1 394.9 L293.5 395.4 L291.8 395.9 L290.2 396.6 L288.5 397.2 L286.8 398.0 L285.1 398.7 L283.4 399.4 L281.7 400.2 L280.0 400.9 L278.3 401.5 L276.5 402.1 L274.8 402.6 L273.1 403.1 L271.3 403.4 L269.6 403.6 L267.9 403.7 L266.2 403.7 L264.5 403.6 L262.8 403.4 L261.2 403.0 L259.5 402.5 L257.9 401.8 L256.4 401.1 L254.8 400.3 L253.3 399.3 L251.8 398.3 L250.3 397.3 L248.9 396.1 L247.5 395.0 L246.1 393.8 L244.7 392.6 L243.3 391.4 L241.9 390.2 L240.6 389.1 L239.2 388.0 L237.8 387.0 L236.4 386.0 L235.0 385.2 L233.6 384.4 L232.2 383.7 L230.7 383.2 L229.2 382.7 L227.7 382.3 L226.1 382.1 L224.5 381.9 L222.9 381.8 L221.2 381.8 L219.5 381.8 L217.8 381.9 L216.1 382.0 L214.3 382.2 L212.5 382.4 L210.7 382.6 L209.0 382.7 L207.2 382.8 L205.4 382.9 L203.6 382.9 L201.9 382.9 L200.2 382.8 L198.5 382.5 L196.8 382.2 L195.3 381.8 L193.7 381.2 L192.3 380.6 L190.9 379.8 L189.5 378.9 L188.2 377.9 L187.0 376.8 L185.9 375.7 L184.8 374.4 L183.7 373.0 L182.7 371.6 L181.8 370.2 L180.9 368.7 L180.1 367.1 L179.3 365.6 L178.4 364.0 L177.6 362.5 L176.9 361.0 L176.0 359.6 L175.2 358.2 L174.4 356.8 L173.5 355.5 L172.6 354.3 L171.6 353.2 L170.6 352.2 L169.5 351.2 L168.3 350.3 L167.1 349.5 L165.9 348.8 L164.5 348.2 L163.1 347.6 L161.7 347.1 L160.2 346.6 L158.6 346.2 L157.0 345.8 L155.4 345.4 L153.8 345.0 L152.2 344.6 L150.5 344.2 L148.9 343.7 L147.3 343.2 L145.8 342.7 L144.3 342.0 L142.8 341.4 L141.4 340.6 L140.1 339.8 L138.9 338.9 L137.8 337.9 L136.8 336.8 L135.9 335.6 L135.1 334.4 L134.4 333.0 L133.8 331.7 L133.3 330.2 L132.8 328.7 L132.5 327.2 L132.2 325.6 L132.0 324.0 L131.9 322.3 L131.8 320.7 L131.7 319.1 L131.7 317.5 L131.6 315.9 L131.6 314.3 L131.5 312.8 L131.4 311.3 L131.2 309.8 L131.0 308.4 L130.7 307.1 L130.3 305.8 L129.9 304.6 L129.4 303.4 L128.7 302.2 L128.0 301.1 L127.2 300.1 L126.3 299.1 L125.3 298.1 L124.3 297.1 L123.1 296.2 L122.0 295.3 L120.8 294.3 L119.5 293.4 L118.3 292.4 L117.0 291.5 L115.7 290.5 L114.5 289.5 L113.4 288.4 L112.2 287.4 L111.2 286.2 L110.3 285.1 L109.4 283.9 L108.7 282.7 L108.0 281.4 L107.5 280.1 L107.1 278.8 L106.9 277.4 L106.8 276.0 L106.8 274.6 L106.9 273.2 L107.1 271.7 L107.5 270.3 L107.9 268.8 L108.4 267.4 L109.0 266.0 L109.7 264.5 L110.3 263.1 L111.0 261.7 L111.8 260.3 L112.5 259.0 L113.1 257.7 L113.8 256.3 L114.4 255.0 L114.9 253.8 L115.4 252.5 L115.7 251.2 L116.0 250.0 L116.2 248.8 L116.2 247.5 L116.2 246.3 L116.1 245.0 L115.8 243.8 L115.5 242.5 L115.1 241.2 L114.6 239.9 L114.1 238.6 L113.5 237.2 L112.9 235.9 L112.2 234.5 L111.5 233.1 L110.9 231.6 L110.3 230.2 L109.7 228.7 L109.2 227.3 L108.7 225.8 L108.4 224.3 L108.1 222.9 L108.0 221.4 L107.9 220.0 L108.0 218.6 L108.2 217.2 L108.5 215.9 L109.0 214.5 L109.6 213.3 L110.3 212.0 L111.1 210.8 L112.0 209.7 L113.0 208.5 L114.1 207.5 L115.3 206.4 L116.5 205.4 L117.8 204.5 L119.1 203.5 L120.4 202.6 L121.7 201.7 L122.9 200.8 L124.2 200.0 L125.4 199.1 L126.5 198.2 L127.6 197.2 L128.6 196.3 L129.6 195.3 L130.4 194.2 L131.2 193.2 L131.8 192.0 L132.4 190.9 L132.9 189.6 L133.3 188.3 L133.6 187.0 L133.9 185.6 L134.1 184.1 L134.3 182.6 L134.4 181.1 L134.6 179.5 L134.7 177.9 L134.8 176.3 L134.9 174.6 L135.1 173.0 L135.3 171.4 L135.6 169.7 L135.9 168.2 L136.3 166.6 L136.8 165.2 L137.4 163.7 L138.1 162.4 L138.9 161.1 L139.7 159.9 L140.7 158.7 L141.8 157.7 L143.0 156.7 L144.2 155.9 L145.6 155.1 L147.0 154.4 L148.5 153.8 L150.0 153.2 L151.6 152.7 L153.2 152.3 L154.9 151.9 L156.5 151.5 L158.2 151.1 L159.8 150.8 L161.5 150.4 L163.1 150.1 L164.6 149.7 L166.1 149.2 L167.6 148.8 L169.0 148.2 L170.4 147.6 L171.7 146.9 L172.9 146.1 L174.1 145.3 L175.2 144.3 L176.3 143.3 L177.3 142.2 L178.2 141.0 L179.2 139.7 L180.1 138.4 L180.9 137.0 L181.8 135.6 L182.6 134.1 L183.5 132.6 L184.4 131.1 L185.3 129.5 L186.2 128.0 L187.1 126.6 L188.1 125.1 L189.1 123.7 L190.2 122.4 L191.4 121.2 L192.6 120.1 L193.9 119.0 L195.2 118.1 L196.6 117.2 L198.0 116.5 L199.5 115.9 L201.1 115.5 L202.7 115.1 L204.4 114.8 L206.1 114.6 L207.8 114.6 L209.5 114.6 L211.3 114.7 L213.1 114.8 L214.9 115.0 L216.7 115.2" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+        <path d="M435.0 138.1 L435.9 139.5 L436.8 140.9 L437.5 142.4 L438.2 143.9 L438.9 145.5 L439.5 147.1 L440.0 148.7 L440.6 150.3 L441.1 151.9 L441.7 153.5 L442.2 155.0 L442.8 156.5 L443.4 157.9 L444.1 159.3" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M435.0 138.1 L435.9 139.5 L436.8 140.9 L437.5 142.4 L438.2 143.9 L438.9 145.5 L439.5 147.1 L440.0 148.7 L440.6 150.3 L441.1 151.9 L441.7 153.5 L442.2 155.0 L442.8 156.5 L443.4 157.9 L444.1 159.3" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M479.3 189.0 L479.4 190.5 L479.5 192.1 L479.5 193.7 L479.4 195.2 L479.3 196.8 L479.1 198.4 L478.9 200.0 L478.7 201.6 L478.5 203.1 L478.2 204.7 L478.1 206.2 L477.9 207.6 L477.8 209.0 L477.8 210.4" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M479.3 189.0 L479.4 190.5 L479.5 192.1 L479.5 193.7 L479.4 195.2 L479.3 196.8 L479.1 198.4 L478.9 200.0 L478.7 201.6 L478.5 203.1 L478.2 204.7 L478.1 206.2 L477.9 207.6 L477.8 209.0 L477.8 210.4" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M494.9 250.0 L494.3 251.4 L493.6 252.7 L492.9 254.0 L492.1 255.3 L491.2 256.6 L490.3 257.9 L489.3 259.1 L488.4 260.4 L487.4 261.6 L486.5 262.8 L485.6 264.0 L484.8 265.1 L484.1 266.3 L483.4 267.5" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M494.9 250.0 L494.3 251.4 L493.6 252.7 L492.9 254.0 L492.1 255.3 L491.2 256.6 L490.3 257.9 L489.3 259.1 L488.4 260.4 L487.4 261.6 L486.5 262.8 L485.6 264.0 L484.8 265.1 L484.1 266.3 L483.4 267.5" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M479.1 310.9 L477.9 311.8 L476.7 312.8 L475.3 313.6 L474.0 314.4 L472.5 315.2 L471.1 316.0 L469.7 316.7 L468.2 317.4 L466.8 318.1 L465.4 318.8 L464.0 319.5 L462.7 320.3 L461.4 321.0" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M479.1 310.9 L477.9 311.8 L476.7 312.8 L475.3 313.6 L474.0 314.4 L472.5 315.2 L471.1 316.0 L469.7 316.7 L468.2 317.4 L466.8 318.1 L465.4 318.8 L464.0 319.5 L462.7 320.3 L461.4 321.0" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M436.4 361.1 L434.8 361.7 L433.3 362.1 L431.6 362.5 L430.0 362.8 L428.3 363.0 L426.5 363.2 L424.8 363.4 L423.1 363.6 L421.3 363.7 L419.6 363.9 L418.0 364.0 L416.3 364.2 L414.7 364.5 L413.1 364.8" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M436.4 361.1 L434.8 361.7 L433.3 362.1 L431.6 362.5 L430.0 362.8 L428.3 363.0 L426.5 363.2 L424.8 363.4 L423.1 363.6 L421.3 363.7 L419.6 363.9 L418.0 364.0 L416.3 364.2 L414.7 364.5 L413.1 364.8" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M371.2 394.5 L369.4 394.5 L367.7 394.4 L365.9 394.2 L364.1 393.9 L362.3 393.6 L360.5 393.2 L358.7 392.8 L357.0 392.4 L355.2 391.9 L353.4 391.5 L351.7 391.1 L350.0 390.8 L348.3 390.5 L346.6 390.3" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M371.2 394.5 L369.4 394.5 L367.7 394.4 L365.9 394.2 L364.1 393.9 L362.3 393.6 L360.5 393.2 L358.7 392.8 L357.0 392.4 L355.2 391.9 L353.4 391.5 L351.7 391.1 L350.0 390.8 L348.3 390.5 L346.6 390.3" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M294.9 405.0 L293.2 404.4 L291.6 403.8 L289.9 403.0 L288.3 402.2 L286.7 401.3 L285.0 400.4 L283.4 399.4 L281.9 398.5 L280.3 397.5 L278.7 396.6 L277.2 395.7 L275.6 394.8 L274.1 394.0 L272.5 393.3" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M294.9 405.0 L293.2 404.4 L291.6 403.8 L289.9 403.0 L288.3 402.2 L286.7 401.3 L285.0 400.4 L283.4 399.4 L281.9 398.5 L280.3 397.5 L278.7 396.6 L277.2 395.7 L275.6 394.8 L274.1 394.0 L272.5 393.3" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M219.5 391.2 L218.2 390.1 L216.9 389.0 L215.6 387.7 L214.4 386.4 L213.2 385.1 L212.0 383.7 L210.9 382.3 L209.7 380.9 L208.6 379.5 L207.5 378.2 L206.4 376.9 L205.3 375.6 L204.1 374.4 L203.0 373.3" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M219.5 391.2 L218.2 390.1 L216.9 389.0 L215.6 387.7 L214.4 386.4 L213.2 385.1 L212.0 383.7 L210.9 382.3 L209.7 380.9 L208.6 379.5 L207.5 378.2 L206.4 376.9 L205.3 375.6 L204.1 374.4 L203.0 373.3" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M156.7 355.1 L155.9 353.6 L155.2 352.2 L154.6 350.6 L154.0 349.1 L153.5 347.5 L153.0 345.8 L152.5 344.2 L152.1 342.6 L151.6 341.0 L151.2 339.4 L150.8 337.9 L150.3 336.4 L149.8 335.0 L149.2 333.6" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M156.7 355.1 L155.9 353.6 L155.2 352.2 L154.6 350.6 L154.0 349.1 L153.5 347.5 L153.0 345.8 L152.5 344.2 L152.1 342.6 L151.6 341.0 L151.2 339.4 L150.8 337.9 L150.3 336.4 L149.8 335.0 L149.2 333.6" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M116.5 302.1 L116.4 300.5 L116.5 299.0 L116.6 297.5 L116.8 295.9 L117.1 294.3 L117.4 292.8 L117.7 291.2 L118.1 289.7 L118.4 288.2 L118.7 286.7 L119.0 285.2 L119.3 283.8 L119.5 282.4" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M116.5 302.1 L116.4 300.5 L116.5 299.0 L116.6 297.5 L116.8 295.9 L117.1 294.3 L117.4 292.8 L117.7 291.2 L118.1 289.7 L118.4 288.2 L118.7 286.7 L119.0 285.2 L119.3 283.8 L119.5 282.4" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M105.0 241.8 L105.6 240.5 L106.3 239.2 L107.1 237.9 L108.0 236.6 L108.9 235.4 L109.9 234.2 L110.9 233.0 L111.9 231.8 L113.0 230.6 L114.0 229.5 L115.0 228.4 L115.9 227.3 L116.8 226.1 L117.7 225.0" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M105.0 241.8 L105.6 240.5 L106.3 239.2 L107.1 237.9 L108.0 236.6 L108.9 235.4 L109.9 234.2 L110.9 233.0 L111.9 231.8 L113.0 230.6 L114.0 229.5 L115.0 228.4 L115.9 227.3 L116.8 226.1 L117.7 225.0" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M124.8 181.5 L126.0 180.6 L127.3 179.7 L128.6 178.9 L130.0 178.1 L131.5 177.4 L133.0 176.7 L134.5 176.0 L136.0 175.4 L137.5 174.8 L139.0 174.1 L140.4 173.5 L141.8 172.9 L143.2 172.2 L144.5 171.5" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M124.8 181.5 L126.0 180.6 L127.3 179.7 L128.6 178.9 L130.0 178.1 L131.5 177.4 L133.0 176.7 L134.5 176.0 L136.0 175.4 L137.5 174.8 L139.0 174.1 L140.4 173.5 L141.8 172.9 L143.2 172.2 L144.5 171.5" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <path d="M172.5 132.6 L174.0 132.1 L175.7 131.8 L177.4 131.5 L179.1 131.3 L180.8 131.1 L182.5 131.0 L184.3 130.9 L186.1 130.9 L187.8 130.8 L189.5 130.7 L191.2 130.6 L192.9 130.5 L194.5 130.3 L196.1 130.1" fill="none" stroke="var(--rust)" stroke-width="8.5" stroke-linecap="round"/><path d="M172.5 132.6 L174.0 132.1 L175.7 131.8 L177.4 131.5 L179.1 131.3 L180.8 131.1 L182.5 131.0 L184.3 130.9 L186.1 130.9 L187.8 130.8 L189.5 130.7 L191.2 130.6 L192.9 130.5 L194.5 130.3 L196.1 130.1" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round" opacity=".92"/>
+        <g transform="translate(247.6 105.8) rotate(-4)">
+<path d="M-6 -13 C10 -22 34 -24 56 -18 L90 -11 C101 -8 104 -1 99 4 L72 8 C58 15 36 21 14 17 C6 16 0 14 -6 13 Z" fill="var(--rust)"/>
+<path d="M32 -19 C26 -34 10 -40 -8 -33 C6 -33 14 -28 20 -18 Z" fill="var(--rust)"/>
+<path d="M44 -20 C42 -30 34 -37 24 -40 C32 -34 34 -28 36 -19 Z" fill="var(--rust)"/>
+<path d="M98 0 L66 4 C54 6 46 11 38 14" fill="none" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/>
+<path d="M28 4 a7 7 0 1 1 -7 -7 a3.8 3.8 0 1 1 -3.8 3.8" fill="none" stroke="var(--bg)" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M58 -9 q6 -7 14 -2 q-6 6 -14 2 Z" fill="var(--bg)"/><circle cx="66" cy="-8" r="1.9" fill="var(--ink)"/>
+<circle cx="90" cy="-5" r="1.6" fill="var(--bg)"/>
+<path d="M99 4 l4 6 l-9 -2 Z" fill="var(--bg)"/>
+</g>
+        <path transform="translate(434.4 143.9) rotate(38.3)" d="M-5 -7 L5 0 L-5 7" fill="none" stroke="var(--bg)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path transform="translate(434.4 356.1) rotate(141.7)" d="M-5 -7 L5 0 L-5 7" fill="none" stroke="var(--bg)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path transform="translate(165.6 356.1) rotate(-141.7)" d="M-5 -7 L5 0 L-5 7" fill="none" stroke="var(--bg)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path transform="translate(165.6 143.9) rotate(-38.3)" d="M-5 -7 L5 0 L-5 7" fill="none" stroke="var(--bg)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g><rect class="arc-bg" x="462" y="98" width="148" height="44" rx="7"/><text class="arcnum" x="536" y="118" text-anchor="middle">Equity stakes</text><text class="arclabel" x="536" y="134" text-anchor="middle">+ cloud contracts in</text></g><g><rect class="arc-bg" x="462" y="358" width="148" height="44" rx="7"/><text class="arcnum" x="536" y="378" text-anchor="middle">Orders</text><text class="arclabel" x="536" y="394" text-anchor="middle">against the backlog</text></g><g><rect class="arc-bg" x="-10" y="358" width="150" height="44" rx="7"/><text class="arcnum" x="65" y="378" text-anchor="middle">$132.5B backlog</text><text class="arclabel" x="65" y="394" text-anchor="middle">CoreWeave, Nov 10</text></g><g><rect class="arc-bg" x="-10" y="98" width="150" height="44" rx="7"/><text class="arcnum" x="65" y="118" text-anchor="middle">Guarantees</text><text class="arclabel" x="65" y="134" text-anchor="middle">commitments flow back</text></g>
+        <g class="loopnode"><rect x="205" y="2" width="190" height="58" rx="10"/><text x="300" y="27" text-anchor="middle" font-size="16">Hyperscalers</text><text class="lsub" x="300" y="46" text-anchor="middle" font-size="12">2026 capex guided $720 to 740B</text></g><g class="loopnode"><rect x="404" y="221" width="172" height="58" rx="10"/><text x="490" y="246" text-anchor="middle" font-size="16">The labs</text><text class="lsub" x="490" y="265" text-anchor="middle" font-size="12">OpenAI · Anthropic</text></g><g class="loopnode"><rect x="200" y="371" width="200" height="58" rx="10"/><text x="300" y="396" text-anchor="middle" font-size="16">Neoclouds &amp; SPVs</text><text class="lsub" x="300" y="415" text-anchor="middle" font-size="12">borrow to build capacity</text></g><g class="loopnode"><rect x="24" y="221" width="172" height="58" rx="10"/><text x="110" y="246" text-anchor="middle" font-size="16">Chip suppliers</text><text class="lsub" x="110" y="265" text-anchor="middle" font-size="12">Nvidia · Broadcom</text></g>
+        <text x="300" y="222" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink2)">IMF: 14 circular deals</text><text x="300" y="239" text-anchor="middle" font-size="12.5"  fill="var(--ink2)">since 2023</text><text x="300" y="261" text-anchor="middle" font-size="12.5"  fill="var(--ink2)">$300B equity · $650B debt</text><text x="300" y="278" text-anchor="middle" font-size="12.5"  fill="var(--ink2)">$1.4T of commitments</text><text x="300" y="295" text-anchor="middle" font-size="12.5"  fill="var(--ink2)">$253B of backstop caps</text>
+      </svg>
+      <div class="factchips">
+        <span class="fchip"><b>$253B</b> · backstop caps are maximum exposure, not expected loss</span>
+      </div>
+      <p class="src" style="margin-top:10px">Deal count and values: <a href="https://www.imf.org/en/news/articles/2026/10/13/tr-101326-press-briefing-transcript-global-financial-stability-report-annual-meetings-2026" target="_blank" rel="noopener">IMF, Global Financial Stability Report briefing, Oct 13, 2026</a>. Bain: <a href="https://www.morningstar.com/news/pr-newswire/20260929ne57767/global-ai-market-could-hit-6-trillion-annually-by-2031-through-unlocking-value-and-innovation-bain-cos-7th-global-technology-report" target="_blank" rel="noopener">Global Technology Report release, Sept 29, 2026</a>.</p>
+    </div>
+    <div class="donutbox">
+      <h3 style="margin-bottom:8px">Investment into AI firms, 2021–25</h3>
+      <svg viewBox="0 0 140 140" role="img" aria-label="Donut chart: 55 percent of investment into AI firms comes from other AI firms, 45 percent from outside the industry, Bank for International Settlements figure">
+        <circle cx="70" cy="70" r="54" fill="none" stroke="var(--blue)" stroke-width="21"/>
+        <circle cx="70" cy="70" r="54" fill="none" stroke="var(--rust)" stroke-width="21" stroke-dasharray="186.6 339.3" transform="rotate(-90 70 70)"/>
+        <text x="70" y="70" text-anchor="middle" font-size="30" font-weight="700" fill="var(--plum)" font-family="Georgia,serif">55%</text>
+        <text x="70" y="86" text-anchor="middle" font-size="10.5" fill="var(--ink2)">from inside</text>
+        <text x="70" y="99" text-anchor="middle" font-size="10.5" fill="var(--ink2)">the industry</text>
+      </svg>
+      <div class="legend">
+        <div><span class="sw" style="background:var(--rust)"></span><span><b>55% from other AI firms:</b> supplier equity, guarantees, vendor financing, hyperscaler stakes in the labs. It measures how tangled the industry is, not whether it crashes.</span></div>
+        <div><span class="sw" style="background:var(--blue)"></span><span><b>45% from outside:</b> bonds, banks, private credit. The half that can walk away.</span></div>
+      </div>
+    </div>
+  </div>
+  <h3 style="margin-top:20px">Two views of the same gap: demand is missing, and credit is nervous</h3>
+  <p class="secnote">Supply is getting built now, but the customers to pay for it mostly haven't been found. The market lending against it is already pricing that in.</p>
+  <div class="vcharts">
+    <div class="vchart">
+      <h3>Revenue needed vs found, 2031</h3>
+      <div class="vplot" role="img" aria-label="Vertical bars: 6.0 trillion dollars a year of revenue needed by 2031 versus 1.2 to 1.8 trillion identified, leaving 4.2 trillion unidentified at the top of the range">
+        <div class="vcol"><span class="vval">$6.0T</span><div class="vbar" style="height:100%;background:var(--plum)"></div></div>
+        <div class="vcol"><span class="vval" style="position:absolute;bottom:31%;margin:0 0 4px">$1.2 to 1.8T</span><div class="vgap" style="height:calc(70% - 26px);margin-bottom:26px"><b>$4.2T<br>unidentified</b></div><div class="vbar" style="height:20%;background:var(--blue)"></div><div class="vbar vtop" style="height:10%;background:color-mix(in srgb,var(--blue) 45%,transparent)"></div></div>
+      </div>
+      <div class="vlabs"><span>Needed by 2031</span><span>Identified willingness to pay</span></div>
+      <p class="src">Bain, Global Technology Report, Sept 29, 2026. Paler section is the top of the $1.2 to 1.8T range.</p>
+    </div>
+    <div class="vchart">
+      <h3>5-year CDS spreads, mid-Oct 2026 (bp)</h3>
+      <div class="vplot" role="img" aria-label="Vertical bars of 5-year credit default swap spreads in basis points: CoreWeave about 1,117, Oracle 288 to 322, Broadcom 122, Meta 108, Nvidia 101, with a distress line at 1,000">
+        <div class="vline" style="bottom:89.5%"><i>1,000 bp distress</i></div>
+        <div class="vcol"><span class="vval">~1,117</span><div class="vbar" style="height:100%;background:var(--bad)"></div></div>
+        <div class="vcol"><span class="vval">288 to 322</span><div class="vbar" style="height:28.8%;background:var(--bad);opacity:.75"></div></div>
+        <div class="vcol"><span class="vval">122</span><div class="vbar" style="height:10.9%;background:var(--bad);opacity:.6"></div></div>
+        <div class="vcol"><span class="vval">108</span><div class="vbar" style="height:9.7%;background:var(--bad);opacity:.6"></div></div>
+        <div class="vcol"><span class="vval">101</span><div class="vbar" style="height:9%;background:var(--bad);opacity:.6"></div></div>
+      </div>
+      <div class="vlabs"><span><b>CoreWeave</b></span><span>Oracle</span><span>Broadcom</span><span>Meta</span><span>Nvidia</span></div>
+      <p class="src">Spreads: FT and Bloomberg, mid-October. Distress line: S&amp;P Global.</p>
+    </div>
+  </div>
+  <p style="font-size:15.5px;line-height:1.7;margin:6px 0 0"><b>There is about <span class="bignum" style="font-size:28px;line-height:1">$4.2T</span> a year of revenue nobody has found yet</b>, even at the top of the range. <b>CoreWeave is the tell:</b> it sits around 1,117 bp, past the 1,000 bp distress line, while Nvidia, Meta and Broadcom hang out near 100. The stress isn't everywhere, it's exactly where the model says, in the neoclouds borrowing against lab orders, so if credit cracks, it cracks here first.</p>
+  <p style="font-size:15.5px;margin:14px 0 0"><b>On Nov 10</b> CoreWeave beat, raised guidance and raised capex. That helps the stalemate call, since production is planned at scale through 2027 and the runway is long. <b>2028 is where it gets dicey.</b></p>
+  <h3 style="margin-top:20px">Where the risk goes next</h3>
+  <p class="secnote">Banks don't sit on this debt anymore. They make the loan and pass it on, and every hand-off spreads the risk wider and makes it harder to see. If it freezes, you'll see it in the price first.</p>
+  <div class="rflow">
+    <ol class="rf-steps">
+      <li class="rf-step"><span class="rf-n">1 · Borrow</span><b>Builders &amp; SPVs</b><span class="rf-big">~$38B</span><span class="rf-t">Construction debt for Oracle-leased campuses in Texas and Wisconsin.</span></li>
+      <li class="rf-step"><span class="rf-n">2 · Underwrite</span><b>Arranging banks</b><span class="rf-big">6+ months</span><span class="rf-t">JPMorgan and MUFG, still selling that package on. Large banks have ~$450B committed to AI-adjacent borrowers, ~$150B drawn (Chicago Fed).</span></li>
+      <li class="rf-step rf-hot"><span class="rf-n">3 · Price · watch here</span><b>The loan market</b><span class="rf-big">89–91¢</span>
+        <span class="rf-gauge" role="img" aria-label="Project Jupiter loans quoted at 89 to 91 cents on the dollar, just above the high-80s level where the hand-off would clog"><i class="clog"></i><i class="band"></i><span class="gl" style="left:0">80¢</span><span class="gl" style="left:40%;transform:translateX(-50%)">88¢</span><span class="gl" style="right:0">par</span></span>
+        <span class="rf-t">~$18B of Project Jupiter loans, quoted below face: a quote, not a sale or a default. Quotes falling through the high 80s would mean the hand-off is clogging.</span></li>
+      <li class="rf-step"><span class="rf-n">4 · Hold</span><b>Insurers &amp; private credit</b><span class="rf-big">$13B+</span><span class="rf-t">Risk transfers being explored: Barclays over $10B, Deutsche about $2B, HSBC over $1B. The chain ends in insurance accounts.</span></li>
+    </ol>
+    <div class="rf-vis" aria-hidden="true"><span>Disclosed in filings</span><i></i><span>Harder to see</span></div>
+    <p class="rf-back"><b>↩ And back again:</b> banks lend to the non-banks that end up holding the risk, so a loss can return to the banking system (Bank of England, July Financial Stability Report).</p>
+  </div>
+  <p class="src">A freeze in that chain is the funding strike from the model: loans stop rolling, projects wait, and whoever needs to refinance first feels it first.</p>
+</section>
+
+<section id="veto">
+  <p class="kicker">The evidence under the model</p>
+  <h2>The veto is real, and it is already working</h2>
+  <p class="secnote">The model says the grid's move can't be undone, and 2026 says it's already happening.</p>
+  <div class="veto-grid">
+    <div class="veto-card"><span class="bignum">40 / 41</span><div class="veto-bar" role="img" aria-label="40 of 41 ballot measures favoured limits"><i style="width:98%"></i></div><div class="veto-bar-label">40 for limits · 1 against</div><p>Local ballots on Nov 3 that favoured limits, five of them full bans. (Ballotpedia)</p></div>
+    <div class="veto-card"><span class="bignum">86</span><div class="veto-bar" role="img" aria-label="76 of 86 cancelled or delayed projects were tied to local opposition"><i style="width:88%"></i></div><div class="veto-bar-label">76 of 86 tied to local opposition</div><p>US projects cancelled or badly delayed since January. (Goldman Sachs, Oct 19)</p></div>
+    <div class="veto-card"><span class="bignum">~35%</span><div class="veto-bar" role="img" aria-label="About 35 percent of the planned pipeline is judged credible"><i style="width:35%"></i></div><div class="veto-bar-label">Credible · 65% stalled, speculative or blocked</div><p>Share of the planned US pipeline judged credible. (Bernstein, via FT / RegLayer)</p></div>
+    <div class="veto-card"><span class="bignum">13%</span><div class="veto-bar" role="img" aria-label="Only 13 percent of queued capacity was operating by the end of 2025"><i style="width:13%"></i></div><div class="veto-bar-label">Queued 2000–2020 · operating by end of 2025</div><p>Queued power that actually got built. A queue is not supply. (LBNL, Queued Up 2026)</p></div>
+  </div>
+  <p style="font-size:16px;margin-top:16px"><b>That's gatekeeping in real life:</b> priced in Ohio and Virginia, with limits winning 40 of 41 local ballots. No crash is required, because the stalemate shows up wherever a connection gets priced, conditioned or refused.</p>
+</section>
+
+<section id="paths">
+  <p class="kicker">The three paths</p>
+  <h2>What has to happen, each way</h2>
+  <p class="secnote"><b>The middle holds until new information shakes it.</b> If something does break, crash is the likelier exit, because nobody chooses a funding strike but once one starts it sticks, and blanket politics is only two moves away. Boom gets no help from the model. Here's what to watch, each way:</p>
+  <div class="paths">
+    <div class="path">
+      <div class="prail"><span class="prail-name">Stalemate</span><span class="prail-pct">55%</span></div>
+      <div class="pbody">
+        <p><b>The crack arrives slowly and on the grid's terms,</b> so building continues, but easy growth and easy financing don't.</p>
+        <ul>
+          <li><b>Gatekeeping spreads:</b> tariffs at 85% of contracted cost, state by state</li>
+          <li><b>Capex stays high, growth stops:</b> digestion language gets rewarded</li>
+          <li><b>The weak get margined out:</b> credit costs more than neocloud revenue can carry, so they fold or sell</li>
+          <li><b>Stalled campuses sell at a discount</b> instead of new ones being announced</li>
+        </ul>
+        <p style="font-size:14px;margin-top:9px">Think shale after 2014, which didn't die but consolidated on the lenders' terms (more on that below).</p>
+      </div>
+    </div>
+    <div class="path boom">
+      <div class="prail"><span class="prail-name">Boom</span><span class="prail-pct">20%</span></div>
+      <div class="pbody">
+        <p><b>The decision makers choose speed,</b> so utilities and commissions connect and condition instead of blocking, and everything else holds at once.</p>
+        <ul>
+          <li><b>Permits come with conditions, not bans</b></li>
+          <li><b>Capex guidance holds or rises;</b> any trim is blamed on supply, not demand</li>
+          <li><b>Anthropic prices near talk and holds;</b> Nvidia confirms demand on Nov 17</li>
+          <li><b>Private credit keeps refinancing</b> the neocloud layer at investment grade spreads</li>
+        </ul>
+      </div>
+    </div>
+    <div class="path crash">
+      <div class="prail"><span class="prail-name">Crash</span><span class="prail-pct">25%</span></div>
+      <div class="pbody">
+        <p><b>The crack arrives fast, through money or blanket politics,</b> and history says it takes a pair of triggers rather than one bad day.</p>
+        <ul>
+          <li><b>Funding strike:</b> an SPV or neocloud refinancing fails and spreads gap wider</li>
+          <li><b>Demand miss:</b> Nvidia guides down, or a hyperscaler cuts capex citing demand</li>
+          <li><b>A lab cannot meet its commitments:</b> the IMF's triple whammy</li>
+          <li><b>Politics turns blanket:</b> bans replace conditions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="history">
+    <h3>Three build-outs, one pattern</h3>
+    <p class="secnote">Every build-out like this has the same three parts: money lent ahead of demand, a leveraged weak link, and a credit shock. Telecom took the crash path and shale took the stalemate path. AI already has the first two, and the third would be the funding strike, world 3b in the game.</p>
+    <div class="bo-wrap"><div class="bo" role="table" aria-label="Telecom, shale and the AI build-out compared">
+      <div class="bo-h" role="row"><span role="columnheader"></span>
+        <span role="columnheader"><b>Telecom / fibre</b>1996–2002<em class="bo-tag crash">Crash path</em></span>
+        <span role="columnheader"><b>US shale</b>2010–2020<em class="bo-tag stale">Stalemate path</em></span>
+        <span role="columnheader" class="bo-ai"><b>AI build-out</b>2024–<em class="bo-tag open">Not yet decided</em></span></div>
+      <div class="bo-r" role="row"><span role="rowheader">Scale</span><span>&gt;$500B invested</span><span>$913B of capex for −$226B of free cash flow</span><span class="bo-ai">$720–740B of capex in 2026 alone</span></div>
+      <div class="bo-r" role="row"><span role="rowheader">Money ahead of demand</span><span>$250B of junk bonds and vendor loans (Lucent, Nortel)</span><span>Cheap credit for wells that lose 60–70% of output in year one</span><span class="bo-ai">SPV debt off balance sheets, plus $253B of supplier backstops</span></div>
+      <div class="bo-r" role="row"><span role="rowheader">The weak link</span><span>Carriers building to a traffic forecast that never came</span><span>Drillers who needed new credit just to stand still</span><span class="bo-ai">Leveraged neoclouds: CoreWeave CDS ~1,117 bp</span></div>
+      <div class="bo-r" role="row"><span role="rowheader">The shock</span><span>Demand fell short, then funding stopped</span><span>Oil fell from $110 to $35, then lenders pulled back</span><span class="bo-ai"><b>Not yet.</b> Watch the funding strike: crash triggers above</span></div>
+      <div class="bo-r" role="row"><span role="rowheader">How it ended</span><span>~95% of fibre sat dark, sold for cents. The next boom ran on it.</span><span>600+ bankruptcies. Output plateaued under lender discipline.</span><span class="bo-ai"><b>The call:</b> stalemate 55%, crash 25%</span></div>
+    </div></div>
+    <p class="src" style="margin-top:8px">Both times the technology survived while the first financiers didn't, and that's the stalemate's shape.</p>
+  </div>
+  <h3 style="margin-top:22px">The bets come due on these dates</h3>
+  <div class="checks">
+    <div class="check"><b>Nov 17, 2026</b>Nvidia results, the demand chokepoint reports first.</div>
+    <div class="check"><b>~Nov 19-20</b>Anthropic's first trading days (reported target), the IPO window gets priced.</div>
+    <div class="check"><b>Dec 9</b>FOMC decision, at the close of the Dec 8–9 meeting. ERCOT's audit of a 474 GW queue lands around Dec 10, money and power in the same week.</div>
+    <div class="check"><b>January 2027</b>Governors-elect in Texas, Georgia and Ohio take office, executive order, or negotiated terms?</div>
+  </div>
+  <p class="secnote" style="margin-top:12px">There are three check-ins: after the Anthropic pricing and Nvidia print, after the December FOMC and ERCOT audit, and after the January inaugurations. The call at the top is the one that gets graded.</p>
+  <p class="secnote" style="margin-top:8px"><b>How I get graded.</b> Once 2027 results are in: <b>crash</b> if two or more crash triggers fire together, or big-four 2027 capex lands under $620B. <b>Boom</b> if it hits $950B or more with no crash trigger. Everything in between is <b>stalemate</b>.</p>
+</section>
+
+<section id="conclusion">
+  <p class="kicker">The call</p>
+  <h2>So where does that leave things?</h2>
+  <p class="lede"><b>The stalemate holds until new information shakes it.</b> The builders want infinite growth and the grid is finite, so nobody wins outright, and credit decides who survives the wait. I put it at 55% stalemate, 20% boom and 25% crash, and I'll be graded on the dates above, starting with Nvidia on Nov 17 and Anthropic's first trading days.</p>
+</section>
+
+<footer>
+  <details>
+    <summary>Quick reference, numbers and what was left out</summary>
+    <div class="body">
+      <table>
+        <tr><th>Figure</th><th>Value</th><th>Source / status</th></tr>
+        <tr><td>Microsoft calendar-2026 capex</td><td class="num">~$170B</td><td>CFO Amy Hood, Oct 28, 2026 call. The $190B figure was superseded April guidance.</td></tr>
+        <tr><td>PJM 2027/28 reserve margin</td><td class="num">14.8% vs 20% standard</td><td><a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2025-releases/20251217-pjm-auction-procures-134479-mw-of-generation-resources.pdf" target="_blank" rel="noopener">PJM's own release (PDF), Dec 17, 2025</a></td></tr>
+        <tr><td>Chicago Fed: large-bank commitments to AI-adjacent borrowers</td><td class="num">~$450B</td><td><a href="https://www.chicagofed.org/publications/chicago-fed-insights/2026/ai-tail-risk-for-banks" target="_blank" rel="noopener">Chicago Fed, “Tail Risk for Banks Posed by Investments in Generative AI,” Feb 2026</a></td></tr>
+        <tr><td>Anthropic IPO price range</td><td class="num">$70–78</td><td>Price range filed in the S-1/A amendment, Nov 10, 2026; about $1.3T fully diluted at the range (WSJ)</td></tr>
+        <tr><td>“550 jurisdictions with bans”</td><td class="num">Not used</td><td>Unverifiable as an enacted count; SemiAnalysis counted 300+ enacted (Sept 2026)</td></tr>
+        <tr><td>“Virginia prices +76% from AI”</td><td class="num">Not used</td><td>Misattributed; the sourced AI-attributable figure is ~40% of PJM capacity-auction cost</td></tr>
+        <tr><td>Nov 5 value lost</td><td class="num">$2.3T / $2.5T</td><td>Bloomberg / Reuters calculations of the Nasdaq-100, cited as a range, not a point</td></tr>
+      </table>
+    </div>
+  </details>
+  <p class="src" style="margin-top:14px">Sources: company filings and earnings calls (Anthropic S-1/A, Nov 2, 2026, and its price-range amendment, Nov 10, 2026; Microsoft, Oct 28, 2026; CoreWeave Q3 2026 results, Nov 10, 2026); <a href="https://www.imf.org/en/news/articles/2026/10/13/tr-101326-press-briefing-transcript-global-financial-stability-report-annual-meetings-2026" target="_blank" rel="noopener">IMF Global Financial Stability Report briefing, Oct 13, 2026</a>; <a href="https://www.morningstar.com/news/pr-newswire/20260929ne57767/global-ai-market-could-hit-6-trillion-annually-by-2031-through-unlocking-value-and-innovation-bain-cos-7th-global-technology-report" target="_blank" rel="noopener">Bain Global Technology Report release, Sept 29, 2026</a>; <a href="https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/" target="_blank" rel="noopener">Menlo Ventures, State of Enterprise AI, Nov 3, 2026</a>; <a href="https://www.chicagofed.org/publications/chicago-fed-insights/2026/ai-tail-risk-for-banks" target="_blank" rel="noopener">Chicago Fed, Feb 2026</a>; <a href="https://www.pjm.com/-/media/DotCom/about-pjm/newsroom/2025-releases/20251217-pjm-auction-procures-134479-mw-of-generation-resources.pdf" target="_blank" rel="noopener">PJM auction release, Dec 17, 2025</a>; Ballotpedia (Nov 2026 ballot tally); Bloomberg, Reuters, FT reporting (Nov 6-10, 2026). Model: a 12-player GMCR conflict, 15 options and 24,576 feasible states of 32,768 combinations (Nash 1 · GMR 6,735 · SMR 6,735 · SEQ 1,090). This is analysis, not investment advice.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  // theme (Research Desk ks-mode)
+  var btn=document.getElementById('modeBtn');
+  function normMode(m){return (m==='dark'||m==='night')?'dark':'light';}
+  function apply(m){m=normMode(m);document.documentElement.setAttribute('data-theme',m);document.documentElement.style.colorScheme=m;btn.textContent=(m==='dark'?'Day mode':'Night mode');}
+  var saved=null; try{saved=localStorage.getItem('ks-mode');}catch(e){}
+  apply(saved||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  btn.addEventListener('click',function(){var m=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';apply(m);try{localStorage.setItem('ks-mode',normMode(m));}catch(e){}});
+
+  // ---------- MAP ----------
+  var PLAYERS={
+    openai:{n:'OpenAI',x:90,y:96,sub:'ChatGPT lab · private',lever:'IPO now · Mega-commitments',today:'Staying private; commitments ON',score:11,note:'Holds a move that pays, going public now, but is deterred: the SEC sanction against it is credible. Deterred, not content.'},
+    anthropic:{n:'Anthropic',x:90,y:216,sub:'Claude lab · IPO pricing',lever:'IPO now · Mega-commitments',today:'IPO pricing; commitments ON',score:14,note:'Pricing into the same window OpenAI just took $1.25T in. Its S-1 shows $33.2B revenue in 9M 2026 against ~$895B of commitments.'},
+    hyperscalers:{n:'Hyperscalers',x:90,y:336,sub:'Big four clouds',lever:'Accelerate capex · Fund the labs',today:'Both ON, ~$720-740B guided',score:15,note:'The prisoner\u2019s dilemma core: cutting capex unilaterally cedes the workloads. Nobody blinks first.'},
+    chips:{n:'Chip Suppliers',x:395,y:76,sub:'GPU makers · Nvidia',lever:'Guarantee the build-out',today:'ON, guarantees & SPVs',score:17,note:'Supplier, investor and guarantor at once. Broadcom\u2019s backstop is funded and tied to its own silicon; Nvidia\u2019s is larger and mostly non-binding.'},
+    neoclouds:{n:'Neoclouds & SPVs',x:395,y:196,sub:'CoreWeave · rents GPUs',lever:'Expand on leverage',today:'ON, leveraged expansion',score:16,note:'Where the leverage lives: CoreWeave\u2019s backlog jumped to $132.5B in its Nov 10 print, and it raised 2026 capex guidance to $37\u201339B in the same release that carried $846M of quarterly interest. The model\u2019s crash tripwire is here.'},
+    capmarkets:{n:'Capital Markets',x:395,y:316,sub:'Lends · bonds & credit',lever:'Fund at current spreads',today:'ON, funding, at a price',score:12,note:'Hyperscalers are now ~10% of global investment-grade issuance. The strike family, markets off and leveraged expansion off with it, is 57% of all credible equilibria.'},
+    sec:{n:'SEC',x:395,y:436,sub:'Writes disclosure rules',lever:'Escalate: from disclosure rules to challenging how circular deals are booked as revenue',today:'OFF, disclosure only',score:5,note:'Its escalation is the credible sanction that keeps OpenAI private. In the full model it is also a SEQ blocker at today\u2019s state.'},
+    fed:{n:'Federal Reserve',x:700,y:76,sub:'Rates · bank oversight',lever:'Intervene on AI credit',today:'OFF, speeches & analysis',score:-8,note:'Watching formally: ~$450B of large-bank commitments to AI-adjacent borrowers (Chicago Fed). Schmid\u2019s question: \u201Ctoo-big-to-fail AI ecosystem?\u201D'},
+    fedgov:{n:'Federal Government',short:'US Government',x:700,y:196,sub:'Permits & policy push',lever:'Push the build-out',today:'ON, permits, land, pledge',score:9,note:'Plays both sides: streamlining permits and a ratepayer pledge, while moratorium bills stall (zero Senate cosponsors) and a ratepayer act passed the House 417-3.'},
+    china:{n:'China',x:700,y:316,sub:'Rival models & chips',lever:'Accelerate its ecosystem',today:'ON, accelerating',score:-9,note:'The outside option that breaks every pacing deal: H200 imports blocked, domestic-only chip rules, and a 2026 model wave that caps US prices.'},
+    states:{n:'US States',x:700,y:436,sub:'Siting limits · PUCs',lever:'Restrict at scale',today:'OFF, competing on incentives',score:8,note:'38 states offer incentives while 40 of 41 local ballots favoured limits. Governors-elect in TX, GA and OH ran on pauses and take office in January.'},
+    utilities:{n:'Utilities & Grid',x:545,y:520,sub:'Sells the power · grid',lever:'Gatekeep, charge full cost',today:'OFF in the model\u2019s today, the unstable point',score:2,note:'Gatekeeping pays it +3 and no single reply costs it more than 1, so nobody can talk it out of moving. Once it\u2019s on, it stays on.'}
+  };
+
+  var ICONS={
+    openai:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M24 6 L38 14.5 V31 L24 42 L10 31 V14.5 Z"/><path d="M24 15 L31.5 19.5 V28.5 L24 33.5 L16.5 28.5 V19.5 Z"/></svg>',
+    anthropic:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M24 4 V44 M4 24 H44 M10 10 L38 38 M38 10 L10 38"/></svg>',
+    hyperscalers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 18.5 a4.3 4.3 0 1 1 .6-8.55 A5.4 5.4 0 0 1 18 10.6 a3.7 3.7 0 0 1-.5 7.9 Z"/></svg>',
+    chips:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M9.5 7V4M14.5 7V4M9.5 20v-3M14.5 20v-3M7 9.5H4M7 14.5H4M20 9.5h-3M20 14.5h-3"/></svg>',
+    neoclouds:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 4 L21 9 L12 14 L3 9 Z"/><path d="M3 14.5 L12 19.5 L21 14.5"/></svg>',
+    capmarkets:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20.5 H20.5"/><path d="M5.5 20.5 V12 M11 20.5 V6.5 M16.5 20.5 V10"/></svg>',
+    sec:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 L19 5.4 V11 c0 4.6-3 7.8-7 9.6 C8 18.8 5 15.6 5 11 V5.4 Z"/></svg>',
+    fed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3.5 9.5 L12 4.5 L20.5 9.5"/><path d="M5.5 9.5 V17 M9.8 9.5 V17 M14.2 9.5 V17 M18.5 9.5 V17"/><path d="M3.5 20.5 H20.5"/></svg>',
+    fedgov:'<svg viewBox="0 0 24 24" aria-hidden="true"><text x="2" y="19" font-size="19">\uD83C\uDDFA\uD83C\uDDF8</text></svg>',
+    china:'<svg viewBox="0 0 24 24" aria-hidden="true"><text x="2" y="19" font-size="19">\uD83C\uDDE8\uD83C\uDDF3</text></svg>',
+    states:'<svg viewBox="0 0 24 24" aria-hidden="true"><text x="2" y="19" font-size="19">\uD83C\uDDFA\uD83C\uDDF8</text></svg>',
+    utilities:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 L4.5 13.5 H11 L9.8 22 L19.5 10 H13 Z" fill="currentColor"/></svg>'
+  };
+  var PID={'Hyperscalers':'hyperscalers','Anthropic':'anthropic','OpenAI':'openai','SEC':'sec','Capital Markets':'capmarkets','Federal Reserve':'fed','Federal Government':'fedgov','China':'china','US States':'states','Utilities & Grid':'utilities','Chip Suppliers':'chips','Neoclouds & SPV Layer':'neoclouds'};
+  var EDGES=[
+    {a:'openai',b:'anthropic',f:'rival',t:'The rivalry',e:'Each lab\u2019s IPO is the other\u2019s price ceiling (−2 each way in the model); commitments −1 each way. Neither can slow without handing the other the enterprise market.',c:'A shared, finite pool of AI capital: buyers priced Anthropic against OpenAI\u2019s $1.25T mark in the same week. The loop\u2019s two biggest borrowers compete for the same money.'},
+    {a:'hyperscalers',b:'openai',f:'money',bend:220,t:'Hyperscalers fund OpenAI',e:'Commitments are OpenAI\u2019s commitment device, they force suppliers and financiers to build. Hyperscalers gain +3 from its mega-commitments.',c:'The classic circular leg: cloud contracts and equity flow down, compute commitments flow back. OpenAI\u2019s stack is ~$1.4T reported.'},
+    {a:'hyperscalers',b:'anthropic',f:'money',t:'Hyperscalers fund Anthropic',e:'Same structure as OpenAI\u2019s leg, and the reason the labs\u2019 fates are correlated even as they compete.',c:'Anthropic\u2019s filed commitments are ~$895B, substantially all compute, ~$447.5B due before end-2030.'},
+    {a:'chips',b:'neoclouds',f:'money',t:'Chip guarantees for neoclouds',e:'Guarantees keep the leveraged layer fundable, and make chip suppliers creditors of their own customers.',c:'Nvidia is obligated on $6.3B of residual CoreWeave capacity; its financing platform targets >$500B of third-party capital (non-binding).'},
+    {a:'chips',b:'anthropic',f:'money',t:'Broadcom\u2019s Anthropic SPV',e:'A funded, guaranteed SPV tied to custom silicon, the most committed version of vendor financing in the record.',c:'~$35B SPV bought ~1M TPUs leased to Anthropic; Broadcom backstops up to $29B, with ~$72.5B of disclosed caps in total.'},
+    {a:'chips',b:'openai',f:'money',t:'Nvidia\u2019s OpenAI backstop',e:'A reported residual-value guaranty of up to $105B on a ~4.25 GW campus, supplier as insurer of the build-out.',c:'Contrast the $100B letter of intent (not closed) with the $30B Nvidia actually put into OpenAI\u2019s March 2026 round.'},
+    {a:'capmarkets',b:'neoclouds',f:'money',t:'Private credit funds the SPV layer',e:'This is the funding-strike channel: if this line closes, the crash path opens. CoreWeave\u2019s DDTL priced at SOFR+225, while it stays open.',c:'Risk migrates onward into insurance general accounts via SRT deals (Barclays, Deutsche, HSBC exploring cover, Oct 2026).'},
+    {a:'capmarkets',b:'hyperscalers',f:'money',t:'Bond markets fund the hyperscalers',e:'Incremental debt funded ~32% of capex by mid-2026, up from ~9% in FY2024, the build-out\u2019s centre of gravity moved from cash flow to credit.',c:'Plus ~$662B of signed-but-not-started lease commitments sitting off balance sheet (Moody\u2019s estimate).'},
+    {a:'neoclouds',b:'anthropic',f:'compute',t:'Neocloud capacity for Anthropic',e:'Capacity literally changes hands: when Oracle/OpenAI left 600 MW at Abilene, Microsoft took 900 MW there. Scarcity is allocated, not priced cleanly.',c:'Anthropic also pays SpaceX $1.25B a month for bridge capacity, scarcity showing up as a price.'},
+    {a:'sec',b:'openai',f:'power',t:'SEC escalation, the sanction',e:'The credible threat that keeps OpenAI\u2019s IPO deferred: escalation is a move the SEC would actually make, so the deterrence holds under SEQ.',c:'Disclosure is where circular financing becomes visible, commitments and guarantees surface in filings first.'},
+    {a:'sec',b:'anthropic',f:'power',t:'SEC review of the ANT filing',e:'Anthropic\u2019s S-1/A is the disclosure event of the season: filed numbers, blank price. The roadshow runs under the regulator\u2019s eye.',c:'The filing itself is the loop\u2019s best map: $895B of commitments, itemised.'},
+    {a:'fed',b:'capmarkets',f:'power',bend:140,t:'Fed, rates and supervision',e:'A hike already landed in September (3.75-4.00%). Intervention on AI credit is the Fed\u2019s unplayed lever, a SEQ blocker at today\u2019s state.',c:'Leveraged builders refinance at the Fed\u2019s price. Cook: >$1.5T of announced data-centre plans, a small portion realised.'},
+    {a:'fedgov',b:'hyperscalers',f:'power',t:'Permits, land, and the pledge',e:'The push lever is ON: streamlined permitting, federal land, a voluntary ratepayer pledge. A federal moratorium needs a reintroduced bill and faces a veto.',c:'Federal support is part of why the funding loop clears: the state underwrites the build-out politically, not financially.'},
+    {a:'fedgov',b:'china',f:'rival',t:'Export controls',e:'Controls moved H200 sales to case-by-case review, and Beijing blocked the imports anyway. Each side\u2019s move assumes the other defects.',c:'Controls reroute the loop: domestic Chinese silicon and open-weight models set the price floor US labs must meet.'},
+    {a:'china',b:'openai',f:'rival',bend:120,t:'China disciplines US pricing',e:'The reason no pacing deal survives: 16 Chinese models shipped in September 2026 while US labs discussed slowing down.',c:'DeepSeek-class pricing (~$0.60 off-peak output floor) caps what the loop\u2019s revenue side can charge.'},
+    {a:'states',b:'utilities',f:'power',t:'Commissions set the tariffs',e:'State commissions are where gatekeeping is manufactured, AEP Ohio\u2019s tariff is a state product before it is a utility one.',c:'Tariffs decide who pays for the grid the loop requires: builders at ≥85% of contracted demand, or households.'},
+    {a:'utilities',b:'hyperscalers',f:'power',t:'Gatekeeping, the decisive line',e:'+3 to the grid, unsanctionable, ON in 100% of stable states. PJM\u2019s reserve margin is 14.8% against a 20% standard; ERCOT is auditing a 474 GW queue.',c:'Cost internalisation lengthens the loop\u2019s timelines, 2028 capacity is the exposed year, without breaking it. That is the stalemate mechanism.'},
+    {a:'states',b:'hyperscalers',f:'power',bend:-220,t:'States bid, then restrict',e:'38 states bid with incentives; the November ballots and three governors-elect say the bidding era is ending. The restriction lever is OFF at scale, for now.',c:'Incentives were part of the loop\u2019s economics (Virginia\u2019s exemption forgoes ~$1.6B a year). Removing them reprices projects, not the thesis.'},
+    {a:'utilities',b:'neoclouds',f:'compute',t:'Connection terms for the leveraged layer',e:'CoreWeave offered to pay all substation and interconnection costs for future Texas sites, the leveraged layer negotiating directly with the grid\u2019s terms.',c:'Who pays for connection decides whether SPV economics survive gatekeeping, the two findings meet on this line.'}
+  ];
+  var svg=document.getElementById('map'), NS='http://www.w3.org/2000/svg';
+  var NW=184,NH=46;
+  var ZONES=[
+    {label:'WASHINGTON',v:'--z-wash',ids:['sec','fedgov','fed']},
+    {label:'LABS & BACKERS',v:'--z-labs',ids:['openai','anthropic','hyperscalers']},
+    {label:'BUILD CHAIN & MONEY',v:'--z-build',ids:['chips','neoclouds','capmarkets']},
+    {label:'LAND, POWER & OUTSIDE',v:'--z-land',ids:['china','utilities','states']}
+  ];
+  ZONES.forEach(function(z,c){
+    var zt=document.createElementNS(NS,'text');zt.setAttribute('x',28+240*c);zt.setAttribute('y',40);zt.setAttribute('class','zlabel');zt.setAttribute('style','fill:var('+z.v+')');zt.textContent=z.label;svg.appendChild(zt);
+    z.ids.forEach(function(id,r){PLAYERS[id].x=28+240*c;PLAYERS[id].y=96+170*r;PLAYERS[id].zv=z.v;});
+  });
+  function ctr(id){var p=PLAYERS[id];return[p.x+NW/2,p.y+NH/2];}
+  EDGES.forEach(function(e,i){
+    var a=ctr(e.a),b=ctr(e.b),mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+    if(e.bend){var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1;mx+=-dy/L*e.bend;my+=dx/L*e.bend;}
+    var path=document.createElementNS(NS,'path');
+    path.setAttribute('d','M'+a[0]+' '+a[1]+' Q'+mx+' '+my+' '+b[0]+' '+b[1]);
+    path.setAttribute('class','edge f-'+e.f); path.dataset.fam=e.f; path.dataset.idx=i;
+    path.setAttribute('tabindex','0'); path.setAttribute('role','button'); path.setAttribute('aria-label',e.t+', connection between '+PLAYERS[e.a].n+' and '+PLAYERS[e.b].n+'. Press Enter to pin this connection.');
+    path.addEventListener('click',function(){pinEdge(i);});
+    path.addEventListener('mouseenter',function(){showEdge(i);});
+    path.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pinEdge(i);}});
+    svg.appendChild(path);
+  });
+  Object.keys(PLAYERS).forEach(function(id){
+    var p=PLAYERS[id],g=document.createElementNS(NS,'g');
+    g.setAttribute('class','node'); g.dataset.id=id;
+    g.setAttribute('tabindex','0'); g.setAttribute('role','button'); g.setAttribute('aria-label',p.n+'. Press Enter to pin this player and list all of its connections.');
+    var r=document.createElementNS(NS,'rect');
+    r.setAttribute('x',p.x);r.setAttribute('y',p.y);r.setAttribute('width',NW);r.setAttribute('height',NH);r.setAttribute('rx',9);
+    var t=document.createElementNS(NS,'text');t.setAttribute('x',p.x+42);t.setAttribute('y',p.y+21);t.textContent=p.short||p.n;
+    var s=document.createElementNS(NS,'text');s.setAttribute('x',p.x+42);s.setAttribute('y',p.y+37);s.setAttribute('class','sub');s.textContent=p.sub;
+    var st=document.createElementNS(NS,'rect');st.setAttribute('x',p.x);st.setAttribute('y',p.y);st.setAttribute('width',5);st.setAttribute('height',NH);st.setAttribute('style','fill:var('+p.zv+');stroke:none');
+    var ic=document.createElementNS(NS,'g');ic.setAttribute('transform','translate('+(p.x+12)+','+(p.y+12)+')');ic.setAttribute('style','color:var('+p.zv+')');ic.innerHTML=ICONS[id].replace('<svg','<svg width="22" height="22"');
+    g.appendChild(r);g.appendChild(st);g.appendChild(ic);g.appendChild(t);g.appendChild(s);
+    g.addEventListener('click',function(){pinPlayer(id);});
+    g.addEventListener('mouseenter',function(){showPlayer(id);});
+    g.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pinPlayer(id);}});
+    svg.appendChild(g);
+  });
+  var mpTitle=document.getElementById('mpTitle'), mpMeta=document.getElementById('mpMeta'), mpStrip=document.getElementById('mpStrip');
+  var FAMNAMES={money:'Money & guarantees',compute:'Compute & capacity',power:'Permission & power',rival:'Rivalry & discipline'};
+  function clearSel(){svg.querySelectorAll('.sel').forEach(function(el){el.classList.remove('sel');});svg.querySelectorAll('.dim').forEach(function(el){el.classList.remove('dim');});}
+  function showEdge(i){
+    var e=EDGES[i];
+    mpTitle.textContent=e.t;
+    mpMeta.textContent=PLAYERS[e.a].n+' ↔ '+PLAYERS[e.b].n+' · '+FAMNAMES[e.f];
+    mpStrip.innerHTML='<b>For the equilibrium:</b> '+e.e+'<br><b>For the circular loop:</b> '+e.c;
+  }
+  function pinEdge(i){
+    clearSel();showEdge(i);
+    svg.querySelectorAll('.edge').forEach(function(el){if(+el.dataset.idx===i)el.classList.add('sel');else el.classList.add('dim');});
+  }
+  function connListHTML(id){
+    var items='';
+    EDGES.forEach(function(e,i){ if(e.a===id||e.b===id){ var other=(e.a===id?e.b:e.a); items+='<li><button type="button" class="connlink" data-edge="'+i+'">'+PLAYERS[other].n+' · '+e.t+'</button> <span style="color:var(--ink2)">('+FAMNAMES[e.f]+')</span></li>'; } });
+    return '<b>All connections for this player:</b><ul class="connlist">'+items+'</ul>';
+  }
+  function showPlayer(id){
+    var p=PLAYERS[id];
+    mpTitle.textContent=p.n;
+    mpMeta.textContent='Lever: '+p.lever+' · Today: '+p.today+' · Model score today: '+p.score;
+    mpStrip.innerHTML='<b>Where it stands:</b> '+p.note+connListHTML(id);
+  }
+  function pinPlayer(id){
+    clearSel();showPlayer(id);
+    svg.querySelectorAll('.node').forEach(function(el){if(el.dataset.id===id)el.classList.add('sel');});
+    svg.querySelectorAll('.edge').forEach(function(el){var e=EDGES[+el.dataset.idx];if(e.a!==id&&e.b!==id)el.classList.add('dim');else el.classList.add('sel');});
+  }
+  var FAMDESC={
+    all:{t:'All connections, the general picture',m:'Four families, 19 connections. Start with the dashed red line: OpenAI and Anthropic are not on the same team. Each lab\u2019s IPO costs the other 2 points, and its mega-commitments cost the other 1.',s:'Blue is money, green is compute, rust is permission and power, dashed is rivalry. Pick a player to start.'},
+    money:{t:'Money & guarantees',m:'7 connections · blue lines',s:'<b>Who funds whom:</b> hyperscalers stake the labs, chip firms guarantee the builders, bond markets fund the hyperscalers, and equity, guarantees and $1.4T of revenue commitments flow back the other way. This is the circular loop, drawn as lines.'},
+    compute:{t:'Compute & capacity',m:'2 connections · green lines',s:'<b>Scarce capacity is allocated, not auctioned cleanly:</b> gigawatts change hands between projects, when Oracle and OpenAI left 600 MW at Abilene, Microsoft took 900 MW, and the leveraged layer negotiates its connection terms directly with the grid.'},
+    power:{t:'Permission & power',m:'7 connections · rust lines',s:'<b>The decision-makers\u2019 family:</b> the SEC\u2019s credible sanction, the Fed\u2019s unplayed lever, federal permits and land, state tariffs and incentives, and the grid\u2019s gatekeeping line, the one move in the whole game nobody can punish.'},
+    rival:{t:'Rivalry & discipline',m:'3 connections · dashed lines',s:'<b>The labs price against each other</b> (−2 on each other\u2019s IPOs, −1 on commitments), and China disciplines both from outside: export controls one way, an open-weight price floor the other. No pacing deal survives this family.'}
+  };
+  function showFamily(f){var d=FAMDESC[f];mpTitle.textContent=d.t;mpMeta.textContent=d.m;mpStrip.innerHTML=d.s;}
+  document.getElementById('famChips').addEventListener('click',function(ev){
+    var b=ev.target.closest('.chip');if(!b)return;
+    this.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');clearSel();
+    var f=b.dataset.fam;
+    svg.querySelectorAll('.edge').forEach(function(el){el.classList.toggle('dim',f!=='all'&&el.dataset.fam!==f);});
+    showFamily(f);
+  });
+  document.getElementById('mapPanel').addEventListener('click',function(ev){
+    var b=ev.target.closest('.connlink'); if(!b) return;
+    pinEdge(+b.dataset.edge);
+  });
+  // grouped connections table
+  var FAMS={money:'Money & guarantees',compute:'Compute & capacity',power:'Permission & power',rival:'Rivalry & discipline'};
+  var ct=document.getElementById('connTables'), html='';
+  Object.keys(FAMS).forEach(function(f){
+    html+='<h3 style="margin:14px 0 6px">'+FAMS[f]+'</h3><table><tr><th>Connection</th><th>What flows</th></tr>';
+    EDGES.forEach(function(e,i){if(e.f===f)html+='<tr class="crow" data-idx="'+i+'"><td><b>'+PLAYERS[e.a].n+' ↔ '+PLAYERS[e.b].n+'</b></td><td>'+e.t+', '+e.c+'</td></tr>';});
+    html+='</table>';
+  });
+  ct.innerHTML=html;
+  ct.addEventListener('click',function(ev){
+    var tr=ev.target.closest('tr.crow');if(!tr)return;
+    pinEdge(+tr.dataset.idx);
+    document.getElementById('mapPanel').scrollIntoView({block:'nearest'});
+  });
+
+  // ---------- GAME BOARD ----------
+  var OPTS=[['H_ACC','Hyperscalers accelerate capex','Hyperscalers'],['H_FUND','Hyperscalers fund the labs','Hyperscalers'],['A_IPO','Anthropic IPOs now','Anthropic'],['A_MEGA','Anthropic signs mega-commitments','Anthropic'],['O_IPO','OpenAI IPOs now','OpenAI'],['O_MEGA','OpenAI signs mega-commitments','OpenAI'],['S_ESC','SEC escalates','SEC'],['M_FUND','Capital markets fund at current spreads','Capital Markets'],['F_INT','Fed intervenes on AI credit','Federal Reserve'],['G_PUSH','Federal government pushes the build-out','Federal Government'],['C_ACC','China accelerates','China'],['ST_RES','States restrict at scale','US States'],['U_GATE','Utilities gatekeep (full-cost terms)','Utilities & Grid'],['CHIP_GUAR','Chip suppliers guarantee','Chip Suppliers'],['NEO_EXP','Neoclouds expand on leverage','Neoclouds & SPV Layer']];
+  var W={'Hyperscalers':{'H_ACC':2,'H_FUND':1,'A_IPO':1,'A_MEGA':3,'O_IPO':0,'O_MEGA':3,'S_ESC':-3,'M_FUND':2,'F_INT':-1,'G_PUSH':2,'C_ACC':-1,'ST_RES':-2,'U_GATE':-1,'CHIP_GUAR':1,'NEO_EXP':1},'Anthropic':{'H_ACC':3,'H_FUND':3,'A_IPO':2,'A_MEGA':1,'O_IPO':-2,'O_MEGA':-1,'S_ESC':-3,'M_FUND':2,'F_INT':-1,'G_PUSH':1,'C_ACC':-2,'ST_RES':-1,'U_GATE':-1,'CHIP_GUAR':3,'NEO_EXP':2},'OpenAI':{'H_ACC':3,'H_FUND':3,'A_IPO':-2,'A_MEGA':-1,'O_IPO':1,'O_MEGA':1,'S_ESC':-2,'M_FUND':2,'F_INT':-1,'G_PUSH':2,'C_ACC':-2,'ST_RES':-2,'U_GATE':-1,'CHIP_GUAR':3,'NEO_EXP':2},'SEC':{'H_ACC':1,'H_FUND':1,'A_IPO':1,'A_MEGA':1,'O_IPO':1,'O_MEGA':1,'S_ESC':1,'M_FUND':-1,'F_INT':1,'G_PUSH':-1,'C_ACC':0,'ST_RES':0,'U_GATE':0,'CHIP_GUAR':1,'NEO_EXP':1},'Capital Markets':{'H_ACC':1,'H_FUND':1,'A_IPO':2,'A_MEGA':1,'O_IPO':1,'O_MEGA':1,'S_ESC':-2,'M_FUND':2,'F_INT':-2,'G_PUSH':1,'C_ACC':-1,'ST_RES':-1,'U_GATE':1,'CHIP_GUAR':2,'NEO_EXP':2},'Federal Reserve':{'H_ACC':-1,'H_FUND':-1,'A_IPO':1,'A_MEGA':-1,'O_IPO':1,'O_MEGA':-1,'S_ESC':1,'M_FUND':1,'F_INT':1,'G_PUSH':-1,'C_ACC':0,'ST_RES':1,'U_GATE':2,'CHIP_GUAR':-2,'NEO_EXP':-3},'Federal Government':{'H_ACC':2,'H_FUND':1,'A_IPO':1,'A_MEGA':1,'O_IPO':1,'O_MEGA':1,'S_ESC':-1,'M_FUND':1,'F_INT':-1,'G_PUSH':2,'C_ACC':-2,'ST_RES':-2,'U_GATE':-1,'CHIP_GUAR':1,'NEO_EXP':1},'China':{'H_ACC':-2,'H_FUND':-1,'A_IPO':-1,'A_MEGA':-1,'O_IPO':-1,'O_MEGA':-1,'S_ESC':1,'M_FUND':-2,'F_INT':1,'G_PUSH':-2,'C_ACC':3,'ST_RES':2,'U_GATE':1,'CHIP_GUAR':-1,'NEO_EXP':-1},'US States':{'H_ACC':1,'H_FUND':1,'A_IPO':0,'A_MEGA':1,'O_IPO':0,'O_MEGA':1,'S_ESC':0,'M_FUND':1,'F_INT':-1,'G_PUSH':1,'C_ACC':0,'ST_RES':-1,'U_GATE':1,'CHIP_GUAR':1,'NEO_EXP':1},'Utilities & Grid':{'H_ACC':1,'H_FUND':0,'A_IPO':0,'A_MEGA':1,'O_IPO':0,'O_MEGA':1,'S_ESC':0,'M_FUND':1,'F_INT':-1,'G_PUSH':-1,'C_ACC':0,'ST_RES':-1,'U_GATE':3,'CHIP_GUAR':0,'NEO_EXP':-1},'Chip Suppliers':{'H_ACC':3,'H_FUND':2,'A_IPO':2,'A_MEGA':3,'O_IPO':2,'O_MEGA':3,'S_ESC':-2,'M_FUND':2,'F_INT':-1,'G_PUSH':1,'C_ACC':-2,'ST_RES':-1,'U_GATE':-1,'CHIP_GUAR':1,'NEO_EXP':2},'Neoclouds & SPV Layer':{'H_ACC':2,'H_FUND':1,'A_IPO':1,'A_MEGA':2,'O_IPO':1,'O_MEGA':2,'S_ESC':-2,'M_FUND':3,'F_INT':-3,'G_PUSH':1,'C_ACC':-1,'ST_RES':-2,'U_GATE':-2,'CHIP_GUAR':3,'NEO_EXP':2}};
+  var PNAMES=Object.keys(W), IX={}, OWN={};
+  OPTS.forEach(function(o,i){IX[o[0]]=i;});
+  PNAMES.forEach(function(p){OWN[p]=[];}); OPTS.forEach(function(o,i){OWN[o[2]].push(i);});
+  var SHORT={H_ACC:'accelerate capex',H_FUND:'fund the labs',A_IPO:'IPO now',A_MEGA:'mega-commitments',O_IPO:'IPO now',O_MEGA:'mega-commitments',S_ESC:'escalate',M_FUND:'fund at current spreads',F_INT:'intervene on AI credit',G_PUSH:'push the build-out',C_ACC:'accelerate',ST_RES:'restrict at scale',U_GATE:'gatekeep at full cost',CHIP_GUAR:'guarantee',NEO_EXP:'expand on leverage'};
+  var GROUPS=[['The labs and their backers',['OpenAI','Anthropic','Hyperscalers']],['The build chain and the money',['Chip Suppliers','Neoclouds & SPV Layer','Capital Markets']],['Washington',['SEC','Federal Reserve','Federal Government']],['Land, power and the outside',['US States','Utilities & Grid','China']]];
+  var SCEN=[
+    {id:'today',name:'Today',tag:'Where we are',bits:'111101010110011',note:'Building at full speed with money flowing and the grid not yet charging full cost everywhere, so four players hold a move that pays.'},
+    {id:'gray',name:'The gray area',tag:'Today, once the grid charges',bits:'111101010110111',note:'This is today with gatekeeping switched on, so every tempting move now has an answer, but two of those answers are bluffs.'},
+    {id:'nash',name:'Everyone plays their strongest card',tag:'The one fully settled world',bits:'111111111110111',note:'The SEC escalates, the Fed intervenes, OpenAI lists. Building continues on the grid’s terms.'},
+    {id:'strike',name:'The money stops',tag:'A funding strike',bits:'111101001110110',note:'Lenders off, leveraged expansion off with them, the Fed has stepped in, the grid charges full cost. OpenAI stays private and the states hold off on blanket bans.'},
+    {id:'fear',name:'Held only by fear of replies',tag:'Deterrence without credibility',bits:'110001111110110',note:'Lab IPOs off, SEC already escalated, building slower, leveraged builders out.'}
+  ];
+  function bitsOf(b){return b.split('').map(Number);}
+  var TODAY=bitsOf(SCEN[0].bits);
+  function feas(s){return !(s[IX.NEO_EXP]&&!s[IX.M_FUND]);}
+  function pay(p,s){var t=0;for(var i=0;i<s.length;i++)t+=W[p][OPTS[i][0]]*s[i];return t;}
+  function moves(p,s){var idx=OWN[p],out=[];for(var m=1;m<(1<<idx.length);m++){var t=s.slice();idx.forEach(function(i,k){if(m>>k&1)t[i]=1-t[i];});if(feas(t))out.push(t);}return out;}
+  function moveTxt(a,b){var o=[];for(var i=0;i<a.length;i++)if(a[i]!==b[i])o.push((b[i]?'switching on ':'switching off ')+'“'+SHORT[OPTS[i][0]]+'”');return o.join(' and ');}
+  function analyse(s){
+    var out={};
+    PNAMES.forEach(function(p){
+      var base=pay(p,s),tempt=[];
+      moves(p,s).forEach(function(t){
+        var g=pay(p,t)-base; if(g<=0)return;
+        var m={t:t,gain:g,gmr:false,smr:false,seq:false,rep:null};
+        PNAMES.forEach(function(q){ if(q===p)return;
+          moves(q,t).forEach(function(r){
+            if(pay(p,r)>base)return;
+            var cred=pay(q,r)>pay(q,t), sm=moves(p,r).every(function(u){return pay(p,u)<=base;});
+            m.gmr=true; if(sm)m.smr=true; if(cred)m.seq=true;
+            if(!m.rep||(cred&&!m.rep.cred))m.rep={by:q,r:r,cred:cred,cost:pay(q,r)-pay(q,t)};
+          });
+        });
+        tempt.push(m);
+      });
+      var st=!tempt.length?'settled':tempt.every(function(m){return m.seq;})?'deterred':tempt.every(function(m){return m.gmr;})?'bluffed':'free';
+      out[p]={score:base,tempt:tempt,status:st,
+        nash:!tempt.length,gmr:tempt.every(function(m){return m.gmr;}),smr:tempt.every(function(m){return m.smr;}),seq:tempt.every(function(m){return m.seq;})};
+    });
+    return out;
+  }
+  var TSCORE={}; PNAMES.forEach(function(p){TSCORE[p]=pay(p,TODAY);});
+  var SCALE=4; SCEN.forEach(function(sc){var s=bitsOf(sc.bits);PNAMES.forEach(function(p){SCALE=Math.max(SCALE,Math.abs(pay(p,s)-TSCORE[p]));});});
+  var state=TODAY.slice(), selP=null, userPicked=false;
+  var TAGTXT={settled:'Settled',deterred:'Deterred',bluffed:'Bluffed',free:'Free to move'};
+  var elScen=document.getElementById('gbScen'), elChart=document.getElementById('gbChart'), elDet=document.getElementById('gbDetail'), elLev=document.getElementById('gbLevers');
+  function curId(){var k=state.join('');for(var i=0;i<SCEN.length;i++)if(SCEN[i].bits===k)return SCEN[i].id;return 'custom';}
+  function dname(p){return p==='Neoclouds & SPV Layer'?'Neoclouds & SPVs':p;}
+  function sgn(v){return v>0?'+'+v:v<0?'−'+(-v):'0';}
+  // scenario buttons
+  SCEN.concat([{id:'custom',name:'Your world',tag:'Built with the levers'}]).forEach(function(sc){
+    var b=document.createElement('button');b.type='button';b.className='gb-sbtn';b.dataset.id=sc.id;
+    b.innerHTML='<span class="t">'+sc.tag+'</span><span class="n">'+sc.name+'</span>';
+    if(sc.id==='custom')b.hidden=true;
+    b.addEventListener('click',function(){if(sc.bits){state=bitsOf(sc.bits);render();}});
+    elScen.appendChild(b);
+  });
+  // chart rows (built once, updated in place so bars animate)
+  var ROW={};
+  GROUPS.forEach(function(g){
+    var h=document.createElement('div');h.className='gb-grp';h.textContent=g[0];h.style.color='var('+({'The labs and their backers':'--z-labs','The build chain and the money':'--z-build','Washington':'--z-wash','Land, power and the outside':'--z-land'})[g[0]]+')';elChart.appendChild(h);
+    g[1].forEach(function(p){
+      var b=document.createElement('button');b.type='button';b.className='gb-row';
+      b.innerHTML='<span class="gb-name">'+dname(p)+'<small></small></span><span class="gb-track"><span class="gb-bar"></span><span class="gb-val"></span></span><span class="gb-tag"></span>';
+      b.addEventListener('click',function(){selP=p;userPicked=true;render();});
+      elChart.appendChild(b);ROW[p]=b;
+    });
+  });
+  // lever panel
+  PNAMES.forEach(function(p){
+    var d=document.createElement('div');d.className='gb-lp';d.innerHTML='<b>'+dname(p)+'</b>';
+    OWN[p].forEach(function(i){
+      var b=document.createElement('button');b.type='button';b.className='lv';b.dataset.i=i;b.textContent=SHORT[OPTS[i][0]];
+      b.addEventListener('click',function(){
+        state[i]=1-state[i];
+        if(i===IX.M_FUND&&!state[i])state[IX.NEO_EXP]=0;
+        if(i===IX.NEO_EXP&&state[i])state[IX.M_FUND]=1;
+        render();
+      });
+      d.appendChild(b);
+    });
+    elLev.appendChild(d);
+  });
+  function render(){
+    var A=analyse(state), id=curId(), sc=SCEN.filter(function(x){return x.id===id;})[0];
+    elScen.querySelectorAll('.gb-sbtn').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false');if(b.dataset.id==='custom')b.hidden=(id!=='custom');});
+    var all=function(k){return PNAMES.every(function(p){return A[p][k];});};
+    var v={nash:all('nash'),gmr:all('gmr'),smr:all('smr'),seq:all('seq')};
+    var names=function(st){return PNAMES.filter(function(p){return A[p].status===st;}).map(dname);};
+    var free=names('free'),bl=names('bluffed'),vt,vc;
+    if(v.nash){vt='Stable. Nobody wants to move.';vc='holds';}
+    else if(v.seq){vt='Stable. Every tempting move meets a believable answer.';vc='holds';}
+    else if(v.gmr){vt='Fragile. Held in place by '+(bl.length>1?'bluffs':'a bluff')+': '+bl.join(' and ')+'.';vc='part';}
+    else{vt='Unstable. '+free.join(' and ')+(free.length>1?' can move':' can move')+' and nothing stops it.';vc='falls';}
+    var ve=document.getElementById('gbVerdict');ve.textContent=vt;ve.className='gb-verdict '+vc;
+    document.getElementById('gbTests').innerHTML=['nash','gmr','smr','seq'].map(function(k){return '<span class="gb-test'+(v[k]?' on':'')+'">'+(v[k]?'✓ ':'✗ ')+k.toUpperCase()+'</span>';}).join('');
+    document.getElementById('gbSub').textContent=sc?sc.note:'A world you built. Its verdict and scores are computed live by the same model.';
+    var d=PNAMES.map(function(p){return [p,A[p].score-TSCORE[p]];});
+    var up=d.filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
+    var dn=d.filter(function(x){return x[1]<0;}).sort(function(a,b){return a[1]-b[1];}).slice(0,3);
+    var fmt=function(x){return dname(x[0])+' '+sgn(x[1]);};
+    document.getElementById('gbWL').innerHTML=(id==='today')?'<b>The baseline.</b> Every other world is measured against this one. Look at the tags: '+(4)+' players want out.'.replace('4',PNAMES.filter(function(p){return A[p].status!=='settled';}).length):
+      '<b class="up">Gains most:</b> '+(up.length?up.map(fmt).join(' · '):'nobody')+' &nbsp; <b class="dn">Loses most:</b> '+(dn.length?dn.map(fmt).join(' · '):'nobody');
+    var sc2=SCALE; d.forEach(function(x){sc2=Math.max(sc2,Math.abs(x[1]));});
+    d.forEach(function(x){
+      var p=x[0],dv=x[1],r=ROW[p],w=Math.abs(dv)/sc2*48,bar=r.querySelector('.gb-bar'),val=r.querySelector('.gb-val');
+      bar.className='gb-bar '+(dv>=0?'pos':'neg');bar.style.left=(dv>=0?50:50-w)+'%';bar.style.width=w+'%';
+      var inside=w>30;val.textContent=sgn(dv);val.style.left=(dv>=0?50+w:50-w)+'%';
+      val.style.transform=inside?(dv<0?'translateX(5px)':'translateX(calc(-100% - 5px))'):(dv<0?'translateX(calc(-100% - 5px))':'translateX(5px)');
+      val.style.color=inside?'#fff':dv>0?'var(--good)':dv<0?'var(--bad)':'var(--ink2)';
+      r.querySelector('small').textContent='score '+A[p].score;
+      var tg=r.querySelector('.gb-tag');tg.className='gb-tag tag-'+A[p].status;tg.textContent=TAGTXT[A[p].status];
+      r.setAttribute('aria-label',dname(p)+': '+sgn(dv)+' versus today, score '+A[p].score+', '+TAGTXT[A[p].status]);
+    });
+    if(!userPicked||!selP){var order=['free','bluffed','deterred'];selP=null;order.forEach(function(st){if(!selP)PNAMES.forEach(function(p){if(!selP&&A[p].status===st)selP=p;});});selP=selP||'Hyperscalers';}
+    PNAMES.forEach(function(p){ROW[p].classList.toggle('sel',p===selP);});
+    var a=A[selP],pl=PLAYERS[PID[selP]]||{},dv=a.score-TSCORE[selP];
+    var lv=OWN[selP].map(function(i){return SHORT[OPTS[i][0]]+': <b>'+(state[i]?'ON':'OFF')+'</b>';}).join(' · ');
+    var mv=a.tempt.length?'<ul>'+a.tempt.map(function(m){
+        var s='<b>+'+m.gain+'</b> by '+moveTxt(state,m.t)+'. ';
+        if(m.rep&&m.rep.cred)s+='<span style="color:var(--blue)">Deterred:</span> '+dname(m.rep.by)+' would answer by '+moveTxt(m.t,m.rep.r)+', and would gain from doing it.';
+        else if(m.rep)s+='<span style="color:var(--mid)">Bluffed:</span> '+dname(m.rep.by)+' could answer by '+moveTxt(m.t,m.rep.r)+', but would lose '+(-m.rep.cost)+' doing it, so the threat is empty.';
+        else s+='<span style="color:var(--bad)">Nothing stops it:</span> no single reply leaves it worse off.';
+        return '<li>'+s+'</li>';}).join('')+'</ul>':'<p style="margin:6px 0">No move pays. It is happy where it is.</p>';
+    elDet.innerHTML='<h4>'+dname(selP)+'</h4><p class="ds">'+(pl.sub||'')+'</p><div class="dscore">'+a.score+'<span style="color:'+(dv>0?'var(--good)':dv<0?'var(--bad)':'var(--ink2)')+'">'+(id==='today'?'today’s score':sgn(dv)+' vs today')+'</span></div>'
+      +'<p style="margin:10px 0 0"><b>Its levers here:</b> '+lv+'</p><p style="margin:10px 0 0"><b>Does it want to move?</b> <span class="gb-tag tag-'+a.status+'">'+TAGTXT[a.status]+'</span></p>'+mv
+      +(pl.note?'<p class="dnote">'+pl.note+'</p>':'');
+    elLev.querySelectorAll('.lv').forEach(function(b){var i=+b.dataset.i;b.setAttribute('aria-pressed',state[i]?'true':'false');b.classList.toggle('changed',state[i]!==TODAY[i]);});
+  }
+  render();
+  document.querySelectorAll('[data-scen]').forEach(function(b){b.addEventListener('click',function(){
+    var sc=SCEN.filter(function(x){return x.id===b.dataset.scen;})[0]; if(!sc)return;
+    state=bitsOf(sc.bits); if(b.dataset.player){selP=b.dataset.player;userPicked=true;}else{userPicked=false;}
+    render(); document.getElementById('gb').scrollIntoView({behavior:'smooth',block:'start'});
+  });});
+})();
+</script>
+<script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
