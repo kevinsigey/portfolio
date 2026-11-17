@@ -667,7 +667,6 @@
   function norm(m){return m==='dark'?'dark':'light';}
   function apply(m){m=norm(m);document.documentElement.setAttribute('data-mode',m);document.documentElement.style.colorScheme=m;btn.textContent=(m==='dark'?'Day mode':'Night mode');}
   var saved=null; try{saved=localStorage.getItem('ks-mode');}catch(e){}
-  if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){saved='dark';}
   apply(saved||'light');
   btn.addEventListener('click',function(){var m=document.documentElement.getAttribute('data-mode')==='dark'?'light':'dark';apply(m);try{localStorage.setItem('ks-mode',m);}catch(e){}});
 })();
