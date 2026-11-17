@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>No Quiet Days — Kevin Sigey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700;6..72,800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f4f1ea; --card:#fffdf8; --panel2:#ede8dc; --ink:#1c2027; --ink2:#5d594e; --line:#d8d1bf;
+    --accent:#c2410c; --slate:#005eb8; --sage:#0e8a3c; --gold:#b77900; --plum:#c2185b;
+    --good:#0e8a3c; --bad:#d90429;
+    /* Chart palette — maximally distinct hues, same meaning on every chart */
+    --ch-blue:#005eb8;   /* the week itself / historical actuals */
+    --ch-orange:#e85d04; /* priced for this week / Anthropic / Nvidia now */
+    --ch-magenta:#c2185b;/* second priced name (Palo Alto) */
+    --ch-green:#0e8a3c;  /* following month, up */
+    --ch-red:#d90429;    /* following month, down / losses */
+    --ch-teal:#00838f;   /* VIX / volatility */
+    --ch-amber:#d98e00;  /* sizing comps secondary */
+    --shadow:0 1px 3px rgba(30,25,15,.12);
+  }
+  html[data-mode="dark"]{
+    --paper:#16140f; --card:#211e18; --panel2:#2a261d; --ink:#ece7da; --ink2:#a89f8d; --line:#3c372b;
+    --accent:#ff8a4c; --slate:#4db2ff; --sage:#3ecf6e; --gold:#ffc233; --plum:#ff6b9d;
+    --good:#3ecf6e; --bad:#ff5d73;
+    --ch-blue:#4db2ff; --ch-orange:#ff8a3c; --ch-magenta:#ff6b9d; --ch-green:#3ecf6e; --ch-red:#ff5d73; --ch-teal:#2dd4d8; --ch-amber:#ffc233;
+    --shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1060px;margin:0 auto;padding:22px 16px 64px}
+  h1,h2,h3{font-family:"Newsreader",Georgia,serif;line-height:1.12;margin:0}
+  h1{font-size:clamp(42px,7vw,64px);font-weight:800;letter-spacing:-.015em}
+  h2{font-size:clamp(26px,3.8vw,34px);font-weight:700;margin-bottom:6px}
+  h3{font-size:17px;font-weight:700}
+  p{margin:0 0 11px}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .kicker{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .byline{font-size:14px;color:var(--ink2);margin-top:10px}
+  .byline b{color:var(--ink)}
+  .modebtn{position:fixed;top:10px;right:10px;z-index:50;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow);min-height:36px}
+  section{margin-top:56px}
+  .secnote{font-size:16px;max-width:72ch}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 10px;box-shadow:var(--shadow)}
+  .card + .card{margin-top:14px}
+  .asof{font-size:12.5px;color:var(--ink2);margin-top:8px;font-family:"IBM Plex Mono",ui-monospace,monospace;line-height:1.45}
+  svg text{font-family:"IBM Plex Sans",sans-serif}
+  svg .svmono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .execsum{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:20px 22px;box-shadow:var(--shadow);margin-top:22px}
+  .execsum .thesis{font-family:"Newsreader",Georgia,serif;font-size:clamp(24px,3.6vw,32px);line-height:1.25;font-weight:800;margin-bottom:10px}
+  .execsum p{font-size:16.5px;max-width:76ch}
+  .execsum p:last-child{margin-bottom:0}
+  .execsum p b{color:var(--accent)}
+  .strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .strip .cell{background:var(--panel2);border-radius:8px;padding:8px 13px;font-size:13.5px;color:var(--ink2)}
+  .strip .cell b{font-family:"Newsreader",Georgia,serif;font-size:21px;color:var(--ink);margin-right:5px;vertical-align:-2px}
+  /* The real calendar timeline */
+  .tl{position:relative;margin-top:10px;padding-left:26px}
+  .tl:before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .tl .row{position:relative;padding:10px 0 10px 6px}
+  .tl .row + .row{border-top:1px dashed var(--line)}
+  .tl .dot{position:absolute;left:-24px;top:16px;width:14px;height:14px;border-radius:50%;background:var(--panel2);border:2px solid var(--ink2)}
+  .tl .row.hot .dot{background:var(--accent);border-color:var(--accent)}
+  .tl .when{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+  .tl .what{font-family:"Newsreader",Georgia,serif;font-size:20px;font-weight:700;line-height:1.2;margin:2px 0 3px}
+  .tl .why{font-size:14.5px;color:var(--ink2);max-width:70ch}
+  .tl .why b{color:var(--ink)}
+  .weekband{background:var(--panel2);border-radius:10px;padding:12px 16px;margin:6px 0 4px -6px}
+  .weekband .when{color:var(--ink2)}
+  .weekband .what{font-size:17px}
+  /* Board */
+  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:6px}
+  @media(max-width:900px){.board{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.board{grid-template-columns:1fr}}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+  .day h3{font-size:15px;letter-spacing:.05em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--line);padding-bottom:7px}
+  .day h3 span{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink2);letter-spacing:0;text-transform:none}
+  .ev{border-radius:8px;padding:9px 10px;background:var(--panel2)}
+  .ev .et{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-family:"IBM Plex Mono",monospace}
+  .ev .en{font-weight:600;font-size:14.5px;line-height:1.3;margin-top:2px}
+  .ev .ed{font-size:12.5px;color:var(--ink2);line-height:1.4;margin-top:2px}
+  .ev .ed b{color:var(--ink)}
+  .ev.big{background:var(--accent);color:#fff}
+  .ev.big .et,.ev.big .ed{color:rgba(255,255,255,.88)}
+  .ev.big .ed b{color:#fff}
+  .ev.med{border:1.5px solid var(--slate);background:var(--card)}
+  .ev.med .en{color:var(--slate)}
+  .daycount{font-size:12.5px;color:var(--ink2);margin-top:auto;padding-top:4px;border-top:1px dashed var(--line)}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink2);margin:2px 0 8px;align-items:center}
+  .legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .legend .lnsw{display:inline-block;width:22px;height:0;border-top:3.5px solid;margin-right:6px;vertical-align:middle;border-radius:2px}
+  .legend .arsw{display:inline-block;width:22px;height:11px;margin-right:6px;vertical-align:-1px;border-top:3px solid;border-radius:2px;opacity:.9}
+  .legend .keysw{display:inline-block;width:26px;height:16px;border-radius:4px;margin-right:6px;vertical-align:-3px;border:1px solid var(--line);background:var(--panel2)}
+  .legend .keysw.big{background:var(--accent);border-color:var(--accent)}
+  .legend .keysw.med{background:var(--card);border:1.5px solid var(--slate)}
+  .story{font-size:15.5px;line-height:1.6;color:var(--ink);margin:10px 0 6px;max-width:76ch}
+  /* Three lids */
+  .lids{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+  @media(max-width:760px){.lids{grid-template-columns:1fr}}
+  .lid{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 17px;box-shadow:var(--shadow)}
+  .lid .ln{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;text-transform:uppercase}
+  .lid h3{font-size:21px;margin:4px 0 6px}
+  .lid p{font-size:14.5px;color:var(--ink2);margin:0}
+  .lid p b{color:var(--ink)}
+  .lid .big{font-family:"Newsreader",Georgia,serif;font-size:34px;font-weight:800;line-height:1;color:var(--ink);display:block;margin:8px 0 4px}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  @media(max-width:860px){.twocol{grid-template-columns:1fr}}
+  .pull{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+  @media(max-width:700px){.pull{grid-template-columns:1fr}}
+  .pull .p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  .pull .p .n{font-family:"Newsreader",Georgia,serif;font-size:36px;line-height:1;font-weight:800}
+  .pull .p .l{font-size:13.5px;color:var(--ink2);margin-top:4px;line-height:1.4}
+  .grades{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:6px}
+  @media(max-width:760px){.grades{grid-template-columns:1fr}}
+  .grade{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;box-shadow:var(--shadow)}
+  .grade .gd{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+  .grade h3{font-size:19px;margin:3px 0 5px}
+  .grade p{font-size:14.5px;margin:0}
+  .grade .line{border-top:1px solid var(--line);margin-top:10px;padding-top:9px;font-size:13.5px;color:var(--ink2)}
+  .notes{margin-top:40px;border-top:1px solid var(--line);padding-top:14px}
+  .notes h3{font-size:15px;margin-bottom:6px}
+  .notes p,.notes li{font-size:13.5px;color:var(--ink2);line-height:1.55}
+  .notes ol{margin:6px 0 0;padding-left:18px}
+  .notes li{margin-bottom:4px}
+  footer{margin-top:36px;border-top:1px solid var(--line);padding-top:14px;font-size:13.5px;color:var(--ink2)}
+  @media(max-width:640px){header{padding-top:38px}}
+  .chartwrap{position:relative}
+  .ctip{position:absolute;z-index:20;max-width:min(290px,88%);background:var(--ink);color:var(--paper);font-size:13px;line-height:1.4;padding:8px 11px;border-radius:8px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .15s ease}
+  .ctip.show{opacity:1}
+  svg .pt{cursor:pointer;outline:none}
+  svg .pt .halo{opacity:0;transition:opacity .15s ease}
+  svg .pt:hover .halo,svg .pt:focus .halo,svg .pt.on .halo{opacity:.9}
+  @media (prefers-reduced-motion: reduce){.ctip,svg .pt .halo{transition:none}}
+  button,[role="button"]{min-height:36px}
+</style>
+</head>
+<body>
+<button class="modebtn" id="modeBtn" type="button">Night mode</button>
+<div class="wrap">
+
+<header>
+  <div class="kicker">The week of November 16–20, 2026</div>
+  <h1>No Quiet Days</h1>
+  <p class="byline">By <b>Kevin Sigey</b> &middot; November 17, 2026</p>
+</header>
+
+<div style="margin-top:14px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14.5px;line-height:1.55">
+  <p style="margin:0"><b>Midday Tuesday, November 17.</b> Monday broke the pattern early: the S&amp;P 500 closed at 7,416.59, down 1.92 percent, a third straight down day, with the VIX at 22.91 and Nvidia down 4.12 percent to $156.14. One day of this week has already moved more than any of the seven comp weeks moved in five. Tuesday morning's retail sales came in at +0.2 percent, as expected. The week's grade is still set Friday at the close, and the month's on December 18.</p>
+</div>
+
+<div class="execsum" id="thesis">
+  <p class="thesis">The market is paying for an explosion this week. History says it is scheduled for next month.</p>
+  <p>Options are charging <b>±8.6% for Nvidia</b> and <b>±11.1% for Palo Alto Networks</b>. It is the most expensive insurance of the quarter, all written on these five days. Seven times since 2000, a week has stacked this much on itself. Five of them moved <b>−0.6% to +0.7%</b> while they were happening. Their following months moved <b>−17% to +5%</b>.</p>
+  <p>The events are real. A leaderless Nvidia and the largest IPO raise in history are the fuse. The charge goes off after: the Fed on <b>December 9</b>, every AI name re-rated against Nvidia's guide, every 2027 IPO priced off Anthropic's close. The calendar sells certainty about timing. It has never delivered it.</p>
+</div>
+
+<div class="strip" aria-label="The week in counts">
+  <div class="cell"><b>±11.1%</b>most expensive ticket this week</div>
+  <div class="cell"><b>−0.6% to +0.7%</b>what crowded weeks actually did</div>
+  <div class="cell"><b>−17% to +5%</b>the month after</div>
+  <div class="cell"><b>Dec 9</b>when it settles</div>
+</div>
+
+<section id="mispricing" style="margin-top:36px">
+  <h2>1. You're paying for the wrong week</h2>
+  <div class="card">
+    <!-- PANEL A -->
+    <div style="border-top:2px solid var(--line);padding-top:12px">
+      <h3 style="font-size:18px">Panel A &mdash; Priced for one stock</h3>
+      <div class="legend"><span><span class="lnsw" style="border-color:var(--ch-magenta)"></span><b style="color:var(--ch-magenta)">Palo Alto</b>&nbsp;lines = &plusmn;11.1% by Friday</span><span><span class="lnsw" style="border-color:var(--ch-orange)"></span><b style="color:var(--ch-orange)">Nvidia</b>&nbsp;lines = &plusmn;8.6% by Friday</span></div>
+      <svg viewBox="0 0 720 330" width="100%" role="img" aria-label="Panel A, priced for one stock. Line chart with no shading, Monday to Friday. Two pairs of smooth unfilled lines fan from zero on Monday: Palo Alto to plus 11.1 percent and minus 11.1 percent by Friday, Nvidia inside it to plus 8.6 percent and minus 8.6 percent by Friday. All four end labels sit in the right margin, outside the line endpoints, with clear space between them.">
+        <text x="268" y="24" font-size="11" font-weight="700" letter-spacing=".06em" fill="var(--ink2)" text-anchor="middle">MONDAY &rarr; FRIDAY</text>
+        <g font-size="11.5" fill="var(--ink2)" class="svmono">
+          <text x="64" y="64" text-anchor="end">+10%</text>
+          <text x="64" y="114" text-anchor="end">+5%</text>
+          <text x="64" y="164" text-anchor="end">0%</text>
+          <text x="64" y="214" text-anchor="end">&minus;5%</text>
+          <text x="64" y="264" text-anchor="end">&minus;10%</text>
+        </g>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="72" y1="60" x2="452" y2="60"/><line x1="72" y1="110" x2="452" y2="110"/><line x1="72" y1="210" x2="452" y2="210"/><line x1="72" y1="260" x2="452" y2="260"/>
+        </g>
+        <line x1="72" y1="160" x2="452" y2="160" stroke="var(--ink2)" stroke-width="1.6"/>
+        <!-- Palo Alto lines -->
+        <path d="M84,160 C110,138 145,118 176,105 C207,92 237,86 268,82 C299,78 330,68 360,64 C391,60 421,53 452,49" stroke="var(--ch-magenta)" stroke-width="2.8" fill="none"/>
+        <path d="M84,160 C110,182 145,202 176,215 C207,228 237,234 268,238 C299,242 330,252 360,256 C391,260 421,267 452,271" stroke="var(--ch-magenta)" stroke-width="2.8" fill="none"/>
+        <!-- Nvidia lines -->
+        <path d="M84,160 C110,145 145,128 176,117 C207,106 237,102 268,99 C299,96 330,89 360,85 C391,81 421,77 452,74" stroke="var(--ch-orange)" stroke-width="2.8" fill="none"/>
+        <path d="M84,160 C110,175 145,192 176,203 C207,214 237,218 268,221 C299,224 330,231 360,235 C391,239 421,243 452,246" stroke="var(--ch-orange)" stroke-width="2.8" fill="none"/>
+        <circle cx="84" cy="160" r="4.5" fill="var(--ink)"/>
+        <circle cx="452" cy="49" r="4.5" fill="var(--ch-magenta)"/><circle cx="452" cy="74" r="4.5" fill="var(--ch-orange)"/><circle cx="452" cy="246" r="4.5" fill="var(--ch-orange)"/><circle cx="452" cy="271" r="4.5" fill="var(--ch-magenta)"/>
+        <!-- End labels: outside endpoints, in right margin, 25px apart vertically -->
+        <g font-size="12.5" font-weight="700" class="svmono">
+          <text x="470" y="53" fill="var(--ch-magenta)">PALO ALTO +11.1%</text>
+          <text x="470" y="78" fill="var(--ch-orange)">NVIDIA +8.6%</text>
+          <text x="470" y="250" fill="var(--ch-orange)">NVIDIA &minus;8.6%</text>
+          <text x="470" y="275" fill="var(--ch-magenta)">PALO ALTO &minus;11.1%</text>
+        </g>
+        <g font-size="12" text-anchor="middle" fill="var(--ink)">
+          <text x="84" y="298">Mon 16</text><text x="176" y="298">Tue 17</text><text x="268" y="298">Wed 18</text><text x="360" y="298">Thu 19</text><text x="452" y="298" font-weight="700">Fri 20</text>
+        </g>
+        <text x="84" y="318" font-size="11.5" fill="var(--ink2)">Curves widen with the square root of time, the way an options cone widens.</text>
+      </svg>
+    </div>
+      <p class="story">Options are asking a lot of two stocks in five days. Palo Alto Networks carries the wider charge at 11.1 percent in either direction by Friday, Nvidia follows at 8.6 percent, and both prices were set before either company had reported. Those charges expire with the week, whether the moves they pay for arrive or not.</p>
+
+    <!-- PANEL B -->
+    <div style="border-top:2px solid var(--line);padding-top:12px">
+      <h3 style="font-size:18px">Panel B &mdash; What the market did</h3>
+      <div class="legend"><span><span class="lnsw" style="border-color:var(--ch-green)"></span><b style="color:var(--ch-green)">Top line</b>&nbsp;= top of the range &mdash; +0.7% in the week, +5.0% at Dec 18</span><span><span class="lnsw" style="border-color:var(--ch-red)"></span><b style="color:var(--ch-red)">Bottom line</b>&nbsp;= bottom of the range &mdash; &minus;0.6% in the week, &minus;17.0% at Dec 18</span><span><span class="lnsw" style="border-color:var(--ink);border-top-style:dashed"></span><b>Dashed line</b>&nbsp;= median outcome &mdash; 0.0% in the week, +3.8% at Dec 18</span></div>
+      <svg viewBox="0 0 720 400" width="100%" role="img" aria-label="Panel B, what the market did. Two smooth boundary lines for the index only, no shading. In the week, Monday to Friday, the lines hug zero between minus 0.6 percent and plus 0.7 percent. Past Friday they open smoothly to plus 5 percent and minus 17 percent by December 18. A dashed median line runs on zero through the week, labelled median week 0.0 percent, then curves to plus 3.8 percent at December 18. The Friday divider label sits below the axis, clear of all line endpoints and labels.">
+        <g font-size="12" font-weight="700" letter-spacing=".05em">
+          <text x="162" y="28" text-anchor="middle" fill="var(--ch-blue)">THE WEEK</text>
+          <text x="420" y="28" text-anchor="middle" fill="var(--ch-blue)">THE MONTH AFTER</text>
+        </g>
+        <g font-size="11.5" fill="var(--ink2)" class="svmono">
+          <text x="64" y="84" text-anchor="end">+5%</text>
+          <text x="64" y="134" text-anchor="end">0%</text>
+          <text x="64" y="184" text-anchor="end">&minus;5%</text>
+          <text x="64" y="234" text-anchor="end">&minus;10%</text>
+          <text x="64" y="284" text-anchor="end">&minus;15%</text>
+        </g>
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="72" y1="80" x2="600" y2="80"/><line x1="72" y1="180" x2="600" y2="180"/><line x1="72" y1="230" x2="600" y2="230"/><line x1="72" y1="280" x2="600" y2="280"/>
+        </g>
+        <!-- Friday divider: line only in plot, label below axis -->
+        <line x1="240" y1="42" x2="240" y2="322" stroke="var(--ink2)" stroke-width="1.2" stroke-dasharray="5 4"/>
+        <!-- Range boundaries: lines only, no fill -->
+        <path d="M84,130 C130,128 180,124 240,123 C290,122 310,120 340,118 C380,115 410,108 430,105 C470,99 520,88 600,80" stroke="var(--ch-green)" stroke-width="3" fill="none"/>
+        <path d="M84,130 C130,132 180,134 240,136 C290,138 310,140 340,142 C380,148 410,165 430,182 C470,215 520,260 600,300" stroke="var(--ch-red)" stroke-width="3" fill="none"/>
+        <line x1="72" y1="130" x2="600" y2="130" stroke="var(--ink2)" stroke-width="1.6"/>
+        <circle cx="84" cy="130" r="4.5" fill="var(--ink)"/>
+        <!-- Median -->
+        <line x1="84" y1="130" x2="240" y2="130" stroke="var(--ink)" stroke-width="3" stroke-dasharray="9 6"/>
+        <path d="M240,130 C320,124 420,108 500,98 C540,94 575,92 600,92" stroke="var(--ink)" stroke-width="3" stroke-dasharray="9 6" fill="none"/>
+        <circle cx="600" cy="92" r="4.5" fill="var(--ink)"/>
+        <!-- Median leader + label, inside the wide part of the range, clear of both boundaries -->
+        <line x1="540" y1="100" x2="540" y2="120" stroke="var(--ink)" stroke-width="1.4"/>
+        <text x="540" y="138" font-size="12.5" font-weight="800" fill="var(--ink)" text-anchor="middle" letter-spacing=".03em">MEDIAN +3.8%</text>
+        <!-- Week range labels, offset clear of the lines -->
+        <g font-size="12" font-weight="700" class="svmono">
+          <text x="252" y="108" fill="var(--ch-green)">+0.7%</text>
+          <text x="252" y="154" fill="var(--ch-red)">&minus;0.6%</text>
+        </g>
+        <text x="84" y="200" font-size="11.5" font-weight="700" fill="var(--ch-blue)">In the week: &minus;0.6% to +0.7% &middot; median 0.0%</text>
+        <!-- Inside label for month range, in the empty middle of the range -->
+        <g text-anchor="middle">
+          <text x="530" y="182" font-size="14" font-weight="800" fill="var(--ch-blue)" letter-spacing=".03em">THE MONTH AFTER</text>
+          <text x="530" y="202" font-size="12" font-weight="700" fill="var(--ch-blue)" class="svmono">&minus;17% to +5%</text>
+        </g>
+        <!-- End labels in right margin, outside endpoints -->
+        <g font-size="12.5" font-weight="700" class="svmono">
+          <text x="612" y="84" fill="var(--ch-green)">+5.0%</text>
+          <text x="612" y="304" fill="var(--ch-red)">&minus;17.0%</text>
+        </g>
+        <g font-size="12" text-anchor="middle" fill="var(--ink)">
+          <text x="84" y="345">Mon 16</text><text x="240" y="345" font-weight="700">Fri 20</text><text x="340" y="345">Nov 27</text><text x="430" y="345">Dec 4</text><text x="515" y="345">Dec 11</text><text x="600" y="345" font-weight="700">Dec 18</text>
+        </g>
+        <text x="420" y="366" font-size="11" font-weight="700" fill="var(--ink2)" text-anchor="middle" letter-spacing=".04em">FRI 20 &middot; THE WEEK ENDS &mdash; EVERYTHING RIGHT OF THE DASHED LINE IS AFTER IT</text>
+        <text x="84" y="388" font-size="11.5" fill="var(--ink2)">Time after Friday is compressed. Curves are smoothed.</text>
+      </svg>
+    </div>
+    <p class="story">History answers with a much smaller week and a much larger month. Across the seven earlier pile-ups the median week finished at exactly 0.0 percent, five of the seven sat between minus 0.6 percent and plus 0.7 percent, and the month that followed then ranged from minus 17.0 percent to plus 5.0 percent with a median gain of 3.8 percent. The pressure was real during those weeks too, and the move still waited until the crowded week was over.</p>
+    <p class="asof">Panel A: options pricing as of Nov 14, 2026 &mdash; Nvidia &plusmn;8.6% (reports Tuesday after the close), Palo Alto Networks &plusmn;11.1% (Wednesday after the close), each drawn widening with the square root of time to Friday. Panel B: FRED Friday-to-Friday closes for the seven comp weeks in section 4 and the four weeks after each. The range lines in the week are the five-of-seven range, &minus;0.6% to +0.7%; the full week range including the two upside outliers is &minus;0.6% to +2.7%, plotted week by week in section 4. The month-after range, +5.0% to &minus;17.0%, covers all seven. Medians are computed from the same seven weeks as plotted in section 4 (May 2023 on the Nasdaq series): the median week return is 0.0%, and the median following-month return is +3.8%. The mean month outcome is about &minus;0.2%, dragged down by the single March 2000 crash of &minus;17.0%, so the median is not the average.</p>
+  </div>
+</section>
+
+<section id="real-calendar">
+  <h2>2. The real calendar starts Friday at 4pm</h2>
+  <p class="secnote">This week opens questions. These dates close them. Four of the five sit after the week ends.</p>
+  <div class="tl">
+    <div class="weekband">
+      <div class="when">Mon Nov 16 – Fri Nov 20</div>
+      <div class="what">The crowded week itself</div>
+      <div class="why">Nvidia reports, Anthropic trades, minutes print, expiry rolls. Appointments, all of them.</div>
+    </div>
+    <div class="row">
+      <span class="dot"></span>
+      <div class="when">Tue Nov 17 · after the close, then the weeks after</div>
+      <div class="what">Nvidia's guide gets graded</div>
+      <div class="why">Guide in focus near <b>$108 billion</b>, from interim CEO Colette Kress, five days after Huang resigned. The weeks after settle the real question: whether the machine runs without its founder.</div>
+    </div>
+    <div class="row">
+      <span class="dot"></span>
+      <div class="when">Thu Nov 19 · the close, then the weeks after</div>
+      <div class="what">Anthropic's first close, then real price discovery</div>
+      <div class="why">Day one is an auction between a <b>$74 midpoint</b> and perps near <b>$98</b>. The verdict comes later: index inclusion, coverage, lockup, first earnings.</div>
+    </div>
+    <div class="row">
+      <span class="dot"></span>
+      <div class="when">Wed Dec 3</div>
+      <div class="what">The Senate hearing on Nvidia's succession</div>
+      <div class="why">The succession question enters the record, two weeks after earnings. The board will not reinstate Huang and has hired a search firm.</div>
+    </div>
+    <div class="row hot">
+      <span class="dot"></span>
+      <div class="when">Wed Dec 9 · 2:00 PM</div>
+      <div class="what">The FOMC decision</div>
+      <div class="why">The one decision every print this week feeds. A 25bp hike is priced at <b>87.5% to 89%</b> across three venues. Five costumes, one question, answered three weeks later.</div>
+    </div>
+    <div class="row hot">
+      <span class="dot"></span>
+      <div class="when">Fri Dec 18 · four weeks on</div>
+      <div class="what">The following month prints the verdict</div>
+      <div class="why">In the seven historical pile-ups, the month after the crowded week ran <b>−17.0% to +5.0%</b>. That window, not this week, is where crowded weeks have always been decided.</div>
+    </div>
+  </div>
+</section>
+
+<section id="board">
+  <h2>3. The week that looks like everything</h2>
+  <p class="secnote">Five days, no quiet one.</p>
+  <div class="board" role="img" aria-label="Calendar board for November 16 to 20, 2026">
+    <div class="day">
+      <h3>Mon <span>Nov 16</span></h3>
+      <div class="ev med"><div class="et">12:00 PM</div><div class="en">Fed Chair Warsh speaks</div><div class="ed">Productivity and Jobs Task Force Conference, San Francisco</div></div>
+      <div class="ev"><div class="et">8:30 AM</div><div class="en">Empire State manufacturing</div><div class="ed">Consensus near <b>10</b>, prior 25.5</div></div>
+      <div class="ev"><div class="et">Earnings</div><div class="en">Tyson Foods</div><div class="ed">Only S&amp;P 500 name on the day</div></div>
+      <div class="daycount">The lightest day still has the Fed chair at noon.</div>
+    </div>
+    <div class="day">
+      <h3>Tue <span>Nov 17</span></h3>
+      <div class="ev med"><div class="et">8:30 AM</div><div class="en">Retail sales, October</div><div class="ed">Consensus flat to <b>+0.2%</b> after +0.8%. Last big consumer read before Dec 9</div></div>
+      <div class="ev"><div class="et">Before open</div><div class="en">Home Depot, Disney</div><div class="ed">Home Depot near <b>$348B</b></div></div>
+      <div class="ev big"><div class="et">After close</div><div class="en">Nvidia earnings</div><div class="ed"><b>$3.9T</b>, implied move <b>±8.6%</b>, interim CEO Colette Kress, five days after Huang resigned</div></div>
+      <div class="daycount">December reprices in the morning. The AI trade reprices at night.</div>
+    </div>
+    <div class="day">
+      <h3>Wed <span>Nov 18</span></h3>
+      <div class="ev med"><div class="et">2:00 PM</div><div class="en">FOMC minutes</div><div class="ed">Oct 27–28 meeting. Held at 3.75%–4.00%, 10–2 vote. Stale on arrival: they predate the hot CPI and PPI</div></div>
+      <div class="ev med"><div class="et">1:00 PM</div><div class="en">20-year auction, $16B</div><div class="ed">Live duration supply, against a 10-year at <b>5.11%</b></div></div>
+      <div class="ev"><div class="et">Before open</div><div class="en">Target, Lowe's, TJX</div><div class="ed">Three consumer reads. Palo Alto Networks after the close, implied <b>±11.1%</b></div></div>
+      <div class="ev big"><div class="et">Evening</div><div class="en">Anthropic prices</div><div class="ed">Filed range <b>$70–$78</b></div></div>
+      <div class="daycount">Four-way collision: minutes, auction, VIX expiry, pricing.</div>
+    </div>
+    <div class="day">
+      <h3>Thu <span>Nov 19</span></h3>
+      <div class="ev big"><div class="et">9:30 AM open</div><div class="en">Anthropic first trades</div><div class="ed">Raise above <b>$61B</b>. About <b>$1.33T</b> fully diluted at the midpoint</div></div>
+      <div class="ev med"><div class="et">Before open</div><div class="en">Walmart, Alibaba</div><div class="ed">Walmart about <b>$1.02T</b>, implied ±6.2%</div></div>
+      <div class="ev"><div class="et">8:30 AM</div><div class="en">Claims and Philly Fed</div><div class="ed">Claims near <b>200K</b>. Philly Fed 19.2 vs 20.9 prior</div></div>
+      <div class="daycount">A trillion-dollar retailer reports into a trillion-dollar debut.</div>
+    </div>
+    <div class="day">
+      <h3>Fri <span>Nov 20</span></h3>
+      <div class="ev med"><div class="et">All day</div><div class="en">Monthly options expiry</div><div class="ed">Largest by notional open interest on the Cboe calendar</div></div>
+      <div class="ev"><div class="et">10:00 AM</div><div class="en">Michigan sentiment, final</div><div class="ed">Preliminary 51.0. Year-ahead inflation expectations <b>4.3%</b></div></div>
+      <div class="ev"><div class="et">Speakers</div><div class="en">Waller and Cook</div><div class="ed">Two more Fed voices, both feeding Dec 9</div></div>
+      <div class="daycount">Then the hedges roll off, and the real calendar starts.</div>
+    </div>
+  </div>
+  <div class="legend" aria-label="Key to the highlighting on this board" style="margin-top:10px">
+    <span><span class="keysw big"></span><b>Filled</b>&nbsp;= the week's headline events: Nvidia earnings, and Anthropic pricing and its first trade</span>
+    <span><span class="keysw med"></span><b>Outlined</b>&nbsp;= major scheduled events that can move the tape that day: Fed speakers and minutes, key data, the 20-year auction, monthly expiry, and Walmart and Alibaba earnings</span>
+    <span><span class="keysw"></span><b>Plain</b>&nbsp;= the rest of each day's scheduled earnings, data and speakers</span>
+  </div>
+  <p class="asof">Source: Federal Reserve, Census Bureau, Treasury and Cboe schedules, verified Nov 14, 2026. All times ET.</p>
+</section>
+
+<section id="pattern">
+  <h2>4. Calm week, loud month</h2>
+  <p class="secnote">Seven pile-ups since 2000. Every time, the week was the quiet part.</p>
+  <div class="card">
+    <h3>Week return vs following-month return — two lines, seven pile-ups</h3>
+    <div class="legend"><span><span class="lnsw" style="border-color:var(--ch-blue)"></span><b style="color:var(--ch-blue)">During the crowded week</b></span><span><span class="lnsw" style="border-color:var(--ch-orange)"></span><b style="color:var(--ch-orange)">The following month</b></span><span>Shaded gap between the lines = how much the verdict moved after the week ended · <b>Hover or tap any point</b> for what happened that week · Nov 2026 sits on the zero line, pending</span></div>
+    <div class="chartwrap">
+    <svg viewBox="0 0 720 400" width="100%" role="img" aria-label="Line chart with two lines across seven crowded weeks plus a pending November 2026 point. The week line stays near zero, between minus 0.6 and plus 2.7 percent. The following-month line swings from minus 17 percent in March 2000 to plus 5 percent after GM in 2010. Every point has a hover or tap tooltip describing what happened that week. November 2026 is a hollow point on the zero line, still pending.">
+      <!-- plot: x = 85,165,245,325,405,485,565,645(pending) ; y(v) = 300 - (v+18)/24*270 ; zero y=98 -->
+      <g font-size="11.5" fill="var(--ink2)" class="svmono">
+        <text x="52" y="45" text-anchor="end">+5%</text><text x="52" y="101" text-anchor="end">0%</text><text x="52" y="190" text-anchor="end">−5%</text><text x="52" y="246" text-anchor="end">−10%</text><text x="52" y="302" text-anchor="end">−15%</text>
+      </g>
+      <g stroke="var(--line)" stroke-width="1"><line x1="62" y1="41" x2="690" y2="41"/><line x1="62" y1="186" x2="690" y2="186"/><line x1="62" y1="242" x2="690" y2="242"/><line x1="62" y1="298" x2="690" y2="298"/></g>
+      <line x1="62" y1="98" x2="690" y2="98" stroke="var(--ink2)" stroke-width="1.6"/>
+      <text x="690" y="90" font-size="11" fill="var(--ink2)" text-anchor="end">0% — no move</text>
+      <!-- gap shading between lines -->
+      <path d="M85,67 L165,98 L245,90 L325,104 L405,101 L485,69 L565,100 L565,129 L485,52 L405,91 L325,42 L245,55 L165,41 L85,289 Z" fill="var(--ink2)" opacity="0.10"/>
+      <!-- month line (orange) -->
+      <path d="M85,289 L165,41 L245,55 L325,42 L405,91 L485,52 L565,129" stroke="var(--ch-orange)" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+      <!-- week line (blue) -->
+      <path d="M85,67 L165,98 L245,90 L325,104 L405,101 L485,69 L565,100" stroke="var(--ch-blue)" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+      <!-- interactive points: week (blue) -->
+      <g class="pt" tabindex="0" role="button" aria-label="Mar 2000 · Week +2.7% — Palm's IPO and the Nasdaq peak." data-tip="Mar 2000 · Week +2.7% — Palm's IPO and the Nasdaq peak."><title>Mar 2000 · Week +2.7% — Palm's IPO and the Nasdaq peak.</title><circle cx="85" cy="67" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="85" cy="67" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="85" cy="67" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Nov 2010 · Week 0.0% — GM's IPO into QE2." data-tip="Nov 2010 · Week 0.0% — GM's IPO into QE2."><title>Nov 2010 · Week 0.0% — GM's IPO into QE2.</title><circle cx="165" cy="98" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="165" cy="98" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="165" cy="98" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Dec 2019 · Week +0.7% — Aramco's debut, a dormant Fed, a trade truce." data-tip="Dec 2019 · Week +0.7% — Aramco's debut, a dormant Fed, a trade truce."><title>Dec 2019 · Week +0.7% — Aramco's debut, a dormant Fed, a trade truce.</title><circle cx="245" cy="90" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="245" cy="90" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="245" cy="90" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Sep 2020 · Week −0.6% — Snowflake's debut the same day as the FOMC." data-tip="Sep 2020 · Week −0.6% — Snowflake's debut the same day as the FOMC."><title>Sep 2020 · Week −0.6% — Snowflake's debut the same day as the FOMC.</title><circle cx="325" cy="104" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="325" cy="104" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="325" cy="104" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Nov 2021 · Week −0.3% — Rivian's debut the morning CPI printed 6.2%." data-tip="Nov 2021 · Week −0.3% — Rivian's debut the morning CPI printed 6.2%."><title>Nov 2021 · Week −0.3% — Rivian's debut the morning CPI printed 6.2%.</title><circle cx="405" cy="101" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="405" cy="101" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="405" cy="101" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="May 2023 · Week +2.5% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff." data-tip="May 2023 · Week +2.5% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff."><title>May 2023 · Week +2.5% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff.</title><circle cx="485" cy="69" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="485" cy="69" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="485" cy="69" r="5" fill="var(--ch-blue)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Sep 2023 · Week −0.2% — Arm's IPO, firm CPI, the UAW strike." data-tip="Sep 2023 · Week −0.2% — Arm's IPO, firm CPI, the UAW strike."><title>Sep 2023 · Week −0.2% — Arm's IPO, firm CPI, the UAW strike.</title><circle cx="565" cy="100" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="565" cy="100" r="11" fill="none" stroke="var(--ch-blue)" stroke-width="2"/><circle cx="565" cy="100" r="5" fill="var(--ch-blue)"/></g>
+      <!-- interactive points: month (orange) -->
+      <g class="pt" tabindex="0" role="button" aria-label="Mar 2000 · Month −17.0% — Palm's IPO and the Nasdaq peak." data-tip="Mar 2000 · Month −17.0% — Palm's IPO and the Nasdaq peak."><title>Mar 2000 · Month −17.0% — Palm's IPO and the Nasdaq peak.</title><circle cx="85" cy="289" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="85" cy="289" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="85" cy="289" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Nov 2010 · Month +5.0% — GM's IPO into QE2." data-tip="Nov 2010 · Month +5.0% — GM's IPO into QE2."><title>Nov 2010 · Month +5.0% — GM's IPO into QE2.</title><circle cx="165" cy="41" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="165" cy="41" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="165" cy="41" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Dec 2019 · Month +3.8% — Aramco's debut, a dormant Fed, a trade truce." data-tip="Dec 2019 · Month +3.8% — Aramco's debut, a dormant Fed, a trade truce."><title>Dec 2019 · Month +3.8% — Aramco's debut, a dormant Fed, a trade truce.</title><circle cx="245" cy="55" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="245" cy="55" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="245" cy="55" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Sep 2020 · Month +4.9% — Snowflake's debut the same day as the FOMC." data-tip="Sep 2020 · Month +4.9% — Snowflake's debut the same day as the FOMC."><title>Sep 2020 · Month +4.9% — Snowflake's debut the same day as the FOMC.</title><circle cx="325" cy="42" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="325" cy="42" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="325" cy="42" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Nov 2021 · Month +0.6% — Rivian's debut the morning CPI printed 6.2%." data-tip="Nov 2021 · Month +0.6% — Rivian's debut the morning CPI printed 6.2%."><title>Nov 2021 · Month +0.6% — Rivian's debut the morning CPI printed 6.2%.</title><circle cx="405" cy="91" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="405" cy="91" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="405" cy="91" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="May 2023 · Month +4.0% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff." data-tip="May 2023 · Month +4.0% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff."><title>May 2023 · Month +4.0% — Nvidia's guide ignites the AI trade in the debt-ceiling standoff.</title><circle cx="485" cy="52" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="485" cy="52" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="485" cy="52" r="5" fill="var(--ch-orange)"/></g>
+      <g class="pt" tabindex="0" role="button" aria-label="Sep 2023 · Month −2.8% — Arm's IPO, firm CPI, the UAW strike." data-tip="Sep 2023 · Month −2.8% — Arm's IPO, firm CPI, the UAW strike."><title>Sep 2023 · Month −2.8% — Arm's IPO, firm CPI, the UAW strike.</title><circle cx="565" cy="129" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="565" cy="129" r="11" fill="none" stroke="var(--ch-orange)" stroke-width="2"/><circle cx="565" cy="129" r="5" fill="var(--ch-orange)"/></g>
+      <!-- pending point: Nov 2026 -->
+      <g class="pt" tabindex="0" role="button" aria-label="Nov 2026 · This week — Nvidia, Anthropic and the pile-up. Still pending." data-tip="Nov 2026 · This week — Nvidia, Anthropic and the pile-up. Still pending."><title>Nov 2026 · This week — Nvidia, Anthropic and the pile-up. Still pending.</title><circle cx="645" cy="98" r="17" fill="#000" fill-opacity="0"/><circle class="halo" cx="645" cy="98" r="12" fill="none" stroke="var(--ink2)" stroke-width="2"/><circle cx="645" cy="98" r="6" fill="var(--card)" stroke="var(--ink2)" stroke-width="2.5" stroke-dasharray="3 3"/></g>
+      <text x="645" y="124" font-size="11.5" font-weight="700" fill="var(--ink2)" text-anchor="middle">pending</text>
+      <!-- direct value labels: week (blue) -->
+      <g font-size="12" font-weight="700" class="svmono" fill="var(--ch-blue)">
+        <text x="85" y="52" text-anchor="middle">+2.7%</text><text x="165" y="118" text-anchor="middle">0.0%</text><text x="245" y="110" text-anchor="middle">+0.7%</text><text x="325" y="124" text-anchor="middle">−0.6%</text><text x="405" y="121" text-anchor="middle">−0.3%</text><text x="485" y="89" text-anchor="middle">+2.5%</text><text x="565" y="86" text-anchor="middle">−0.2%</text>
+      </g>
+      <!-- direct value labels: month (orange) -->
+      <g font-size="12" font-weight="700" class="svmono" fill="var(--ch-orange)">
+        <text x="85" y="309" text-anchor="middle">−17.0%</text><text x="165" y="28" text-anchor="middle">+5.0%</text><text x="245" y="42" text-anchor="middle">+3.8%</text><text x="325" y="28" text-anchor="middle">+4.9%</text><text x="405" y="78" text-anchor="middle">+0.6%</text><text x="485" y="40" text-anchor="middle">+4.0%</text><text x="565" y="149" text-anchor="middle">−2.8%</text>
+      </g>
+      <!-- x labels -->
+      <g font-size="12" fill="var(--ink)" text-anchor="middle">
+        <text x="85" y="338" font-weight="700">Mar 2000</text><text x="85" y="354" fill="var(--ink2)" font-size="11">Peak · Nasdaq</text><text x="165" y="338" font-weight="700">Nov 2010</text><text x="165" y="354" fill="var(--ink2)" font-size="11">GM · Nasdaq</text><text x="245" y="338" font-weight="700">Dec 2019</text><text x="245" y="354" fill="var(--ink2)" font-size="11">Aramco · S&P</text><text x="325" y="338" font-weight="700">Sep 2020</text><text x="325" y="354" fill="var(--ink2)" font-size="11">Snowflake · S&P</text><text x="405" y="338" font-weight="700">Nov 2021</text><text x="405" y="354" fill="var(--ink2)" font-size="11">Rivian · S&P</text><text x="485" y="338" font-weight="700">May 2023</text><text x="485" y="354" fill="var(--ink2)" font-size="11">Nvidia · Nasdaq</text><text x="565" y="338" font-weight="700">Sep 2023</text><text x="565" y="354" fill="var(--ink2)" font-size="11">Arm · S&P</text><text x="645" y="338" font-weight="700">Nov 2026</text><text x="645" y="354" fill="var(--ink2)" font-size="11">This week · pending</text>
+      </g>
+      <text x="62" y="378" font-size="12.5" fill="var(--ink2)">The week line barely leaves zero in seven tries. The month line decides</text>
+      <text x="62" y="394" font-size="12.5" fill="var(--ink2)">everything, a month later. Hover or tap any point for what happened that week.</text>
+    </svg>
+    <div class="ctip" id="calmTip" role="status"></div>
+    </div>
+    <p class="story">Seven times the calendar has piled up like this, and seven times the week itself stayed close to quiet. March 2000 gained 2.7 percent in the week and lost 17.0 percent in the month after the Nasdaq peak, November 2010 finished its week flat and gained 5.0 percent in the month after GM returned to market, and the other five weeks all sat between minus 0.6 percent and plus 2.5 percent while their following months spread from minus 2.8 percent to plus 4.9 percent. November 2026 is the eighth week in that sequence, and its month has not printed yet.</p>
+    <p class="asof">Source: FRED daily closes (SP500, NASDAQCOM). Week is Friday close to Friday close. Following month is about four weeks later. The 2000 and 2010 points use the Nasdaq Composite because the FRED S&amp;P 500 daily series starts in 2016. May 2023 is also plotted on the Nasdaq, the index that carried the Nvidia move. On the S&amp;P 500 that week was +0.3% and the following month was +3.4%.</p>
+  </div>
+  <div class="pull">
+    <div class="p"><div class="n" style="color:var(--slate)">−0.6% to +0.7%</div><div class="l">Five of seven crowded weeks, start to finish. The calendar looked historic. The tape did not.</div></div>
+    <div class="p"><div class="n" style="color:var(--bad)">−17.0%</div><div class="l">Nasdaq in the month after the March 2000 peak week. The top printed on a Friday. The fall printed after.</div></div>
+    <div class="p"><div class="n" style="color:var(--sage)">+5.0%</div><div class="l">Nasdaq in the month after GM's debut week. Ireland asked for its bailout the Sunday after the week ended.</div></div>
+  </div>
+</section>
+
+<section id="lids">
+  <h2>5. Why the week can't move</h2>
+  <p class="secnote">Not luck. Three lids hold the tape down while it happens.</p>
+  <div class="lids">
+    <div class="lid">
+      <div class="ln">Lid one</div>
+      <h3>Already priced</h3>
+      <span class="big">88%</span>
+      <p>The hike is priced near <b>88%</b>. Anthropic trades near <b>$98 in perps</b> against a $74 midpoint. Nvidia is <b>±8.6%</b>, to the decimal. A surprise everyone has bought a ticket for is not a surprise.</p>
+    </div>
+    <div class="lid">
+      <div class="ln">Lid two</div>
+      <h3>Pinned by the hedges</h3>
+      <span class="big">26.46</span>
+      <p>The highest in-week VIX peak in any comp week. Crowded weeks are the most hedged weeks of the year, and hedged weeks do not run. Friday's expiry is the lid coming off, dated and in public.</p>
+    </div>
+    <div class="lid">
+      <div class="ln">Lid three</div>
+      <h3>Nobody can decide yet</h3>
+      <span class="big">Dec 9</span>
+      <p>The minutes are <b>stale</b>, written before the hot CPI and PPI. October CPI has <b>no year-over-year rate</b>, because 2025 prices were never collected. Nvidia's CEO seat is empty. Every referee is missing, interim, or reading an old rulebook.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>In-week VIX peaks: none panicked</h3>
+    <div class="legend"><span><span class="sw" style="background:var(--ch-teal)"></span><b style="color:var(--ch-teal)">Bar</b>&nbsp;= highest VIX close inside that crowded week</span><span><span class="lnsw" style="border-color:var(--ch-red);border-top-style:dashed"></span><b style="color:var(--ch-red)">Dashed line</b>&nbsp;= 30, the stress level no week reached</span></div>
+    <svg viewBox="0 0 720 336" width="100%" role="img" aria-label="Vertical bar chart of VIX peak closes during each crowded week: Snowflake 2020 26.46, dot-com peak 2000 24.31, GM 2010 22.58, Nvidia 2023 20.03, Rivian 2021 18.73, Aramco 2019 15.86, Arm 2023 14.23, all below the dashed 30 stress line">
+      <!-- baseline y=248, scale 6.25px per VIX point; stress 30 -> y=60 -->
+      <line x1="48" y1="60" x2="700" y2="60" stroke="var(--ch-red)" stroke-width="1.6" stroke-dasharray="6 4"/>
+      <text x="700" y="48" font-size="12" font-weight="700" fill="var(--ch-red)" text-anchor="end">30 = STRESS — no bar reaches it</text>
+      <g stroke="var(--line)"><line x1="48" y1="123" x2="700" y2="123"/><line x1="48" y1="186" x2="700" y2="186"/></g>
+      <g font-size="11" fill="var(--ink2)" class="svmono"><text x="42" y="127" text-anchor="end">20</text><text x="42" y="190" text-anchor="end">10</text><text x="42" y="252" text-anchor="end">0</text></g>
+      <g fill="var(--ch-teal)">
+        <rect x="60" y="83" width="64" height="165" rx="4"/><rect x="152" y="96" width="64" height="152" rx="4"/><rect x="244" y="107" width="64" height="141" rx="4"/><rect x="336" y="123" width="64" height="125" rx="4"/><rect x="428" y="131" width="64" height="117" rx="4"/><rect x="520" y="149" width="64" height="99" rx="4"/><rect x="612" y="159" width="64" height="89" rx="4"/>
+      </g>
+      <g font-size="13" font-weight="700" fill="var(--ch-teal)" class="svmono" text-anchor="middle">
+        <text x="92" y="72">26.46</text><text x="184" y="85">24.31</text><text x="276" y="96">22.58</text><text x="368" y="112">20.03</text><text x="460" y="120">18.73</text><text x="552" y="138">15.86</text><text x="644" y="148">14.23</text>
+      </g>
+      <g font-size="12" fill="var(--ink)" text-anchor="middle">
+        <text x="92" y="268" font-weight="700">Snowflake</text><text x="92" y="284" fill="var(--ink2)" font-size="11">Sep 2020</text>
+        <text x="184" y="268" font-weight="700">Peak</text><text x="184" y="284" fill="var(--ink2)" font-size="11">Mar 2000</text>
+        <text x="276" y="268" font-weight="700">GM</text><text x="276" y="284" fill="var(--ink2)" font-size="11">Nov 2010</text>
+        <text x="368" y="268" font-weight="700">Nvidia</text><text x="368" y="284" fill="var(--ink2)" font-size="11">May 2023</text>
+        <text x="460" y="268" font-weight="700">Rivian</text><text x="460" y="284" fill="var(--ink2)" font-size="11">Nov 2021</text>
+        <text x="552" y="268" font-weight="700">Aramco</text><text x="552" y="284" fill="var(--ink2)" font-size="11">Dec 2019</text>
+        <text x="644" y="268" font-weight="700">Arm</text><text x="644" y="284" fill="var(--ink2)" font-size="11">Sep 2023</text>
+      </g>
+      <line x1="48" y1="248" x2="700" y2="248" stroke="var(--ink2)" stroke-width="1.4"/>
+      <text x="48" y="304" font-size="12.5" fill="var(--ink2)">The spikes came later. Rivian's week peaked at 18.73 in-week; the VIX hit 31.12</text>
+      <text x="48" y="320" font-size="12.5" fill="var(--ink2)">on December 1, 2021, three weeks after it ended.</text>
+    </svg>
+    <p class="story">Fear stayed contained while those weeks were actually happening. The highest VIX close inside any crowded week was 26.46 in Snowflake week in September 2020, the dot-com peak week reached only 24.31, and Arm week in 2023 peaked at 14.23, so no crowded week ever touched 30, the level that marks stress. In Rivian week the spike came later, when the VIX reached 31.12 on December 1, three weeks after that week had ended.</p>
+    <p class="asof">Source: FRED VIXCLS, highest daily close inside each week.</p>
+  </div>
+</section>
+
+<section id="scale">
+  <h2>6. The size is real. The timing is the story.</h2>
+  <p class="secnote">The events are not small. The claim is only about when they land.</p>
+
+  <div class="card">
+    <h3>Comp-week raises, in today's dollars — vertical bars</h3>
+    <div class="legend"><span><span class="sw" style="background:var(--ch-orange)"></span><b style="color:var(--ch-orange)">Anthropic</b>&nbsp;= this week</span><span><span class="sw" style="background:var(--ch-blue)"></span><b style="color:var(--ch-blue)">Historical comps</b>&nbsp;= the six earlier raises</span></div>
+    <svg viewBox="0 0 720 330" width="100%" role="img" aria-label="Vertical bar chart of IPO proceeds restated in October 2026 dollars: Anthropic 61 billion plus, Aramco 33.6 billion, GM 31 billion, Rivian 14.4 billion, Arm 5.3 billion, Snowflake 4.4 billion, Palm 1.7 billion">
+      <text x="48" y="16" font-size="12.5" fill="var(--ink2)">Gross proceeds, billions of October 2026 dollars</text>
+      <!-- baseline y=262, scale 3.23px per $B (210px = $65B) -->
+      <g stroke="var(--line)"><line x1="48" y1="157" x2="700" y2="157"/><line x1="48" y1="52" x2="700" y2="52"/></g>
+      <g font-size="11" fill="var(--ink2)" class="svmono"><text x="42" y="161" text-anchor="end">$32B</text><text x="42" y="56" text-anchor="end">$65B</text><text x="42" y="266" text-anchor="end">$0</text></g>
+      <rect x="60" y="65" width="68" height="197" rx="4" fill="var(--ch-orange)"/>
+      <g fill="var(--ch-blue)">
+        <rect x="152" y="153" width="68" height="109" rx="4"/><rect x="244" y="162" width="68" height="100" rx="4"/><rect x="336" y="215" width="68" height="47" rx="4"/><rect x="428" y="245" width="68" height="17" rx="4"/><rect x="520" y="248" width="68" height="14" rx="4"/><rect x="612" y="257" width="68" height="5" rx="4"/>
+      </g>
+      <g font-size="13" font-weight="700" class="svmono" text-anchor="middle">
+        <text x="94" y="54" fill="var(--ch-orange)">$61B+</text>
+        <text x="186" y="142" fill="var(--ch-blue)">$33.6B</text><text x="278" y="151" fill="var(--ch-blue)">$31.0B</text><text x="370" y="204" fill="var(--ch-blue)">$14.4B</text><text x="462" y="234" fill="var(--ch-blue)">$5.3B</text><text x="554" y="237" fill="var(--ch-blue)">$4.4B</text><text x="646" y="246" fill="var(--ch-blue)">$1.7B</text>
+      </g>
+      <g font-size="12" fill="var(--ink)" text-anchor="middle">
+        <text x="94" y="282" font-weight="700">Anthropic</text><text x="94" y="298" fill="var(--ink2)" font-size="11">2026</text>
+        <text x="186" y="282" font-weight="700">Aramco</text><text x="186" y="298" fill="var(--ink2)" font-size="11">2019</text>
+        <text x="278" y="282" font-weight="700">GM</text><text x="278" y="298" fill="var(--ink2)" font-size="11">2010</text>
+        <text x="370" y="282" font-weight="700">Rivian</text><text x="370" y="298" fill="var(--ink2)" font-size="11">2021</text>
+        <text x="462" y="282" font-weight="700">Arm</text><text x="462" y="298" fill="var(--ink2)" font-size="11">2023</text>
+        <text x="554" y="282" font-weight="700">Snowflake</text><text x="554" y="298" fill="var(--ink2)" font-size="11">2020</text>
+        <text x="646" y="282" font-weight="700">Palm</text><text x="646" y="298" fill="var(--ink2)" font-size="11">2000</text>
+      </g>
+      <line x1="48" y1="262" x2="700" y2="262" stroke="var(--ink2)" stroke-width="1.4"/>
+      <text x="48" y="322" font-size="12.5" fill="var(--ink2)">Anthropic's bar stands nearly twice as tall as the next raise ever, in today's dollars.</text>
+    </svg>
+    <p class="story">Anthropic is not a normal large debut set beside earlier ones. Its raise above $61 billion is nearly twice Aramco at $33.6 billion and GM at $31.0 billion in today's dollars, more than four times Rivian at $14.4 billion, and more than thirty times Palm at $1.7 billion. A raise of that size would dominate any week it landed in, and this week it shares the calendar with Nvidia.</p>
+    <p class="asof">Source: Company filings and Reuters, restated with BLS CPI-U to October 2026 dollars. Aramco and GM exclude greenshoe. Palm raise is approximate at about $0.9B nominal. Anthropic is about 1.8 times Aramco in real terms, yet almost the same slice of its market: 0.078% against Aramco's 0.076%. GM took the biggest slice at 0.116%.</p>
+  </div>
+
+  <div class="twocol">
+    <div class="card">
+      <h3>Debut value as share of the whole market — vertical bars</h3>
+      <div class="legend"><span><span class="sw" style="background:var(--ch-orange)"></span><b style="color:var(--ch-orange)">Anthropic</b></span><span><span class="sw" style="background:var(--ch-blue)"></span><b style="color:var(--ch-blue)">Comps</b></span></div>
+      <svg viewBox="0 0 340 300" width="100%" role="img" aria-label="Vertical bar chart of debut market cap as percent of total US market on a log scale: Aramco 5.55 percent tallest, Anthropic 1.69 percent second, Palm and GM 0.30 percent, Snowflake 0.17, Rivian 0.16, Arm 0.13 percent">
+        <text x="0" y="14" font-size="11.5" fill="var(--ink2)">% of total US market at first close, log scale</text>
+        <!-- baseline y=205, log heights: 5.55=122, 1.69=86, .30=33, .30=33, .17=16, .16=14, .13=8 -->
+        <rect x="8" y="83" width="36" height="122" rx="3" fill="var(--ch-blue)"/>
+        <rect x="54" y="119" width="36" height="86" rx="3" fill="var(--ch-orange)"/>
+        <rect x="100" y="172" width="36" height="33" rx="3" fill="var(--ch-blue)"/>
+        <rect x="146" y="172" width="36" height="33" rx="3" fill="var(--ch-blue)"/>
+        <rect x="192" y="189" width="36" height="16" rx="3" fill="var(--ch-blue)"/>
+        <rect x="238" y="191" width="36" height="14" rx="3" fill="var(--ch-blue)"/>
+        <rect x="284" y="197" width="36" height="8" rx="3" fill="var(--ch-blue)"/>
+        <g font-size="11" font-weight="700" class="svmono" text-anchor="middle">
+          <text x="26" y="72" fill="var(--ch-blue)">5.55%</text><text x="72" y="108" fill="var(--ch-orange)">1.69%</text><text x="118" y="161" fill="var(--ch-blue)">0.30%</text><text x="164" y="161" fill="var(--ch-blue)">0.30%</text><text x="210" y="178" fill="var(--ch-blue)">0.17%</text><text x="256" y="180" fill="var(--ch-blue)">0.16%</text><text x="302" y="186" fill="var(--ch-blue)">0.13%</text>
+        </g>
+        <line x1="0" y1="205" x2="332" y2="205" stroke="var(--ink2)" stroke-width="1.3"/>
+        <g font-size="10.5" fill="var(--ink)" text-anchor="middle">
+          <text x="26" y="221" font-weight="700">Aramco</text><text x="26" y="235" fill="var(--ink2)">'19</text>
+          <text x="72" y="221" font-weight="700">Anthropic</text><text x="72" y="235" fill="var(--ink2)">'26</text>
+          <text x="118" y="221" font-weight="700">Palm</text><text x="118" y="235" fill="var(--ink2)">'00</text>
+          <text x="164" y="221" font-weight="700">GM</text><text x="164" y="235" fill="var(--ink2)">'10</text>
+          <text x="210" y="221" font-weight="700">Snowfl.</text><text x="210" y="235" fill="var(--ink2)">'20</text>
+          <text x="256" y="221" font-weight="700">Rivian</text><text x="256" y="235" fill="var(--ink2)">'21</text>
+          <text x="302" y="221" font-weight="700">Arm</text><text x="302" y="235" fill="var(--ink2)">'23</text>
+        </g>
+        <text x="0" y="262" font-size="12" fill="var(--ink2)">Only Aramco (far left) has ever debuted bigger</text>
+        <text x="0" y="278" font-size="12" fill="var(--ink2)">as a share of the market. The rest are 6–13× smaller.</text>
+      </svg>
+      <p class="story">Measured against the whole market, only one debut has ever opened larger. Aramco started at 5.55 percent of the United States market total used as the yardstick, Anthropic starts at 1.69 percent, and every other comp sits at 0.30 percent or less, from Palm and GM down to Arm at 0.13 percent. Anthropic therefore stands in a class with one name ahead of it and a wide gap behind it.</p>
+      <p class="asof">Source: First-close values, Siblis totals. Aramco listed in Riyadh. US total used as a yardstick. It was about 85% of its home market.</p>
+    </div>
+    <div class="card">
+      <h3>Nvidia is 2.5 times the event it was — line and area</h3>
+      <div class="legend"><span><span class="lnsw" style="border-color:var(--ch-orange)"></span><b style="color:var(--ch-orange)">Line + shaded area</b>&nbsp;= Nvidia's share of the whole US market</span></div>
+      <svg viewBox="0 0 340 290" width="100%" role="img" aria-label="Area line chart of Nvidia share of total US market rising from about 2 percent in May 2023 to about 5 percent in November 2026, with the area under the line shaded">
+        <!-- baseline y=190, scale 28px per %: 2% -> y=134, 5% -> y=50 -->
+        <g stroke="var(--line)"><line x1="30" y1="162" x2="320" y2="162"/><line x1="30" y1="106" x2="320" y2="106"/><line x1="30" y1="50" x2="320" y2="50"/></g>
+        <g font-size="10.5" fill="var(--ink2)" class="svmono"><text x="26" y="166" text-anchor="end">1%</text><text x="26" y="110" text-anchor="end">3%</text><text x="26" y="54" text-anchor="end">5%</text></g>
+        <path d="M55,134 L285,50 L285,190 L55,190 Z" fill="var(--ch-orange)" opacity="0.22"/>
+        <path d="M55,134 L285,50" stroke="var(--ch-orange)" stroke-width="3.5" fill="none"/>
+        <circle cx="55" cy="134" r="6" fill="var(--ch-blue)"/><circle cx="285" cy="50" r="6" fill="var(--ch-orange)"/>
+        <text x="55" y="112" font-size="15" font-weight="700" class="svmono" fill="var(--ch-blue)" text-anchor="middle">~2.0%</text>
+        <text x="55" y="128" font-size="11" fill="var(--ink2)" text-anchor="middle">May 2023</text>
+        <text x="285" y="28" font-size="15" font-weight="700" class="svmono" fill="var(--ch-orange)" text-anchor="middle">~5.0%</text>
+        <text x="285" y="72" font-size="11" fill="var(--ink2)" text-anchor="middle">Nov 2026</text>
+        <line x1="30" y1="190" x2="320" y2="190" stroke="var(--ink2)" stroke-width="1.3"/>
+        <g font-size="12" fill="var(--ink2)">
+          <text x="0" y="212">2023: $755B to $939B in one session,</text>
+          <text x="0" y="228">+24.4%. Founder presented.</text>
+          <text x="0" y="248">2026: $3.92T into the print, 6–7% of</text>
+          <text x="0" y="264">the S&amp;P 500. Interim CEO.</text>
+          <text x="0" y="282">A ±10% move now ≈ ±$390B, ±0.6–0.7 pts.</text>
+        </g>
+      </svg>
+      <p class="story">Nvidia reports this week as a far larger event than the one that reset the AI trade in May 2023. It was about 2.0 percent of the whole United States market then and it is about 5.0 percent now, at $3.92 trillion into the print, so a move near 10 percent would add or erase about $390 billion and shift the S&amp;P 500 by roughly 0.6 to 0.7 points. The founder presented the 2023 result, and an interim chief executive carries the 2026 one, five days after the founder resigned.</p>
+      <p class="asof">Source: Siblis totals, company closes. May 2023 share is interpolated and flagged as an estimate. S&amp;P weight is 6.1% on one source and 6.9% on another.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Anthropic: priced to pop, braced underneath — price line</h3>
+    <div class="legend"><span><span class="arsw" style="background:color-mix(in srgb,var(--ch-blue) 30%,transparent);border-color:var(--ch-blue)"></span><b style="color:var(--ch-blue)">Filed range</b>&nbsp;= $70–$78</span><span><span class="lnsw" style="border-color:var(--ch-red)"></span><b style="color:var(--ch-red)">Midpoint</b>&nbsp;= $74</span><span><span class="arsw" style="background:color-mix(in srgb,var(--ch-orange) 30%,transparent);border-color:var(--ch-orange)"></span><b style="color:var(--ch-orange)">Perps / paper value</b>&nbsp;= $98–$100</span></div>
+    <svg viewBox="0 0 720 168" width="100%" role="img" aria-label="Anthropic price line: shaded area for the filed range 70 to 78 dollars with a line at the 74 dollar midpoint, and a shaded area for perps and paper value near 98 to 100 dollars">
+      <text x="242" y="40" font-size="13.5" font-weight="700" fill="var(--ch-blue)" text-anchor="middle">Filed range $70–$78</text>
+      <text x="242" y="57" font-size="12" fill="var(--ink2)" text-anchor="middle">November 10 filing</text>
+      <text x="549" y="40" font-size="13.5" font-weight="700" fill="var(--ch-orange)" text-anchor="middle">Perps $98–$100</text>
+      <text x="549" y="57" font-size="12" fill="var(--ink2)" text-anchor="middle">Paper value: $98</text>
+      <path d="M178,102 L178,84 L306,84 L306,102 Z" fill="var(--ch-blue)" opacity="0.32"/>
+      <path d="M178,84 L306,84" stroke="var(--ch-blue)" stroke-width="3.5"/>
+      <path d="M536,102 L536,84 L562,84 L562,102 Z" fill="var(--ch-orange)" opacity="0.38"/>
+      <path d="M536,84 L562,84" stroke="var(--ch-orange)" stroke-width="3.5"/>
+      <line x1="229" y1="78" x2="229" y2="110" stroke="var(--ch-red)" stroke-width="3"/>
+      <line x1="50" y1="96" x2="690" y2="96" stroke="var(--ink2)" stroke-width="1.2"/>
+      <g stroke="var(--ink2)" stroke-width="1.2">
+        <line x1="50" y1="91" x2="50" y2="101"/><line x1="178" y1="91" x2="178" y2="101"/><line x1="306" y1="91" x2="306" y2="101"/><line x1="434" y1="91" x2="434" y2="101"/><line x1="562" y1="91" x2="562" y2="101"/><line x1="690" y1="91" x2="690" y2="101"/>
+      </g>
+      <g font-size="12" fill="var(--ink2)" text-anchor="middle" class="svmono">
+        <text x="50" y="118">$60</text><text x="178" y="118">$70</text><text x="306" y="118">$80</text><text x="434" y="118">$90</text><text x="562" y="118">$100</text><text x="690" y="118">$110</text>
+      </g>
+      <text x="229" y="136" font-size="13" font-weight="700" fill="var(--ch-red)" text-anchor="middle">Midpoint $74</text>
+      <text x="229" y="152" font-size="12" fill="var(--ink2)" text-anchor="middle">about $1.33T fully diluted</text>
+    </svg>
+    <p class="story">Anthropic arrives with two prices before it has one. The filing offers shares at $70 to $78, with a $74 midpoint that values the company at about $1.33 trillion fully diluted, while perpetual contracts and paper trading place it at $98 to $100, about a third above that midpoint. The first trade on Thursday is where those two prices meet, and the close that day settles which one was closer.</p>
+    <p class="asof">Source: Anthropic amended filing Nov 10, 2026. Perps as of Nov 14, 2026. Polymarket day-one close: $1.25–$1.5T leads at about 44%. The under $1.25T bracket gained about ten points in a day to about a quarter of the book. Both sides are positioned before a share trades, which is exactly why day one settles so little.</p>
+  </div>
+</section>
+
+<section id="grading">
+  <h2>7. The grading card</h2>
+  <p class="secnote">Stated in advance, so the paper grades itself. Note where the checkpoints sit.</p>
+  <div class="grades">
+    <div class="grade">
+      <div class="gd">Tue Nov 17 · After the close</div>
+      <h3>Nvidia's guide</h3>
+      <p>Guide in focus near <b>$108 billion</b>. Reaffirmed in the prior cadence, or trimmed and hedged by interim CEO Colette Kress.</p>
+      <p class="line">Settles: whether 5.5% settled or about 9% weighted was the right price for the founder's exit.</p>
+    </div>
+    <div class="grade">
+      <div class="gd">Thu Nov 19 · The close</div>
+      <h3>Anthropic's first close</h3>
+      <p>Brackets are <b>below $1.25T</b>, <b>$1.25–$1.5T</b> and <b>above $1.5T</b>. The middle bracket leads at about 43% to 45%. Midpoint implies about $1.33T. Perps point near $98 against a $74 midpoint.</p>
+      <p class="line">Settles: whether the largest raise ever was priced to pop or priced at the top.</p>
+    </div>
+    <div class="grade">
+      <div class="gd">Wed Dec 9 · 2:00 PM</div>
+      <h3>The FOMC decision</h3>
+      <p>A 25bp hike is priced at <b>87.5% to 89%</b> across three venues. The whole week's data feeds this one afternoon, three weeks later.</p>
+      <p class="line">Settles: the thread. A hold or a 50bp move reprices everything the week appeared to decide.</p>
+    </div>
+    <div class="grade">
+      <div class="gd">Fri Dec 18 · Four weeks on</div>
+      <h3>The following month</h3>
+      <p>In the seven comps, the month after ran <b>−17.0% to +5.0%</b> while five of the weeks themselves sat at −0.6% to +0.7%.</p>
+      <p class="line">Settles: whether this week was historic or merely busy. By the pattern, this is where the verdict prints.</p>
+    </div>
+  </div>
+</section>
+
+<div class="notes">
+  <h3>Notes on the figures</h3>
+  <ol>
+    <li>Palm's 2000 raise of about $0.9 billion is approximate. Contemporary reports put gross proceeds near $874 million.</li>
+    <li>General Motors' value at pricing is about $63 billion including preferred stock per Reuters, against about $50 billion for common equity alone. Charts use common equity at the first close of $34.19.</li>
+    <li>Rivian's first-day value ranges from about $77 billion to $98 billion across reports by share count. Charts use about $86 billion at the first close of $100.73.</li>
+    <li>Aramco's home-market share near 85% of Tadawul comes from a secondary source. Aramco listed in Riyadh, so its market-share figures use the US total as a yardstick.</li>
+    <li>Nvidia's May 2023 market share of about 1.6% to 2.0% is interpolated between year-end totals and is an estimate. Its current S&amp;P 500 weight is 6.1% on one holdings source dated Nov 12, 2026 and 6.9% on another, so the range 6% to 7% is used.</li>
+    <li>Snowflake's share figures use the year-end 2020 total of $40.7 trillion. The mid-September total was lower at roughly $36 trillion, which would raise its shares slightly.</li>
+    <li>The key-person discount figures, 5.5% settled and about 9% probability-weighted, are this desk's estimates from the tape of Nov 12 to 13, 2026.</li>
+    <li>Anthropic's IPO date market on Polymarket put Nov 19 at 93%. There is no other US IPO of size this week.</li>
+  </ol>
+  <h3 style="margin-top:16px">Sources</h3>
+  <p>Federal Reserve Board November 2026 calendar. Census Bureau CB26-165. Treasury tentative auction schedule Q4 2026 and TreasuryDirect amounts. Cboe 2026 options expiration calendar. Anthropic amended filing Nov 10, 2026. Polymarket, Kalshi and CME FedWatch readings Nov 14, 2026. FRED series SP500, NASDAQCOM, VIXCLS and CPIAUCNS. Siblis Research total US market, $78.74 trillion at Sep 30, 2026. Historical offering details from Reuters, company releases and exchange announcements for each week cited.</p>
+</div>
+
+<footer>
+  <p>Kevin Sigey writes about markets, valuation and the AI buildout.</p>
+</footer>
+
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('modeBtn');
+  function norm(m){return m==='dark'?'dark':'light';}
+  function apply(m){m=norm(m);document.documentElement.setAttribute('data-mode',m);document.documentElement.style.colorScheme=m;btn.textContent=(m==='dark'?'Day mode':'Night mode');}
+  var saved=null; try{saved=localStorage.getItem('ks-mode');}catch(e){}
+  if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){saved='dark';}
+  apply(saved||'light');
+  btn.addEventListener('click',function(){var m=document.documentElement.getAttribute('data-mode')==='dark'?'light':'dark';apply(m);try{localStorage.setItem('ks-mode',m);}catch(e){}});
+})();
+</script>
+<script>
+(function(){
+  var wrap=document.querySelector('.chartwrap');
+  var tip=document.getElementById('calmTip');
+  if(!wrap||!tip){return;}
+  var pts=wrap.querySelectorAll('.pt');
+  var active=null;
+  function show(el){
+    active=el;
+    for(var i=0;i<pts.length;i++){pts[i].classList.toggle('on',pts[i]===el);}
+    tip.textContent=el.getAttribute('data-tip')||'';
+    tip.classList.add('show');
+    var wr=wrap.getBoundingClientRect();
+    var r=el.getBoundingClientRect();
+    var cx=r.left-wr.left+r.width/2;
+    var cy=r.top-wr.top+r.height/2;
+    var tw=tip.offsetWidth, th=tip.offsetHeight;
+    var left=cx-tw/2;
+    if(left<4){left=4;}
+    if(left>wr.width-tw-4){left=wr.width-tw-4;}
+    var top=cy-th-16;
+    if(top<0){top=cy+16;}
+    tip.style.left=left+'px';
+    tip.style.top=top+'px';
+  }
+  function hide(){
+    active=null;
+    tip.classList.remove('show');
+    for(var i=0;i<pts.length;i++){pts[i].classList.remove('on');}
+  }
+  for(var i=0;i<pts.length;i++){
+    (function(el){
+      el.addEventListener('mouseenter',function(){show(el);});
+      el.addEventListener('mouseleave',function(){if(active===el){hide();}});
+      el.addEventListener('focus',function(){show(el);});
+      el.addEventListener('blur',function(){if(active===el){hide();}});
+      el.addEventListener('click',function(e){e.stopPropagation();show(el);});
+    })(pts[i]);
+  }
+  document.addEventListener('click',function(){hide();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){hide();}});
+})();
+</script>
+<script data-goatcounter="https://kevinsigey.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
